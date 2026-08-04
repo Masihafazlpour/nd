@@ -1,1753 +1,328 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>فرم‌ ثبت نام دانش‌آموز</title>
-  <style>
-    :root {
-      --bg: #0b1020;
-      --bg2: #111827;
-      --panel: rgba(17, 24, 39, .88);
-      --panel2: rgba(15, 23, 42, .88);
-      --text: #e5e7eb;
-      --muted: #94a3b8;
-      --line: rgba(148, 163, 184, .18);
-      --primary: #6366f1;
-      --primary2: #4f46e5;
-      --success: #22c55e;
-      --danger: #ef4444;
-      --warn: #f59e0b;
-      --chip: #1f2937;
-      --shadow: 0 18px 40px rgba(0, 0, 0, .28);
-      --radius: 22px;
-      --focus: 0 0 0 4px rgba(99, 102, 241, .16);
-    }
-
-    body.light {
-      --bg: #eef4ff;
-      --bg2: #f8fbff;
-      --panel: rgba(255, 255, 255, .9);
-      --panel2: rgba(248, 250, 252, .94);
-      --text: #0f172a;
-      --muted: #64748b;
-      --line: rgba(148, 163, 184, .26);
-      --chip: #eef2ff;
-      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
-      --focus: 0 0 0 4px rgba(99, 102, 241, .12);
-    }
-
-    * {
-      box-sizing: border-box
-    }
-
-    html,
-    body {
-      height: 100%
-    }
-
-    body {
-      margin: 0;
-      font-family: Vazirmatn, IRANSans, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1100px 700px at 80% -10%, rgba(99, 102, 241, .22), transparent 60%),
-        radial-gradient(900px 700px at 0% 0%, rgba(34, 197, 94, .10), transparent 55%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-    }
-
-    body.light {
-      background:
-        radial-gradient(1100px 700px at 80% -10%, rgba(99, 102, 241, .11), transparent 60%),
-        radial-gradient(900px 700px at 0% 0%, rgba(34, 197, 94, .08), transparent 55%),
-        linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
-    }
-
-    .app {
-      min-height: 100%;
-      display: flex;
-      flex-direction: column
-    }
-
-    .topbar {
-      padding: 18px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(10, 15, 28, .74);
-      backdrop-filter: blur(16px);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    body.light .topbar {
-      background: rgba(255, 255, 255, .82)
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px
-    }
-
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), #22c55e);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: #fff;
-      box-shadow: var(--shadow);
-      flex: 0 0 auto;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 18px
-    }
-
-    .brand p {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center
-    }
-
-    .tab {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .03);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: .2s;
-      font-weight: 700;
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      border-color: transparent
-    }
-
-    .wrap {
-      padding: 18px;
-      max-width: 1680px;
-      margin: 0 auto;
-      width: 100%
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.25fr .9fr;
-      gap: 18px;
-      align-items: start
-    }
-
-    @media (max-width:1180px) {
-      .grid {
-        grid-template-columns: 1fr
-      }
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-header {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255, 255, 255, .02)
-    }
-
-    .panel-header h2 {
-      margin: 0;
-      font-size: 16px
-    }
-
-    .panel-header small {
-      color: var(--muted)
-    }
-
-    .panel-body {
-      padding: 18px
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px
-    }
-
-    @media (max-width:760px) {
-      .row {
-        grid-template-columns: 1fr
-      }
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 14px
-    }
-
-    label {
-      font-size: 13px;
-      color: color-mix(in srgb, var(--text) 86%, var(--muted));
-      font-weight: 700
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, .18);
-      background: color-mix(in srgb, var(--panel) 65%, #000 35%);
-      color: var(--text);
-      padding: 13px 14px;
-      outline: none;
-      transition: .2s;
-      font-size: 14px;
-    }
-
-    body.light input,
-    body.light select,
-    body.light textarea {
-      background: #fff
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(99, 102, 241, .7);
-      box-shadow: var(--focus)
-    }
-
-    textarea {
-      min-height: 96px;
-      resize: vertical ;
-      font-family: Vazirmatn !important;
-    }
-
-    .btns {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 16px;
-      padding: 12px 16px;
-      color: white;
-      font-weight: 800;
-      font-size: 14px;
-      transition: .2s;
-      font-family: inherit;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary2))
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, #22c55e, #16a34a)
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, #ef4444, #dc2626)
-    }
-
-    .btn-ghost {
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid var(--line);
-      color: var(--text)
-    }
-
-    .btn-soft {
-      background: rgba(99, 102, 241, .12);
-      color: #c7d2fe;
-      border: 1px solid rgba(99, 102, 241, .25)
-    }
-
-    body.light .btn-ghost {
-      background: #fff
-    }
-
-    body.light .btn-soft {
-      color: #312e81
-    }
-
-    .btn-mini {
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 12px
-    }
-
-    .split {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px
-    }
-
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 16px
-    }
-
-    @media (max-width:900px) {
-      .summary {
-        grid-template-columns: 1fr
-      }
-    }
-
-    .stat {
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .03)
-    }
-
-    body.light .stat {
-      background: rgba(255, 255, 255, .9)
-    }
-
-    .stat b {
-      display: block;
-      font-size: 22px;
-      margin-top: 6px
-    }
-
-    .qcard {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .03);
-      border-radius: 18px;
-      padding: 14px
-    }
-
-    body.light .qcard {
-      background: rgba(255, 255, 255, .9)
-    }
-
-    .qtop {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: flex-start
-    }
-
-    .qtitle {
-      font-weight: 900;
-      line-height: 1.8
-    }
-
-    .qmeta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px
-    }
-
-    .chips {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px
-    }
-
-    .chip {
-      background: var(--chip);
-      border: 1px solid var(--line);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px
-    }
-
-    .qactions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px
-    }
-
-    .draggable {
-      cursor: grab
-    }
-
-    .dragging {
-      opacity: .55
-    }
-
-    .wizard {
-      min-height: 560px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between
-    }
-
-    .progress {
-      height: 12px;
-      background: #0b1220;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 10px 0 18px
-    }
-
-    body.light .progress {
-      background: #e2e8f0
-    }
-
-    .progress>div {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), #22c55e)
-    }
-
-    .question-box {
-      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: var(--shadow)
-    }
-
-    body.light .question-box {
-      background: linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .82))
-    }
-
-    .question-box h3 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      line-height: 1.7
-    }
-
-    .question-box .sub {
-      color: var(--muted);
-      margin-bottom: 20px;
-      line-height: 1.8
-    }
-
-    .question-box .answer-area {
-      margin-top: 10px
-    }
-
-    .navrow {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-top: 16px;
-      flex-wrap: wrap
-    }
-
-    .option-list {
-      display: grid;
-      gap: 10px
-    }
-
-    .opt {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .02);
-      border-radius: 16px
-    }
-
-    body.light .opt {
-      background: #fff
-    }
-
-    .opt input {
-      width: auto
-    }
-
-    .tablewrap {
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 18px
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 980px;
-      background: rgba(255, 255, 255, .02)
-    }
-
-    body.light table {
-      background: #fff
-    }
-
-    th,
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(148, 163, 184, .12);
-      text-align: right;
-      font-size: 13px;
-      white-space: nowrap
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      background: #0f172a;
-      z-index: 1
-    }
-
-    body.light th {
-      background: #f8fafc
-    }
-
-    .hidden {
-      display: none !important
-    }
-
-    .note {
-      padding: 12px 14px;
-      border: 1px dashed rgba(148, 163, 184, .25);
-      border-radius: 16px;
-      color: var(--text);
-      background: rgba(255, 255, 255, .03)
-    }
-
-    body.light .note {
-      background: #fff
-    }
-
-    .footerline {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.8
-    }
-
-    .muted {
-      color: var(--muted)
-    }
-
-    .small {
-      font-size: 12px;
-      color: var(--muted)
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(34, 197, 94, .12);
-      color: #bbf7d0;
-      border: 1px solid rgba(34, 197, 94, .25);
-      font-size: 12px;
-      font-weight: 700
-    }
-
-    body.light .badge {
-      color: #166534
-    }
-
-    .kbd {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px;
-      border: 1px solid var(--line);
-      padding: 2px 8px;
-      border-radius: 8px;
-      background: #0b1220;
-      color: #fff
-    }
-
-    .runtimeBanner {
-      margin-top: 10px;
-      color: #93c5fd;
-      font-size: 12px
-    }
-
-    .required {
-      color: #fca5a5
-    }
-
-    body.light .required {
-      color: #dc2626
-    }
-
-    /* login modal */
-    .loginRoot {
-      position: fixed;
-      inset: 0;
-      z-index: 2200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px
-    }
-
-    .loginRoot.hidden {
-      display: none !important
-    }
-
-    .loginBackdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 23, .62);
-      backdrop-filter: blur(8px)
-    }
-
-    .loginCard {
-      position: relative;
-      z-index: 1;
-      width: min(460px, 100%);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
-      padding: 18px
-    }
-
-    .loginCard h2 {
-      margin: 0 0 8px
-    }
-
-    .loginCard p {
-      margin: 0 0 18px;
-      color: var(--muted);
-      line-height: 1.8
-    }
-
-    /* generic modal */
-    .modalRoot {
-      position: fixed;
-      inset: 0;
-      z-index: 3000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px
-    }
-
-    .modalRoot.hidden {
-      display: none !important
-    }
-
-    .modalBackdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 23, .62);
-      backdrop-filter: blur(8px)
-    }
-
-    .modalCard {
-      position: relative;
-      z-index: 1;
-      width: min(560px, 100%);
-      background: var(--panel);
-      color: var(--text);
-      border: 1px solid rgba(148, 163, 184, .22);
-      border-radius: 24px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
-      padding: 18px
-    }
-
-    .modalCard h3 {
-      margin: 0 0 8px;
-      font-size: 18px
-    }
-
-    .modalCard p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8
-    }
-
-    .modalActions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      margin-top: 18px
-    }
-
-    .modalActions .btn-ghost {
-      background: rgba(255, 255, 255, .06)
-    }
-
-    body.light .modalActions .btn-ghost {
-      background: #fff
-    }
-
-    .dangerText {
-      color: #222
-    }
-
-    /* jalali picker */
-    .jpWrap {
-      position: fixed;
-      inset: 0;
-      z-index: 2500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px
-    }
-
-    .jpWrap.hidden {
-      display: none !important
-    }
-
-    .jpBackdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 23, .62);
-      backdrop-filter: blur(8px)
-    }
-
-    .jpCard {
-      position: relative;
-      z-index: 1;
-      width: min(640px, 100%);
-      background: var(--panel);
-      color: var(--text);
-      border: 1px solid rgba(148, 163, 184, .22);
-      border-radius: 24px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
-      padding: 18px
-    }
-
-    .jpTop {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 12px
-    }
-
-    .jpControls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center
-    }
-
-    .jpControls select {
-      width: auto;
-      min-width: 120px
-    }
-
-    .jpGrid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px
-    }
-
-    .jpHead,
-    .jpDay {
-      padding: 10px 0;
-      text-align: center;
-      border-radius: 12px;
-      font-weight: 700
-    }
-
-    .jpHead {
-      color: var(--muted);
-      font-size: 12px
-    }
-
-    .jpDay {
-      cursor: pointer;
-      background: rgba(255, 255, 255, .02);
-      border: 1px solid rgba(148, 163, 184, .18)
-    }
-
-    body.light .jpDay {
-      background: #fff
-    }
-
-    .jpDay:hover {
-      background: rgba(99, 102, 241, .16)
-    }
-
-    .jpNote {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px
-    }
-
-    .serialRow {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      font-family: Vazirmatn !important;
-      gap: 0;
-      margin-top: 2px;
-      direction: rtl;
-      flex-wrap: nowrap;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .serialLetter,
-    .serialBox {
-      height: 56px;
-      border-radius: 28px;
-      text-align: center;
-      font-family: Vazirmatn !important;
-      font-size: 18px;
-      font-weight: 800;
-      padding-top: 0;
-      padding-bottom: 0;
-      flex: 1 1 0;
-      min-width: 0;
-      background: #fff;
-    }
-
-    .serialLetter {
-      flex: 0 0 34%;
-      min-width: 160px;
-      padding-inline: 18px 42px;
-      font-family: Vazirmatn !important;
-      text-align-last: center;
-    }
-
-    .serialBox.serialBox6 {
-      flex: 0 0 38%;
-      min-width: 180px;
-      font-family: Vazirmatn !important;
-
-    }
-
-    .serialBox.serialBox2 {
-      flex: 0 0 18%;
-      min-width: 96px;
-      max-width: 132px;
-      font-family: Vazirmatn !important;
-
-      margin-inline: 0;
-    }
-
-    .serialSlash {
-      font-size: 42px;
-      font-weight: 900;
-      line-height: 56px;
-      height: 56px;
-      color: #000;
-      flex: 0 0 18px;
-      width: 18px;
-      text-align: center;
-      font-family: Vazirmatn !important;
-      user-select: none;
-      transform: translateY(-1px);
-      margin-inline: 0;
-    }
-
-    @media (max-width:560px) {
-      .serialRow {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px
-      }
-
-      .serialLetter,
-      .serialBox,
-      .serialBox.serialBox6,
-      .serialBox.serialBox2 {
-        width: 100%;
-        min-width: 0;
-        max-width: none;
-        flex-basis: auto;
-        padding-inline: 14px;
-      }
-
-      .serialSlash {
-        display: none
-      }
-    }
-
-    /* small utilities */
-    .inline {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center
-    }
-
-    .modeRow {
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    .modeBadge {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .03);
-      font-size: 12px
-    }
-
-    body.light .modeBadge {
-      background: #fff
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--line);
-      margin: 16px 0
-    }
-
-    .tip {
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(99, 102, 241, .08);
-      border: 1px solid rgba(99, 102, 241, .18);
-      color: var(--text)
-    }
-
-    body.light .tip {
-      background: rgba(99, 102, 241, .08)
-    }
-
-    .dangerLine {
-      border-color: rgba(239, 68, 68, .2) !important
-    }
-  </style>
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز" />
+  <title>سامانه فرم‌ساز دانش‌آموز</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
-
 <body>
-  <div class="app">
-    <div class="topbar">
+  <div id="app" class="app">
+    <header class="topbar">
       <div class="brand">
-        <div class="logo">د</div>
-        <div>
-          <h1>دبیرستان نمونه دولتی شهید شیرآقایی</h1>
-          <!-- <p>یک‌لپتاپی · آفلاین · ذخیره روی همین سیستم</p> -->
+        <div class="logo" aria-hidden="true">د</div>
+        <div class="brand-copy">
+          <h1 id="brandTitle">دبیرستان نمونه دولتی شهید شیرآقایی بهشهر</h1>
+          <p id="brandSub">سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز</p>
         </div>
       </div>
-      <div class="tabs">
-        <button class="tab active" data-view="builderView">مدیریت فرم</button>
-        <button class="tab" data-view="runnerView">اجرای فرم</button>
-        <button class="tab" data-view="dataView">داده‌ها</button>
-        <button class="tab" id="lockBtn">قفل</button>
-        <button class="tab" id="themeBtn">تاریک</button>
+      <div class="topbar-actions">
+        <span id="connectionBadge" class="status-badge status-neutral">در حال بررسی</span>
+        <button id="themeBtn" class="btn btn-ghost btn-sm" type="button">حالت تاریک</button>
+        <button id="adminEntryBtn" class="btn btn-ghost btn-sm" type="button">ورود مدیر</button>
       </div>
-    </div>
+    </header>
 
-    <div class="wrap">
-      <div id="builderView" class="grid">
-        <div class="panel">
-          <div class="panel-header">
+    <main class="page-shell">
+      <section id="configError" class="panel alert-panel hidden" aria-live="polite">
+        <div class="alert-icon">!</div>
+        <div>
+          <h2>تنظیمات اتصال تکمیل نشده است</h2>
+          <p>در فایل <code>config.js</code> مقدارهای <code>SUPABASE_URL</code> و <code>SUPABASE_ANON_KEY</code> را وارد کنید.</p>
+        </div>
+      </section>
+
+      <section id="publicApp" class="view">
+        <div id="publicLoading" class="panel center-panel">
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>در حال دریافت آخرین نسخه فرم…</h2>
+          <p>لطفاً چند لحظه صبر کنید.</p>
+        </div>
+
+        <div id="publicUnavailable" class="panel center-panel hidden">
+          <div class="empty-icon">○</div>
+          <h2>فرم در دسترس نیست</h2>
+          <p id="publicUnavailableMessage">هنوز هیچ نسخه‌ای از فرم منتشر نشده است.</p>
+          <button id="publicRetryBtn" class="btn btn-primary" type="button">تلاش دوباره</button>
+        </div>
+
+        <section id="runnerPanel" class="panel hidden">
+          <div class="panel-header runner-header">
             <div>
-              <h2>طراحی فرم</h2><small>سؤال‌ها را اضافه، ویرایش و مرتب کنید</small>
+              <div class="eyebrow">فرم منتشرشده</div>
+              <h2 id="runnerTitle">اجرای فرم</h2>
+              <p id="runnerDesc" class="panel-subtitle"></p>
             </div>
-            <div class="btns">
-              <button class="btn-soft btn-mini" id="resetSeedBtn">بازگردانی فرم اولیه</button>
-              <button class="btn-success btn-mini" id="saveBuilderBtn">ذخیره فرم</button>
+            <div class="runner-tools">
+              <span id="runnerVersion" class="status-badge status-info">—</span>
+              <button id="runnerRefreshBtn" class="btn btn-ghost btn-sm" type="button">بررسی نسخه جدید</button>
             </div>
           </div>
-          <div class="panel-body">
-            <div class="summary">
-              <div class="stat">تعداد سؤال‌ها<b id="statQ">0</b></div>
-              <div class="stat">پاسخ‌های ذخیره‌شده<b id="statR">0</b></div>
-              <div class="stat">وضعیت<b id="statS">آفلاین</b></div>
-            </div>
-            <div class="field"><label>عنوان فرم</label><input id="formTitle"
-                placeholder="مثلاً: فرم اطلاعات دانش‌آموزان" /></div>
-            <div class="field"><label>توضیح فرم</label><textarea id="formDesc"
-                placeholder="توضیح کوتاه برای دانش‌آموز یا والدین..."></textarea></div>
-            <!-- <div class="tip">
-              فرم اولیه از قبل وجود دارد و شامل فیلدهای اصلی دانش‌آموز، والدین، بیماری، مسکن و سرویس است.
-            </div> -->
 
-            <div class="panel" style="margin-top:16px;background:rgba(255,255,255,.02)">
-              <div class="panel-header">
-                <div>
-                  <h2>افزودن / ویرایش سؤال</h2><small>شرط نمایش، سریال شناسنامه، تاریخ شمسی</small>
+          <div id="publicUpdateBanner" class="inline-alert info hidden">
+            <div>
+              <strong>نسخه جدید فرم منتشر شده است.</strong>
+              <span>برای جلوگیری از قطع پاسخ جاری، پس از پایان این فرم می‌توانید نسخه جدید را دریافت کنید.</span>
+            </div>
+            <button id="loadNewVersionBtn" class="btn btn-soft btn-sm" type="button">دریافت نسخه جدید</button>
+          </div>
+
+          <div class="panel-body wizard-body">
+            <div class="runner-meta-row">
+              <div id="runnerCounter" class="muted">سؤال ۰ از ۰</div>
+              <label class="device-field">
+                <span>نام دستگاه / محل</span>
+                <input id="runnerDeviceName" class="input compact-input" type="text" maxlength="120" placeholder="مثلاً: موبایل دفتر مدرسه" />
+              </label>
+            </div>
+
+            <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-value"></div></div>
+
+            <div class="question-box">
+              <div class="question-kicker" id="questionKicker">سؤال</div>
+              <h3 id="qText">…</h3>
+              <div id="qHelp" class="question-help"></div>
+              <div id="answerArea" class="answer-area"></div>
+
+              <div class="nav-row">
+                <div id="requiredHint" class="small muted"></div>
+                <div class="button-group">
+                  <button id="prevBtn" class="btn btn-ghost" type="button">قبلی</button>
+                  <button id="nextBtn" class="btn btn-primary" type="button">بعدی</button>
+                  <button id="finishBtn" class="btn btn-success hidden" type="button">ثبت نهایی</button>
                 </div>
-                <span class="badge">طراحی</span>
+              </div>
+              <div id="runtimeBanner" class="runtime-banner" aria-live="polite"></div>
+            </div>
+
+            <div id="runnerFoot" class="footerline"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="adminApp" class="view hidden">
+        <div id="adminLoginView" class="auth-layout">
+          <div class="auth-card panel">
+            <div class="auth-icon">⌁</div>
+            <div class="eyebrow">دسترسی مدیر</div>
+            <h2>ورود به فرم‌ساز</h2>
+            <p class="panel-subtitle">حساب مدیر توسط Supabase Auth مدیریت می‌شود و از هر دستگاهی می‌توانید با همان حساب وارد شوید.</p>
+
+            <div id="loginError" class="inline-alert danger hidden"></div>
+            <div class="field">
+              <label for="loginEmail">ایمیل مدیر</label>
+              <input id="loginEmail" class="input" type="email" autocomplete="username" placeholder="admin@example.com" />
+            </div>
+            <div class="field">
+              <label for="loginPassword">رمز عبور</label>
+              <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="رمز عبور" />
+            </div>
+            <div class="auth-actions">
+              <button id="loginBtn" class="btn btn-primary" type="button">ورود</button>
+              <button id="backToPublicBtn" class="btn btn-ghost" type="button">بازگشت به فرم عمومی</button>
+            </div>
+            <p class="small muted auth-note">ثبت‌نام عمومی عمداً غیرفعال است. مدیر باید از قبل در Supabase Auth ساخته شده باشد.</p>
+          </div>
+        </div>
+
+        <div id="adminDashboard" class="hidden">
+          <div class="admin-topbar panel">
+            <div>
+              <div class="eyebrow">کنترل مرکزی</div>
+              <h2>پنل مدیریت فرم</h2>
+              <p id="adminUserLabel" class="panel-subtitle"></p>
+            </div>
+            <div class="admin-actions">
+              <button class="view-tab active" data-admin-view="builder" type="button">مدیریت فرم</button>
+              <button class="view-tab" data-admin-view="data" type="button">داده‌ها</button>
+              <button id="refreshAdminBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+              <button id="logoutBtn" class="btn btn-danger btn-sm" type="button">خروج</button>
+            </div>
+          </div>
+
+          <div id="adminBuilderView" class="admin-view">
+            <div class="layout-grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="eyebrow">ویرایش مرکزی</div>
+                    <h2>طراحی فرم</h2>
+                    <p class="panel-subtitle">تغییرات ابتدا به‌عنوان پیش‌نویس ذخیره می‌شوند و پس از انتشار برای همه دستگاه‌ها فعال خواهند شد.</p>
+                  </div>
+                  <div class="button-group wrap-buttons">
+                    <button id="resetSeedBtn" class="btn btn-soft btn-sm" type="button">بازگردانی فرم اولیه</button>
+                    <button id="saveDraftBtn" class="btn btn-success btn-sm" type="button">ذخیره پیش‌نویس</button>
+                    <button id="publishBtn" class="btn btn-primary btn-sm" type="button">انتشار برای همه دستگاه‌ها</button>
+                  </div>
+                </div>
+
+                <div class="panel-body">
+                  <div class="stats-grid">
+                    <div class="stat-card"><span>تعداد سؤال‌ها</span><strong id="statQ">۰</strong></div>
+                    <div class="stat-card"><span>پاسخ‌های ذخیره‌شده</span><strong id="statR">۰</strong></div>
+                    <div class="stat-card"><span>نسخه منتشرشده</span><strong id="statV">—</strong></div>
+                    <div class="stat-card"><span>وضعیت</span><strong id="statStatus">—</strong></div>
+                  </div>
+
+                  <div id="draftConflictBanner" class="inline-alert warning hidden"></div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۱</span><div><h3>مشخصات فرم</h3><p>عنوان و تنظیمات اصلی فرم منتشرشده.</p></div></div>
+                    <div class="row-2">
+                      <div class="field"><label for="formTitle">عنوان فرم</label><input id="formTitle" class="input" maxlength="180" placeholder="مثلاً: فرم اطلاعات دانش‌آموزان" /></div>
+                      <div class="field"><label for="formDesc">توضیح فرم</label><textarea id="formDesc" class="input textarea" maxlength="1000" placeholder="توضیح کوتاه برای دانش‌آموز یا والدین…"></textarea></div>
+                    </div>
+                    <div class="row-3">
+                      <div class="field"><label for="autoNext">رفتن خودکار به سؤال بعدی</label><select id="autoNext" class="input"><option value="1">بله</option><option value="0">خیر</option></select></div>
+                      <div class="field"><label for="deviceName">نام پیش‌فرض دستگاه</label><input id="deviceName" class="input" maxlength="120" placeholder="مثلاً: دفتر مدرسه" /></div>
+                      <div class="field"><label for="slogan">شعار / متن کوتاه</label><input id="slogan" class="input" maxlength="180" placeholder="مثلاً: فرم دانش‌آموزی مدرسه" /></div>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۲</span><div><h3>افزودن یا ویرایش سؤال</h3><p>تمام قابلیت‌های فرم‌ساز اولیه با اعتبارسنجی کامل.</p></div></div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newLabel">متن سؤال <span class="required">*</span></label><input id="newLabel" class="input" maxlength="250" placeholder="مثلاً: نام دانش‌آموز" /></div>
+                      <div class="field"><label for="newType">نوع سؤال</label><select id="newType" class="input">
+                        <option value="text">متن</option><option value="number">عدد</option><option value="date">تاریخ میلادی</option><option value="jalali">تاریخ شمسی</option><option value="textarea">پاسخ بلند</option><option value="select">سلکت باکس</option><option value="radio">رادیو باتن</option><option value="checkbox">چک‌باکس چندگزینه‌ای</option><option value="serial">سریال شناسنامه</option>
+                      </select></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOptions">گزینه‌ها</label><input id="newOptions" class="input" maxlength="1200" placeholder="با | جدا کنید؛ مثال: اجاره‌ای | شخصی" /></div>
+                      <div class="field"><label for="newPlaceholder">راهنما / Placeholder</label><input id="newPlaceholder" class="input" maxlength="250" placeholder="متن راهنما درون فیلد" /></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOrder">محل سؤال</label><select id="newOrder" class="input"><option value="end">انتهای فهرست</option><option value="start">ابتدای فهرست</option></select></div>
+                      <div class="field"><label for="newRequired">الزامی بودن</label><select id="newRequired" class="input"><option value="yes">الزامی</option><option value="no">اختیاری</option></select></div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="subsection-title">اعتبارسنجی اختصاصی</div>
+                      <div class="row-4">
+                        <div class="field"><label for="newMin">حداقل عدد</label><input id="newMin" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMax">حداکثر عدد</label><input id="newMax" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMinLength">حداقل طول متن</label><input id="newMinLength" class="input" type="number" min="0" step="1" /></div>
+                        <div class="field"><label for="newMaxLength">حداکثر طول متن</label><input id="newMaxLength" class="input" type="number" min="0" step="1" /></div>
+                      </div>
+                      <div class="row-2">
+                        <div class="field"><label for="newPattern">Regex</label><input id="newPattern" class="input ltr" placeholder="مثلاً ^09[0-9]{9}$" /></div>
+                        <div class="field"><label for="newInteger">عدد صحیح باشد؟</label><select id="newInteger" class="input"><option value="no">خیر</option><option value="yes">بله</option></select></div>
+                      </div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="condition-editor-head"><div><div class="subsection-title">شرایط نمایش</div><p class="small muted">فقط سؤال‌های قبلی مجازند؛ بنابراین شرط‌ها نمی‌توانند حلقه ایجاد کنند.</p></div><button id="addConditionBtn" class="btn btn-soft btn-sm" type="button">افزودن شرط</button></div>
+                      <div id="conditionList" class="condition-list"></div>
+                      <div class="row-2 compact-row">
+                        <div class="field"><label for="newCondMode">نحوه ترکیب</label><select id="newCondMode" class="input"><option value="and">همه شرط‌ها (AND)</option><option value="or">حداقل یکی (OR)</option></select></div>
+                        <div class="field"><label>وضعیت</label><div class="status-box">شرط‌های نامعتبر قبل از ذخیره و انتشار مسدود می‌شوند.</div></div>
+                      </div>
+                    </div>
+
+                    <div class="button-group">
+                      <button id="addQuestionBtn" class="btn btn-primary" type="button">افزودن سؤال</button>
+                      <button id="clearDraftBtn" class="btn btn-ghost" type="button">پاک کردن ویرایشگر</button>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۳</span><div><h3>فهرست سؤال‌ها</h3><p>جابجایی با دکمه‌ها یا Drag & Drop؛ تغییرات تا زمان انتشار فقط در پیش‌نویس هستند.</p></div></div>
+                    <div class="toolbar-row">
+                      <div class="small muted">نسخه Draft: <strong id="draftVersionLabel">—</strong> · آخرین تغییر: <strong id="draftUpdatedAt">—</strong></div>
+                      <div class="button-group">
+                        <button id="exportFormBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                        <label class="btn btn-ghost btn-sm file-button"><input id="importFile" type="file" accept="application/json" /><span>ورود JSON</span></label>
+                      </div>
+                    </div>
+                    <div id="questionList" class="question-list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="panel side-panel">
+                <div class="panel-header"><div><div class="eyebrow">پیکربندی</div><h2>وضعیت سامانه</h2></div></div>
+                <div class="panel-body stack">
+                  <div class="info-card"><span>اتصال</span><strong id="serverStatus">در حال بررسی…</strong></div>
+                  <div class="info-card"><span>حساب مدیر</span><strong id="managerStatus">—</strong></div>
+                  <div class="info-card"><span>آخرین نسخه منتشرشده</span><strong id="publishedAtLabel">—</strong></div>
+                  <div class="tip-card"><strong>انتشار یعنی چه؟</strong><p>پیش‌نویس روی دیتابیس مرکزی ذخیره می‌شود. فقط بعد از انتشار، فرم عمومی تمام گوشی‌ها و لپ‌تاپ‌ها نسخه جدید را دریافت می‌کنند.</p></div>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">تغییر رمز مدیر</div>
+                  <div class="field"><label for="currentPassword">رمز فعلی</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" placeholder="برای تأیید هویت" /></div>
+                  <div class="field"><label for="newPassword">رمز جدید</label><input id="newPassword" class="input" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر" /></div>
+                  <div class="field"><label for="newPassword2">تکرار رمز جدید</label><input id="newPassword2" class="input" type="password" autocomplete="new-password" /></div>
+                  <button id="changePasswordBtn" class="btn btn-ghost" type="button">تغییر رمز</button>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">دسترسی سریع</div>
+                  <button id="openPublicBtn" class="btn btn-soft" type="button">مشاهده فرم عمومی</button>
+                  <p class="small muted">برای ورود مدیر در دستگاه دیگر، همین آدرس را با <code>?mode=admin</code> باز کنید.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div id="adminDataView" class="admin-view hidden">
+            <div class="panel">
+              <div class="panel-header">
+                <div><div class="eyebrow">دیتابیس مرکزی</div><h2>داده‌های ذخیره‌شده</h2><p class="panel-subtitle">تمام پاسخ‌ها از یک منبع مرکزی خوانده می‌شوند؛ حذف و ویرایش فقط برای مدیر مجاز است.</p></div>
+                <div class="button-group wrap-buttons">
+                  <button id="refreshResponsesBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+                  <button id="exportResponsesBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                  <button id="exportExcelBtn" class="btn btn-success btn-sm" type="button">خروجی Excel</button>
+                  <button id="clearResponsesBtn" class="btn btn-danger btn-sm" type="button">حذف همه پاسخ‌ها</button>
+                </div>
               </div>
               <div class="panel-body">
-                <div class="row">
-                  <div class="field"><label>متن سؤال</label><input id="newLabel" placeholder="مثلاً: نام دانش‌آموز" />
-                  </div>
-                  <div class="field"><label>نوع سؤال</label>
-                    <select id="newType">
-                      <option value="text">متن</option>
-                      <option value="number">عدد</option>
-                      <option value="date">تاریخ میلادی</option>
-                      <option value="jalali">تاریخ شمسی</option>
-                      <option value="textarea">پاسخ بلند</option>
-                      <option value="select">سلکت باکس</option>
-                      <option value="radio">رادیو باتن</option>
-                      <option value="checkbox">چک‌باکس (چندگزینه‌ای)</option>
-                      <option value="serial">سریال شناسنامه</option>
-                    </select>
-                  </div>
+                <div class="row-2">
+                  <div class="field"><label for="responseSearch">جست‌وجو</label><input id="responseSearch" class="input" placeholder="در نام، تلفن، آدرس یا سایر پاسخ‌ها جست‌وجو کنید" /></div>
+                  <div class="field"><label for="responsePerPage">تعداد در صفحه</label><select id="responsePerPage" class="input"><option value="25">۲۵</option><option value="50" selected>۵۰</option><option value="100">۱۰۰</option></select></div>
                 </div>
-                <div class="row">
-                  <div class="field"><label>گزینه‌ها (برای سلکت/رادیو/چک‌باکس)</label><input id="newOptions"
-                      placeholder="مثلاً: اجاره‌ای | شخصی" /></div>
-                  <div class="field"><label>راهنما / placeholder</label><input id="newPlaceholder"
-                      placeholder="متن راهنما درون فیلد" /></div>
-                </div>
-                <div class="row">
-                  <div class="field"><label>ترتیب</label><select id="newOrder">
-                      <option value="end">انتهای لیست</option>
-                      <option value="start">ابتدای لیست</option>
-                    </select></div>
-                  <div class="field"><label>الزامی بودن</label><select id="newRequired">
-                      <option value="yes">الزامی</option>
-                      <option value="no">اختیاری</option>
-                    </select></div>
-                </div>
-                <div class="row">
-                  <div class="field"><label>نمایش فقط اگر سؤال دیگری...</label><select id="newShowIfQuestion">
-                      <option value="">بدون شرط</option>
-                    </select></div>
-                  <div class="field"><label>مقدار شرط</label><input id="newShowIfValue" placeholder="مثلاً: بله" />
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="field"><label>اپراتور شرط</label>
-                    <select id="newShowIfOp">
-                      <option value="eq">برابر است با</option>
-                      <option value="neq">مخالف است با</option>
-                      <option value="contains">شامل است</option>
-                      <option value="starts">شروع می‌شود با</option>
-                      <option value="ends">پایان می‌یابد با</option>
-                      <option value="empty">خالی است</option>
-                      <option value="notempty">خالی نیست</option>
-                    </select>
-                  </div>
-                  <div class="field"><label>نحوه ترکیب</label>
-                    <select id="newCondMode">
-                      <option value="single">یک شرط</option>
-                      <option value="and">AND</option>
-                      <option value="or">OR</option>
-                    </select>
-                  </div>
-                </div>
-                <!-- <div class="tip">اگر سؤال مربوط به راننده یا سرویس مخفی باشد، مرحله‌ی بعدی به‌طور خودکار روی آخرین سؤال
-                  قابل‌نمایش قرار می‌گیرد و دکمه ثبت ظاهر می‌شود.</div> -->
-                <div class="btns" style="margin-top:12px"><button class="btn-primary" id="addQuestionBtn">افزودن
-                    سؤال</button><button class="btn-ghost" id="clearDraftBtn">پاک کردن فرم افزودن</button></div>
+                <div class="table-scroll"><table class="data-table"><thead><tr id="respHead"></tr></thead><tbody id="respBody"></tbody></table></div>
+                <div class="pagination"><button id="respPrevBtn" class="btn btn-ghost btn-sm" type="button">قبلی</button><span id="respPageLabel">صفحه ۱ از ۱</span><button id="respNextBtn" class="btn btn-ghost btn-sm" type="button">بعدی</button></div>
               </div>
             </div>
 
-            <div style="margin-top:18px" class="split">
-              <h2 style="margin:0">فهرست سؤال‌ها</h2>
-              <div class="btns">
-                <button class="btn-ghost btn-mini" id="exportBtn">خروجی JSON</button>
-                <label class="btn-ghost btn-mini"
-                  style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
-                  <input id="importFile" type="file" accept="application/json" style="display:none" />
-                  <span>ورود JSON</span>
-                </label>
+            <section id="adminEditPanel" class="panel hidden">
+              <div class="panel-header"><div><div class="eyebrow">ویرایش رکورد</div><h2>ویرایش پاسخ</h2><p id="editResponseMeta" class="panel-subtitle"></p></div><button id="closeEditPanelBtn" class="btn btn-ghost btn-sm" type="button">بستن</button></div>
+              <div class="panel-body">
+                <div id="editAnswerArea" class="answer-area"></div>
+                <div class="button-group end-buttons"><button id="saveEditedResponseBtn" class="btn btn-success" type="button">ذخیره تغییرات</button></div>
               </div>
-            </div>
-            <div class="list" id="questionList" style="margin-top:12px"></div>
+            </section>
           </div>
         </div>
+      </section>
+    </main>
+  </div>
 
-        <div class="panel">
-          <div class="panel-header">
-            <div>
-              <h2>تنظیمات مدیر</h2>
-              <!-- <small>رمز عبور، قفل، پاک‌سازی</small> -->
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="field"><label>رمز عبور مدیر</label><input id="pinInput" type="password" placeholder="1234" />
-            </div>
-            <div class="btns" style="margin-bottom:14px"><button class="btn-primary" id="savePinBtn">ذخیره کد</button>
-            </div>
-            <div class="field"><label>خودکار رفتن به سؤال بعدی بعد از پاسخ؟</label><select id="autoNext">
-                <option value="yes">بله</option>
-                <option value="no">خیر</option>
-              </select></div>
-            <div class="field"><label>نمایش نام دستگاه / فرم</label><input id="deviceName"
-                placeholder="مثلاً: لپتاپ مدرسه - اتاق مشاوره" /></div>
-            <div class="field"><label>شعار / متن کوتاه</label><input id="slogan"
-                placeholder="مثلاً: فرم دانش‌آموزی مدرسه" /></div>
-            <div class="btns">
-              <button class="btn-success" id="goRunnerBtn">رفتن به اجرا</button>
-              <button class="btn-danger" id="wipeAllBtn">پاک کردن همه داده‌ها</button>
-            </div>
-            <!-- <div class="note" style="margin-top:16px">داده‌ها روی همین دستگاه و در <b>localStorage</b> ذخیره می‌شوند. -->
-            <!-- </div> -->
-            <!-- <div class="footerline">تاریخ شمسی با محاسبه‌ی دقیق ساخته می‌شود و به‌جای alert از مودال استفاده می‌شود.
-            </div> -->
-          </div>
-        </div>
-      </div>
-
-      <div id="runnerView" class="panel hidden">
-        <div class="panel-header">
-          <div>
-            <h2 id="runnerTitle">اجرای فرم</h2><small id="runnerDesc">پاسخ‌ها با قبلی و بعدی ثبت می‌شوند</small>
-          </div>
-          <div class="btns"><button class="btn-ghost btn-mini" id="backToBuilderBtn">بازگشت به مدیر</button></div>
-        </div>
-        <div class="panel-body wizard">
-          <div>
-            <div class="split">
-              <div class="muted" id="runnerCounter">سؤال 1 از 1</div>
-              <div class="muted" id="runnerDevice"></div>
-            </div>
-            <div class="progress">
-              <div id="progressBar"></div>
-            </div>
-            <div class="question-box">
-              <h3 id="qText">...</h3>
-              <div class="sub" id="qHelp"></div>
-              <div class="answer-area" id="answerArea"></div>
-              <div class="navrow">
-                <div class="small" id="requiredHint"></div>
-                <div class="btns"><button class="btn-ghost" id="prevBtn">قبلی</button><button class="btn-primary"
-                    id="nextBtn">بعدی</button><button class="btn-success hidden" id="finishBtn">ثبت نهایی</button></div>
-              </div>
-              <div class="runtimeBanner" id="runtimeBanner"></div>
-            </div>
-          </div>
-          <div class="footerline" id="runnerFoot"></div>
-        </div>
-      </div>
-
-      <div id="dataView" class="panel hidden">
-        <div class="panel-header">
-          <div>
-            <h2>داده‌های ذخیره‌شده</h2>
-            <!-- <small>نتایج ثبت‌شده در همین لپتاپ</small> -->
-          </div>
-          <div class="btns"><button class="btn-ghost btn-mini" id="exportResponsesBtn">خروجی JSON</button><button
-              class="btn-success btn-mini" id="exportExcelBtn">خروجی اکسل</button><button class="btn-danger btn-mini"
-              id="clearResponsesBtn">حذف پاسخ‌ها</button></div>
-        </div>
-        <div class="panel-body">
-          <div class="tablewrap">
-            <table>
-              <thead>
-                <tr id="respHead"></tr>
-              </thead>
-              <tbody id="respBody"></tbody>
-            </table>
-          </div>
-          <!-- <div class="footerline">در جدول، دکمه‌ی ویرایش برای هر پاسخ موجود است.</div> -->
-        </div>
-      </div>
+  <div id="modalRoot" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-icon" id="modalIcon">i</div>
+      <div class="modal-content"><h3 id="modalTitle">پیام</h3><p id="modalMessage"></p></div>
+      <div id="modalActions" class="modal-actions"></div>
     </div>
   </div>
 
-  <div id="loginRoot" class="loginRoot hidden" aria-hidden="true">
-    <div class="loginBackdrop"></div>
-    <div class="loginCard">
-      <h2 align="center">ورود مدیر</h2>
-      <p align="center">کد پیش‌فرض: <span class="kbd">1234</span></p>
-      <div class="field"><label>رمز مدیر</label><input id="adminPin" type="password" placeholder="••••" /></div>
-      <div class="btns"><button class="btn-primary" id="doLogin">ورود</button>
-        <button class="btn-ghost" id="cancelLogin">انصراف</button>
-      </div>
-      <!-- <div class="footerline">وقتی فرم قفل شود، فقط همین پنجره نمایش داده می‌شود.</div> -->
+  <div id="jalaliWrap" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jpTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card jalali-card">
+      <div class="modal-card-header"><div><div class="eyebrow">تقویم شمسی</div><h3 id="jpTitle">فروردین ۱۴۰۵</h3><p id="jpSub" class="small muted"></p></div><button id="jpClose" class="btn btn-danger btn-sm" type="button">بستن</button></div>
+      <div class="calendar-controls"><select id="jpYear" class="input"></select><select id="jpMonth" class="input"></select><button id="jpPrevMonth" class="btn btn-ghost btn-sm" type="button">ماه قبل</button><button id="jpNextMonth" class="btn btn-ghost btn-sm" type="button">ماه بعد</button></div>
+      <div id="jpDays" class="jalali-grid"></div>
     </div>
   </div>
 
-  <div id="modalRoot" class="modalRoot hidden" aria-hidden="true">
-    <div class="modalBackdrop"></div>
-    <div class="modalCard">
-      <h3 id="modalTitle">عنوان</h3>
-      <p id="modalMessage">پیام</p>
-      <div class="modalActions" id="modalActions"></div>
-    </div>
-  </div>
-
-  <div id="jalaliWrap" class="jpWrap hidden" aria-hidden="true"></div>
-
-  <script>
-    (function () {
-      const LS_FORM = 'local_student_form_builder_v11';
-      const LS_RESP = 'local_student_form_responses_v11';
-      const LS_PIN = 'local_student_form_pin_v11';
-      const LS_CFG = 'local_student_form_cfg_v11';
-      const LS_THEME = 'local_student_form_theme_v11';
-      const $ = id => document.getElementById(id);
-      const loginRoot = $('loginRoot');
-      const modalRoot = $('modalRoot');
-      const modalTitle = $('modalTitle');
-      const modalMessage = $('modalMessage');
-      const modalActions = $('modalActions');
-      const jalaliWrap = $('jalaliWrap');
-
-      function uid() { return 'q_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
-      function loadJSON(k, f) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : structuredClone(f); } catch { return structuredClone(f); } }
-      function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-      function esc(s = '') { return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[m])); }
-      function escapeXML(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'); }
-      function col(n) { let s = ''; while (n) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
-      function buildSheetXml(rows) { const body = rows.map((row, r) => `<row r="${r + 1}">${row.map((v, c) => `<c r="${col(c + 1)}${r + 1}" t="inlineStr"><is><t>${escapeXML(v)}</t></is></c>`).join('')}</row>`).join(''); return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${body}</sheetData></worksheet>`; }
-      const escapeHTML = esc;
-      const SERIAL_LETTERS = ['ا', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'ژ', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'و', 'ه', 'ی'];
-      function toU8(str) { return new TextEncoder().encode(str); }
-      function crc32(buf) { let c = 0xffffffff; for (let i = 0; i < buf.length; i++) { c ^= buf[i]; for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1)); } return (c ^ 0xffffffff) >>> 0; }
-      function writeU16(a, o, v) { a[o] = v & 255; a[o + 1] = (v >>> 8) & 255; }
-      function writeU32(a, o, v) { a[o] = v & 255; a[o + 1] = (v >>> 8) & 255; a[o + 2] = (v >>> 16) & 255; a[o + 3] = (v >>> 24) & 255; }
-      function dosDateTime(d) { return { time: ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 65535, date: ((((d.getFullYear() - 1980) & 127) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 65535 }; }
-      function zipStore(files) { const local = []; const central = []; let offset = 0; const now = dosDateTime(new Date()); for (const f of files) { const name = toU8(f.name); const data = typeof f.data === 'string' ? toU8(f.data) : f.data; const crc = crc32(data); const lh = new Uint8Array(30 + name.length); writeU32(lh, 0, 0x04034b50); writeU16(lh, 4, 20); writeU16(lh, 6, 0); writeU16(lh, 8, 0); writeU16(lh, 10, now.time); writeU16(lh, 12, now.date); writeU32(lh, 14, crc); writeU32(lh, 18, data.length); writeU32(lh, 22, data.length); writeU16(lh, 26, name.length); writeU16(lh, 28, 0); lh.set(name, 30); local.push(lh, data); const ch = new Uint8Array(46 + name.length); writeU32(ch, 0, 0x02014b50); writeU16(ch, 4, 20); writeU16(ch, 6, 20); writeU16(ch, 8, 0); writeU16(ch, 10, 0); writeU16(ch, 12, now.time); writeU16(ch, 14, now.date); writeU32(ch, 16, crc); writeU32(ch, 20, data.length); writeU32(ch, 24, data.length); writeU16(ch, 28, name.length); writeU16(ch, 30, 0); writeU16(ch, 32, 0); writeU16(ch, 34, 0); writeU16(ch, 36, 0); writeU32(ch, 38, 0); writeU32(ch, 42, offset); ch.set(name, 46); central.push(ch); offset += lh.length + data.length; } const centralSize = central.reduce((s, a) => s + a.length, 0); const end = new Uint8Array(22); writeU32(end, 0, 0x06054b50); writeU16(end, 4, 0); writeU16(end, 6, 0); writeU16(end, 8, files.length); writeU16(end, 10, files.length); writeU32(end, 12, centralSize); writeU32(end, 16, offset); writeU16(end, 20, 0); const out = new Uint8Array(offset + centralSize + 22); let p = 0; for (const part of [...local, ...central, end]) { out.set(part, p); p += part.length; } return out; }
-
-      // Jalaali algorithm (self-contained, corrected weekday based on UTC)
-      function div(a, b) { return ~~(a / b); }
-      function mod(a, b) { return a - ~~(a / b) * b; }
-      function jalCal(jy) {
-        const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
-        let bl = breaks.length, gy = jy + 621, leapJ = -14, jp = breaks[0], jm, jump, leap, n, i;
-        if (jy < jp || jy >= breaks[bl - 1]) throw new Error('Invalid Jalaali year');
-        for (i = 1; i < bl; i += 1) { jm = breaks[i]; jump = jm - jp; if (jy < jm) break; leapJ += div(jump, 33) * 8 + div(mod(jump, 33), 4); jp = jm; }
-        n = jy - jp;
-        leapJ += div(n, 33) * 8 + div(mod(n, 33) + 3, 4);
-        if (mod(jump, 33) === 4 && jump - n === 4) leapJ += 1;
-        const leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150;
-        const march = 20 + leapJ - leapG;
-        return { leap: mod(n + 1, 33) - 1 < 4 ? 1 : 0, gy, march };
-      }
-      function g2d(gy, gm, gd) {
-        return div((1461 * (gy + 4800 + div(gm - 14, 12))) / 4, 1) + div((367 * (gm - 2 - 12 * div(gm - 14, 12))) / 12, 1) - div((3 * div(gy + 4900 + div(gm - 14, 12), 100)) / 4, 1) + gd - 32075;
-      }
-      function d2g(jdn) {
-        let j = 4 * jdn + 139361631;
-        j += div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
-        let i = div(mod(j, 1461), 4) * 5 + 308;
-        const gd = div(mod(i, 153), 5) + 1;
-        const gm = mod(div(i, 153), 12) + 1;
-        const gy = div(j, 1461) - 100100 + div(8 - gm, 6);
-        return { gy, gm, gd };
-      }
-      function j2d(jy, jm, jd) {
-        const r = jalCal(jy);
-        return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1;
-      }
-      function d2j(jdn) {
-        const g = d2g(jdn);
-        let jy = g.gy - 621;
-        const r = jalCal(jy);
-        const jdn1f = g2d(g.gy, 3, r.march);
-        let k = jdn - jdn1f;
-        let jm, jd;
-        if (k >= 0) {
-          if (k <= 185) { jm = 1 + div(k, 31); jd = mod(k, 31) + 1; return { jy, jm, jd }; }
-          k -= 186;
-        } else {
-          jy -= 1;
-          k += 179;
-          if (r.leap === 1) k += 1;
-        }
-        jm = 7 + div(k, 30); jd = mod(k, 30) + 1;
-        return { jy, jm, jd };
-      }
-      function toJalaali(gy, gm, gd) { return d2j(g2d(gy, gm, gd)); }
-      function toGregorian(jy, jm, jd) { return d2g(j2d(jy, jm, jd)); }
-      function jalaaliMonthLength(jy, jm) { return jm <= 6 ? 31 : jm <= 11 ? 30 : (jalCal(jy).leap === 1 ? 30 : 29); }
-      function weekdayOfGregorian(gy, gm, gd) { const d = new Date(Date.UTC(gy, gm - 1, gd)); return (d.getUTCDay() + 1) % 7; } // شنبه=0
-
-      const seedQuestions = [
-        { id: uid(), label: 'پایه', type: 'select', required: true, options: ['دهم', 'یازدهم', 'دوازدهم'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'رشته', type: 'text', required: true, options: [], placeholder: 'مثلاً تجربی', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'نام دانش آموز', type: 'text', required: true, options: [], placeholder: 'نام', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'نام خانوادگی دانش آموز', type: 'text', required: true, options: [], placeholder: 'نام خانوادگی', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'سریال شناسنامه', type: 'serial', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'تاریخ تولد', type: 'jalali', required: true, options: [], placeholder: '1400/01/15', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'نام پدر', type: 'text', required: true, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شغل پدر', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'میزان تحصیلات پدر', type: 'select', required: false, options: ['ابتدایی', 'سیکل', 'دیپلم', 'فوق دیپلم', 'لیسانس', 'فوق لیسانس', 'دکتری'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شماره تلفن همراه پدر', type: 'text', required: false, options: [], placeholder: '09...', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'نام و نام خانوادگی مادر', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شغل مادر', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'میزان تحصیلات مادر', type: 'select', required: false, options: ['ابتدایی', 'سیکل', 'دیپلم', 'فوق دیپلم', 'لیسانس', 'فوق لیسانس', 'دکتری'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شماره تلفن همراه مادر', type: 'text', required: false, options: [], placeholder: '09...', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'آدرس منزل', type: 'textarea', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شماره تلفن منزل', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شماره موبایل دانش آموز', type: 'text', required: false, options: [], placeholder: '09...', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'معدل سال قبل', type: 'number', required: false, options: [], placeholder: 'مثلاً 19.50', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'بیماری خاص (دارد/ندارد)', type: 'radio', required: true, options: ['دارد', 'ندارد'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'توضیحات در صورت داشتن بیماری', type: 'textarea', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'وضعیت مسکن', type: 'select', required: false, options: ['اجاره ای', 'شخصی'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'تحت پوشش', type: 'select', required: false, options: ['کمیته امداد', 'بهزیستی', 'غیره', 'هیچکدام'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'تعداد فرزندان خانواده', type: 'number', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'دانش آموز فرزند چندم است', type: 'number', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'استفاده از سرویس مدارس', type: 'radio', required: false, options: ['بله', 'خیر'], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'نام راننده درصورت استفاده', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' },
-        { id: uid(), label: 'شماره تماس راننده درصورت استفاده', type: 'text', required: false, options: [], placeholder: '', showIfId: '', showIfOp: 'eq', showIfValue: '', condMode: 'single' }
-      ];
-
-      const qDisease = seedQuestions.find(q => q.label === 'بیماری خاص (دارد/ندارد)');
-      const qDiseaseDesc = seedQuestions.find(q => q.label === 'توضیحات در صورت داشتن بیماری');
-      const qService = seedQuestions.find(q => q.label === 'استفاده از سرویس مدارس');
-      const qDriverName = seedQuestions.find(q => q.label === 'نام راننده درصورت استفاده');
-      const qDriverPhone = seedQuestions.find(q => q.label === 'شماره تماس راننده درصورت استفاده');
-      if (qDisease && qDiseaseDesc) { qDiseaseDesc.showIfId = qDisease.id; qDiseaseDesc.showIfOp = 'eq'; qDiseaseDesc.showIfValue = 'دارد'; }
-      if (qService && qDriverName) { qDriverName.showIfId = qService.id; qDriverName.showIfOp = 'eq'; qDriverName.showIfValue = 'بله'; }
-      if (qService && qDriverPhone) { qDriverPhone.showIfId = qService.id; qDriverPhone.showIfOp = 'eq'; qDriverPhone.showIfValue = 'بله'; }
-
-      const state = {
-        view: 'builderView',
-        adminUnlocked: false,
-        questions: loadJSON(LS_FORM, seedQuestions),
-        responses: loadJSON(LS_RESP, []),
-        cfg: loadJSON(LS_CFG, { title: 'فرم اطلاعات دانش‌آموزان', desc: 'طراحی شده توسط سید مسیحا فضل پور', autoNext: 'yes', deviceName: 'لپتاپ مدرسه', slogan: 'فرم دانش‌آموزی' }),
-        current: 0,
-        runValues: {},
-        editingId: null,
-        editingResponseId: null,
-        jp: null,
-        theme: localStorage.getItem(LS_THEME) || 'light',
-        lockScreen: true,
-      };
-      if (!localStorage.getItem(LS_PIN)) localStorage.setItem(LS_PIN, '1234');
-
-      function persistAll() { saveJSON(LS_FORM, state.questions); saveJSON(LS_RESP, state.responses); saveJSON(LS_CFG, state.cfg); }
-      function qIndex(id) { return state.questions.findIndex(q => q.id === id); }
-      function visibleQuestions() { return state.questions.filter(isVisible); }
-      function getCondValue(q) { return state.runValues[q.showIfId]; }
-      function matchCond(value, op, target) {
-        const v = value == null ? '' : String(value).trim();
-        const t = target == null ? '' : String(target).trim();
-        if (op === 'empty') return v === '';
-        if (op === 'notempty') return v !== '';
-        if (op === 'contains') return v.includes(t);
-        if (op === 'starts') return v.startsWith(t);
-        if (op === 'ends') return v.endsWith(t);
-        return v === t; // eq default
-      }
-      function isVisible(q) {
-        if (!q.showIfId) return true;
-        const i = qIndex(q.showIfId), j = qIndex(q.id);
-        if (i < 0 || j < 0 || i >= j) return false;
-        const condSource = state.questions[i];
-        const rv = getCondValue(q);
-        if (Array.isArray(rv)) {
-          const asText = rv.join('، ');
-          return matchCond(asText, q.showIfOp || 'eq', q.showIfValue || '');
-        }
-        return matchCond(rv, q.showIfOp || 'eq', q.showIfValue || '');
-      }
-      function ensureCurrent() {
-        const vis = visibleQuestions();
-        if (!vis.length) { state.current = 0; return; }
-        if (state.current < vis.length && vis[state.current] && isVisible(vis[state.current])) return;
-        state.current = Math.min(state.current, vis.length - 1);
-        if (state.current < 0) state.current = 0;
-      }
-
-      function openModal({ title = 'پیام', message = '', buttons = [{ label: 'باشه', kind: 'primary', value: true }] }) {
-        return new Promise(resolve => {
-          $('modalTitle').textContent = title;
-          $('modalMessage').innerHTML = message;
-          modalActions.innerHTML = '';
-          const close = (v) => { modalRoot.classList.add('hidden'); modalRoot.setAttribute('aria-hidden', 'true'); resolve(v); };
-          buttons.forEach((b, idx) => {
-            const btn = document.createElement('button');
-            btn.textContent = b.label;
-            btn.className = b.kind === 'danger' ? 'btn-danger' : b.kind === 'success' ? 'btn-success' : b.kind === 'soft' ? 'btn-soft' : b.kind === 'ghost' ? 'btn-ghost' : 'btn-primary';
-            btn.addEventListener('click', () => close(b.value));
-            modalActions.appendChild(btn);
-            if (idx === buttons.length - 1) setTimeout(() => btn.focus(), 0);
-          });
-          modalRoot.classList.remove('hidden'); modalRoot.setAttribute('aria-hidden', 'false');
-          modalRoot.querySelector('.modalBackdrop').onclick = () => close(buttons[buttons.length - 1]?.value ?? true);
-        });
-      }
-      const ui = { alert: (msg, title = 'پیام') => openModal({ title, message: `<span>${esc(msg)}</span>` }), confirm: (msg, title = 'تأیید') => openModal({ title, message: `<span>${esc(msg)}</span>`, buttons: [{ label: 'لغو', kind: 'ghost', value: false }, { label: 'تأیید', kind: 'primary', value: true }] }), };
-      // modalError is defined later as a shared helper.
-
-      function applyTheme(theme) { state.theme = theme === 'dark' ? 'dark' : 'light'; document.body.classList.toggle('light', state.theme === 'light'); localStorage.setItem(LS_THEME, state.theme); $('themeBtn').textContent = state.theme === 'light' ? 'تاریک' : 'روشن'; }
-
-      function renderTabs() { document.querySelectorAll('.tab[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === state.view)); $('builderView').classList.toggle('hidden', state.view !== 'builderView'); $('runnerView').classList.toggle('hidden', state.view !== 'runnerView'); $('dataView').classList.toggle('hidden', state.view !== 'dataView'); }
-      function requireAdminUI() {
-        const locked = !state.adminUnlocked;
-        loginRoot.classList.toggle('hidden', !locked);
-        $('builderView').style.opacity = locked ? '.35' : '1';
-        $('builderView').style.pointerEvents = locked ? 'none' : 'auto';
-        $('loginRoot').setAttribute('aria-hidden', locked ? 'false' : 'true');
-      }
-      function setDraftDefaults() { $('newLabel').value = ''; $('newType').value = 'text'; $('newOptions').value = ''; $('newPlaceholder').value = ''; $('newRequired').value = 'yes'; $('newOrder').value = 'end'; $('newShowIfQuestion').value = ''; $('newShowIfValue').value = ''; $('newShowIfOp').value = 'eq'; $('newCondMode').value = 'single'; state.editingId = null; $('addQuestionBtn').textContent = 'افزودن سؤال'; }
-      function syncCfg() { state.cfg.title = $('formTitle').value.trim() || 'فرم اطلاعات دانش‌آموزان'; state.cfg.desc = $('formDesc').value.trim(); state.cfg.autoNext = $('autoNext').value; state.cfg.deviceName = $('deviceName').value.trim(); state.cfg.slogan = $('slogan').value.trim(); persistAll(); updateRunnerMeta(); }
-      function typeLabel(t) { return ({ text: 'متن', number: 'عدد', date: 'تاریخ میلادی', jalali: 'تاریخ شمسی', textarea: 'پاسخ بلند', select: 'سلکت', radio: 'رادیو', checkbox: 'چک‌باکس', serial: 'سریال شناسنامه' })[t] || t; }
-      function refreshConditionOptions() { const sel = $('newShowIfQuestion'); const cur = sel.value; sel.innerHTML = '<option value="">بدون شرط</option>' + state.questions.map(q => `<option value="${q.id}">${esc(q.label)}</option>`).join(''); if (cur) sel.value = cur; }
-
-      function renderBuilder() {
-        $('formTitle').value = state.cfg.title || '';
-        $('formDesc').value = state.cfg.desc || '';
-        $('autoNext').value = state.cfg.autoNext || 'yes';
-        $('deviceName').value = state.cfg.deviceName || '';
-        $('slogan').value = state.cfg.slogan || '';
-        $('pinInput').value = '';
-        $('statQ').textContent = state.questions.length;
-        $('statR').textContent = state.responses.length;
-        $('statS').textContent = 'آفلاین';
-        refreshConditionOptions();
-        const list = $('questionList'); list.innerHTML = '';
-        if (!state.questions.length) { list.innerHTML = '<div class="note">هنوز سؤالی ثبت نشده است.</div>'; return; }
-        state.questions.forEach((q, idx) => {
-          const item = document.createElement('div'); item.className = 'qcard draggable'; item.draggable = true; item.dataset.id = q.id;
-          item.innerHTML = `
-        <div class="qtop">
-          <div>
-            <div class="qtitle">${idx + 1}. ${esc(q.label)} ${q.required ? '<span class="required">*</span>' : ''}</div>
-            <div class="qmeta">نوع: ${esc(typeLabel(q.type))}</div>
-          </div>
-          <div class="chip">${q.required ? 'الزامی' : 'اختیاری'}</div>
-        </div>
-        <div class="chips">
-          ${q.showIfId ? `<span class="chip">شرط: ${esc(state.questions.find(x => x.id === q.showIfId)?.label || '')} ${esc(q.showIfOp || 'eq')} ${esc(q.showIfValue || '')}</span>` : ''}
-          ${q.placeholder ? `<span class="chip">placeholder: ${esc(q.placeholder)}</span>` : ''}
-          ${q.options && q.options.length ? `<span class="chip">گزینه‌ها: ${q.options.map(esc).join(' / ')}</span>` : ''}
-        </div>
-        <div class="qactions">
-          <button class="btn-ghost btn-mini" data-act="up">بالا</button>
-          <button class="btn-ghost btn-mini" data-act="down">پایین</button>
-          <button class="btn-soft btn-mini" data-act="edit">ویرایش</button>
-          <button class="btn-danger btn-mini" data-act="del">حذف</button>
-        </div>`;
-          item.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => qAction(btn.dataset.act, q.id)));
-          addDrag(item);
-          list.appendChild(item);
-        });
-      }
-      function addDrag(card) {
-        let dragged = null;
-        card.addEventListener('dragstart', () => { dragged = card; card.classList.add('dragging'); });
-        card.addEventListener('dragend', () => { card.classList.remove('dragging'); dragged = null; syncOrderFromDOM(); persistAll(); renderBuilder(); renderRunner(); });
-        card.addEventListener('dragover', e => { e.preventDefault(); if (!dragged || dragged === card) return; const after = getDragAfterElement($('questionList'), e.clientY); if (after == null) $('questionList').appendChild(dragged); else $('questionList').insertBefore(dragged, after); syncOrderFromDOM(); });
-      }
-      function getDragAfterElement(container, y) { const els = [...container.querySelectorAll('.qcard:not(.dragging)')]; return els.reduce((closest, child) => { const box = child.getBoundingClientRect(); const offset = y - box.top - box.height / 2; if (offset < 0 && offset > closest.offset) return { offset, element: child }; return closest; }, { offset: Number.NEGATIVE_INFINITY }).element; }
-      function syncOrderFromDOM() { const ids = [...$('questionList').querySelectorAll('.qcard')].map(x => x.dataset.id); state.questions.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)); }
-      async function qAction(act, id) {
-        const i = qIndex(id); if (i < 0) return;
-        if (act === 'up' && i > 0) [state.questions[i - 1], state.questions[i]] = [state.questions[i], state.questions[i - 1]];
-        if (act === 'down' && i < state.questions.length - 1) [state.questions[i + 1], state.questions[i]] = [state.questions[i], state.questions[i + 1]];
-        if (act === 'del') { if (await ui.confirm('این سؤال حذف شود؟')) state.questions.splice(i, 1); }
-        if (act === 'edit') {
-          const q = state.questions[i]; state.editingId = q.id;
-          $('newLabel').value = q.label; $('newType').value = q.type; $('newRequired').value = q.required ? 'yes' : 'no';
-          $('newPlaceholder').value = q.placeholder || ''; $('newOptions').value = (q.options || []).join(' | ');
-          $('newOrder').value = 'end'; $('newShowIfQuestion').value = q.showIfId || ''; $('newShowIfValue').value = q.showIfValue || ''; $('newShowIfOp').value = q.showIfOp || 'eq'; $('newCondMode').value = q.condMode || 'single';
-          $('addQuestionBtn').textContent = 'ثبت ویرایش'; window.scrollTo({ top: 0, behavior: 'smooth' }); return;
-        }
-        persistAll(); renderBuilder(); renderRunner();
-      }
-
-      function updateRunnerMeta() { $('runnerTitle').textContent = state.cfg.title || 'اجرای فرم'; $('runnerDesc').textContent = state.cfg.desc || 'پاسخ‌ها با قبلی و بعدی ثبت می‌شوند'; $('runnerDevice').textContent = state.cfg.deviceName ? `دستگاه: ${state.cfg.deviceName}` : ''; $('runnerFoot').textContent = 'در این صفحه، هر سؤال در یک مرحله نمایش داده می‌شود و با قبلی/بعدی جابه‌جا می‌شوید.'; }
-      function renderRunner() {
-        updateRunnerMeta(); ensureCurrent(); const vis = visibleQuestions();
-        if (!vis.length) { $('qText').textContent = 'هیچ سؤال قابل نمایشی وجود ندارد'; $('qHelp').textContent = 'احتمالاً شرط‌ها هنوز پاسخ نگرفته‌اند یا فرم خالی است.'; $('answerArea').innerHTML = ''; $('runnerCounter').textContent = '0 از 0'; $('progressBar').style.width = '0%'; $('prevBtn').disabled = true; $('nextBtn').classList.add('hidden'); $('finishBtn').classList.add('hidden'); $('runtimeBanner').textContent = ''; return; }
-        const q = vis[state.current] || vis[0]; if (!isVisible(q)) { state.current = 0; return renderRunner(); }
-        $('runnerCounter').textContent = `سؤال ${state.current + 1} از ${vis.length}`;
-        $('progressBar').style.width = `${((state.current + 1) / vis.length) * 100}%`;
-        $('qText').innerHTML = `${esc(q.label)} ${q.required ? '<span class="required">*</span>' : ''}`;
-        $('qHelp').textContent = helpText(q);
-        $('requiredHint').textContent = q.required ? 'این سؤال الزامی است.' : 'این سؤال اختیاری است.';
-        $('prevBtn').disabled = state.current === 0;
-        $('nextBtn').classList.toggle('hidden', state.current === vis.length - 1);
-        $('finishBtn').classList.toggle('hidden', state.current !== vis.length - 1);
-        $('finishBtn').textContent = state.editingResponseId ? 'به‌روزرسانی' : 'ثبت نهایی';
-        $('runtimeBanner').textContent = state.editingResponseId ? 'در حال ویرایش یک پاسخ ذخیره‌شده هستید.' : '';
-        const currentValue = state.runValues[q.id] ?? (q.type === 'checkbox' ? [] : '');
-        $('answerArea').innerHTML = renderQuestionInput(q, currentValue);
-        bindAnswerHandlers(q);
-      }
-      function helpText(q) { if (q.type === 'jalali') return 'تقویم شمسی را باز کنید و سال/ماه دلخواه را انتخاب کنید.'; if (q.type === 'date') return 'تاریخ میلادی را وارد کنید.'; if (q.type === 'serial') return 'فرمت: حرف + دو رقم / شش رقم'; if (['select', 'radio', 'checkbox'].includes(q.type)) return 'گزینه‌ی مناسب را انتخاب کنید.'; if (q.type === 'number') return 'فقط عدد وارد کنید.'; return q.placeholder ? `راهنما: ${q.placeholder}` : 'پاسخ را وارد کنید.'; }
-      function renderQuestionInput(q, currentValue) {
-        const ph = esc(q.placeholder || ''); const name = `answer_${q.id}`;
-        if (q.type === 'textarea') return `<textarea id="${name}" placeholder="${ph}">${esc(currentValue || '')}</textarea>`;
-        if (q.type === 'number') return `<input id="${name}" type="number" placeholder="${ph}" value="${esc(currentValue || '')}" />`;
-        if (q.type === 'date') return `<input id="${name}" type="date" value="${esc(currentValue || '')}" />`;
-        if (q.type === 'jalali') return `<div class="inline"><input id="${name}" type="text" readonly placeholder="${ph || '1402/05/12'}" value="${esc(currentValue || '')}" /><button class="btn-soft btn-mini" data-open-jp="${q.id}">تقویم شمسی</button></div>`;
-        if (q.type === 'serial') {
-          const m = String(currentValue || '').match(/^(.)(\d{2})\/(\d{6})$/);
-          const a = m ? m[1] : '';
-          const b = m ? m[2] : '';
-          const c = m ? m[3] : '';
-
-          return `<div class="serialRow">
-    <select id="${name}_1" class="serialLetter">
-      <option value="">حرف</option>
-      ${SERIAL_LETTERS.map(ch => `<option value="${ch}" ${a === ch ? 'selected' : ''}>${ch}</option>`).join('')}
-    </select>
-
-    <input id="${name}_2" class="serialBox serialBox2" maxlength="2" inputmode="numeric" placeholder="00" value="${escapeHTML(b)}" />
-
-    <span class="serialSlash">/</span>
-
-    <input id="${name}_3" class="serialBox serialBox6" maxlength="6" inputmode="numeric" placeholder="000000" value="${escapeHTML(c)}" />
-  </div>
-  <div class="small">فرمت نهایی: حرف + دو رقم / شش رقم</div>`;
-        }
-        if (q.type === 'select') return `<select id="${name}"><option value="">— انتخاب کنید —</option>${(q.options || []).map(o => `<option ${String(currentValue) === String(o) ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
-        if (q.type === 'radio') return `<div class="option-list">${(q.options || []).map(o => `<label class="opt"><input type="radio" name="${name}" value="${esc(o)}" ${String(currentValue) === String(o) ? 'checked' : ''}/> <span>${esc(o)}</span></label>`).join('')}</div>`;
-        if (q.type === 'checkbox') { const arr = Array.isArray(currentValue) ? currentValue : []; return `<div class="option-list">${(q.options || []).map(o => `<label class="opt"><input type="checkbox" data-multi="1" value="${esc(o)}" ${arr.includes(o) ? 'checked' : ''}/> <span>${esc(o)}</span></label>`).join('')}</div>`; }
-        return `<input id="${name}" type="text" placeholder="${ph}" value="${esc(currentValue || '')}" />`;
-      }
-      function bindAnswerHandlers(q) {
-        const id = `answer_${q.id}`;
-        const saveCurrent = () => {
-          if (q.type === 'serial') {
-            const letter = $(id + '_1').value;
-            const d2 = $(id + '_2').value.replace(/[^0-9]/g, '').slice(0, 2);
-            const d6 = $(id + '_3').value.replace(/[^0-9]/g, '').slice(0, 6);
-            state.runValues[q.id] = `${letter}${d2}/${d6}`.trim();
-          } else if (q.type === 'radio') {
-            const checked = [...document.querySelectorAll(`input[name="${id}"]`)].find(i => i.checked);
-            state.runValues[q.id] = checked ? checked.value : '';
-          } else if (q.type === 'checkbox') {
-            state.runValues[q.id] = [...document.querySelectorAll('#answerArea input[data-multi="1"]:checked')].map(i => i.value);
-          } else if ($(id)) {
-            state.runValues[q.id] = $(id).value;
-          }
-        };
-        if (q.type === 'radio') document.querySelectorAll(`input[name="${id}"]`).forEach(n => n.addEventListener('change', () => { saveCurrent(); renderRunner(); }));
-        else if (q.type === 'checkbox') document.querySelectorAll('#answerArea input[data-multi="1"]').forEach(n => n.addEventListener('change', () => { saveCurrent(); renderRunner(); }));
-        else if (q.type === 'serial') {
-          ['_1', '_2', '_3'].forEach(s => {
-            const el = $(id + s);
-            el.addEventListener('input', saveCurrent);
-            el.addEventListener('change', saveCurrent);
-          });
-        }
-        else if (q.type === 'jalali') {
-          const el = $(id);
-          el.addEventListener('input', saveCurrent);
-          el.addEventListener('change', () => { saveCurrent(); renderRunner(); });
-          el.addEventListener('blur', saveCurrent);
-          el.addEventListener('click', () => openJalaliPicker(q.id));
-        }
-        else if ($(id)) $(id).addEventListener('input', () => { saveCurrent(); });
-      }
-      function validateCurrent() {
-        ensureCurrent();
-        const vis = visibleQuestions();
-        const q = vis[state.current] || vis[0];
-        if (!q) return true;
-        const inputEl = $(`answer_${q.id}`);
-        if (inputEl && q.type !== 'radio' && q.type !== 'checkbox' && q.type !== 'serial') state.runValues[q.id] = inputEl.value;
-        const val = state.runValues[q.id];
-        if (q.type === 'serial') {
-          const raw = String(val || '').trim();
-          if (!raw) return !q.required;
-          if (!/^([آ-ی])[0-9]{2}\/([0-9]{6})$/.test(raw)) { modalError('فرمت سریال شناسنامه باید شبیه ا12/123456 باشد.'); return false; }
-        }
-        if (q.required) {
-          const empty = (q.type === 'checkbox') ? (!Array.isArray(val) || val.length === 0) : (val === undefined || val === null || String(val).trim() === '');
-          if (empty) { modalError('این سؤال الزامی است.'); return false; }
-        }
-        if (q.type === 'jalali' && val && !/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(val.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))) {
-          modalError('فرمت تاریخ شمسی باید شبیه 1402/05/12 باشد.'); return false;
-        }
-        return true;
-      }
-      function goNext() { if (!validateCurrent()) return; const vis = visibleQuestions(); if (state.current < vis.length - 1) { state.current++; renderRunner(); } }
-      function goPrev() { if (state.current > 0) { state.current--; renderRunner(); } }
-      async function finish() { if (!validateCurrent()) return; await saveCurrentResponse(); }
-      async function saveCurrentResponse() { const rec = { id: state.editingResponseId || uid(), at: new Date().toLocaleString('fa-IR'), title: state.cfg.title, device: state.cfg.deviceName || '', values: structuredClone(state.runValues) }; if (state.editingResponseId) { const i = state.responses.findIndex(r => r.id === state.editingResponseId); if (i >= 0) state.responses[i] = rec; else state.responses.unshift(rec); } else state.responses.unshift(rec); persistAll(); state.runValues = {}; state.current = 0; state.editingResponseId = null; renderRunner(); renderData(); await openModal({ title: 'ثبت شد', message: 'پاسخ‌ها با موفقیت ذخیره شد.', buttons: [{ label: 'باشه', kind: 'success', value: true }] }); }
-
-      function openJalaliPicker(targetId) {
-        jalaliWrap.className = 'jpWrap';
-        const now = new Date();
-        const todayJ = toJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
-        state.jp = { targetId, jy: todayJ.jy, jm: todayJ.jm };
-        jalaliWrap.innerHTML = `
-      <div class="jpBackdrop"></div>
-      <div class="jpCard">
-        <div class="jpTop">
-          <div><b id="jpTitle"></b><div class="jpNote" id="jpSub"></div></div>
-          <div class="jpControls">
-            <select id="jpYear"></select>
-            <select id="jpMonth"></select>
-            <button class="btn-ghost btn-mini" id="jpPrevMonth">ماه قبل</button>
-            <button class="btn-ghost btn-mini" id="jpNextMonth">ماه بعد</button>
-            <button class="btn-danger btn-mini" id="jpClose">بستن</button>
-          </div>
-        </div>
-        <div class="jpGrid" id="jpDays"></div>
-        <div class="jpNote">برای انتخاب سال یا ماه دلخواه از لیست‌ها استفاده کنید.</div>
-      </div>`;
-        const close = () => { jalaliWrap.className = 'jpWrap hidden'; jalaliWrap.innerHTML = ''; };
-        jalaliWrap.querySelector('.jpBackdrop').onclick = close; $('jpClose').onclick = close;
-        const renderJp = () => {
-          $('jpTitle').textContent = `${monthName(state.jp.jm)} ${state.jp.jy}`;
-          $('jpSub').textContent = 'انتخاب تاریخ شمسی دقیق با روز هفته درست';
-          const ySel = $('jpYear'), mSel = $('jpMonth');
-          ySel.innerHTML = ''; mSel.innerHTML = '';
-          for (let y = 1300; y <= 1450; y++) ySel.insertAdjacentHTML('beforeend', `<option value="${y}" ${y === state.jp.jy ? 'selected' : ''}>${y}</option>`);
-          for (let m = 1; m <= 12; m++) mSel.insertAdjacentHTML('beforeend', `<option value="${m}" ${m === state.jp.jm ? 'selected' : ''}>${monthName(m)}</option>`);
-          const days = $('jpDays'); days.innerHTML = '';
-          const g = toGregorian(state.jp.jy, state.jp.jm, 1);
-          const start = weekdayOfGregorian(g.gy, g.gm, g.gd);
-          const heads = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
-          days.insertAdjacentHTML('beforeend', heads.map(h => `<div class="jpHead">${h}</div>`).join(''));
-          for (let i = 0; i < start; i++) days.insertAdjacentHTML('beforeend', '<div></div>');
-          const len = jalaaliMonthLength(state.jp.jy, state.jp.jm);
-          for (let d = 1; d <= len; d++) days.insertAdjacentHTML('beforeend', `<div class="jpDay" data-day="${d}">${d}</div>`);
-          days.querySelectorAll('.jpDay').forEach(el => el.onclick = () => {
-            const v = `${state.jp.jy}/${String(state.jp.jm).padStart(2, '0')}/${String(el.dataset.day).padStart(2, '0')}`;
-            const input = $('answer_' + state.jp.targetId);
-            input.value = v;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
-            close();
-          });
-        };
-        renderJp();
-        $('jpPrevMonth').onclick = () => { state.jp.jm--; if (state.jp.jm < 1) { state.jp.jm = 12; state.jp.jy--; } renderJp(); };
-        $('jpNextMonth').onclick = () => { state.jp.jm++; if (state.jp.jm > 12) { state.jp.jm = 1; state.jp.jy++; } renderJp(); };
-        $('jpYear').onchange = () => { state.jp.jy = parseInt($('jpYear').value, 10); renderJp(); };
-        $('jpMonth').onchange = () => { state.jp.jm = parseInt($('jpMonth').value, 10); renderJp(); };
-      }
-      function monthName(jm) { return ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'][jm - 1]; }
-
-      function renderData() {
-        const head = $('respHead'), body = $('respBody'); head.innerHTML = ''; body.innerHTML = '';
-        if (!state.responses.length) { body.innerHTML = `<tr><td colspan="${4 + state.questions.length}">هنوز هیچ پاسخی ثبت نشده است.</td></tr>`; return; }
-        const cols = ['زمان ثبت', 'دستگاه', 'فرم', 'عملیات', ...state.questions.map(q => q.label)];
-        head.innerHTML = cols.map(c => `<th>${esc(c)}</th>`).join('');
-        state.responses.forEach(r => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${esc(r.at || '')}</td><td>${esc(r.device || '')}</td><td>${esc(r.title || '')}</td><td><button class="btn-soft btn-mini" data-edit="${r.id}">ویرایش</button> <button class="btn-danger btn-mini" data-del="${r.id}">حذف</button></td>${state.questions.map(q => { const v = r.values?.[q.id]; const txt = Array.isArray(v) ? v.join('، ') : (v ?? ''); return `<td>${esc(txt)}</td>`; }).join('')}`;
-          body.appendChild(tr);
-        });
-        body.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => loadResponseForEdit(b.dataset.edit));
-        body.querySelectorAll('[data-del]').forEach(b => b.onclick = () => deleteResponse(b.dataset.del));
-      }
-      function loadResponseForEdit(id) { const rec = state.responses.find(r => r.id === id); if (!rec) return; state.runValues = structuredClone(rec.values || {}); state.editingResponseId = id; state.current = 0; state.view = 'runnerView'; renderTabs(); renderRunner(); }
-      async function deleteResponse(id) { if (!await ui.confirm('این پاسخ حذف شود؟')) return; state.responses = state.responses.filter(r => r.id !== id); persistAll(); renderData(); }
-
-      function exportJSON(data, filename) { const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
-      function exportXlsx() {
-        const rows = [['زمان ثبت', 'دستگاه', 'فرم', ...state.questions.map(q => q.label)]];
-        state.responses.forEach(r => rows.push([r.at || '', r.device || '', r.title || '', ...state.questions.map(q => { const v = r.values?.[q.id]; return Array.isArray(v) ? v.join('، ') : (v ?? ''); })]));
-        const sheet = buildSheetXml(rows);
-        const workbook = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Responses" sheetId="1" r:id="rId1"/></sheets></workbook>`;
-        const wbRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`;
-        const rootRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
-        const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><color rgb="FF000000"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
-        const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
-        const zip = zipStore([{ name: '[Content_Types].xml', data: contentTypes }, { name: '_rels/.rels', data: rootRels }, { name: 'xl/workbook.xml', data: workbook }, { name: 'xl/_rels/workbook.xml.rels', data: wbRels }, { name: 'xl/styles.xml', data: styles }, { name: 'xl/worksheets/sheet1.xml', data: sheet }]);
-        const blob = new Blob([zip], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'student-form-responses.xlsx'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-      }
-
-      // ---------- events ----------
-      document.querySelectorAll('.tab[data-view]').forEach(b => b.addEventListener('click', () => { state.view = b.dataset.view; renderTabs(); if (state.view === 'runnerView') renderRunner(); if (state.view === 'dataView') renderData(); }));
-
-      $('themeBtn').addEventListener('click', () => applyTheme(state.theme === 'light' ? 'dark' : 'light'));
-      $('lockBtn').addEventListener('click', () => { if (state.adminUnlocked) { state.adminUnlocked = false; requireAdminUI(); } else { loginRoot.classList.remove('hidden'); loginRoot.setAttribute('aria-hidden', 'false'); $('adminPin').focus(); } });
-      $('doLogin').addEventListener('click', () => { if ($('adminPin').value.trim() === localStorage.getItem(LS_PIN)) { state.adminUnlocked = true; loginRoot.classList.add('hidden'); requireAdminUI(); $('adminPin').value = ''; } else modalError('رمز عبور مدیر اشتباه است.'); });
-      $('cancelLogin').addEventListener('click', () => { loginRoot.classList.add('hidden'); loginRoot.setAttribute('aria-hidden', 'true'); });
-
-      $('savePinBtn').addEventListener('click', () => { const v = $('pinInput').value.trim(); if (!v) return modalError('کد خالی مجاز نیست.'); localStorage.setItem(LS_PIN, v); ui.alert('رمز عبور مدیر ذخیره شد.', 'موفق'); });
-      $('saveBuilderBtn').addEventListener('click', () => { syncCfg(); saveJSON(LS_FORM, state.questions); renderBuilder(); ui.alert('فرم ذخیره شد.', 'موفق'); });
-      $('goRunnerBtn').addEventListener('click', () => { syncCfg(); state.view = 'runnerView'; renderTabs(); renderRunner(); });
-      $('backToBuilderBtn').addEventListener('click', () => { state.view = 'builderView'; renderTabs(); });
-      $('prevBtn').addEventListener('click', goPrev); $('nextBtn').addEventListener('click', goNext); $('finishBtn').addEventListener('click', finish);
-      $('clearResponsesBtn').addEventListener('click', async () => { if (await ui.confirm('همه پاسخ‌ها پاک شود؟')) { state.responses = []; saveJSON(LS_RESP, state.responses); renderData(); renderBuilder(); } });
-      $('wipeAllBtn').addEventListener('click', async () => { if (await ui.confirm('همه فرم‌ها و پاسخ‌ها و تنظیمات پاک شود؟')) { localStorage.removeItem(LS_FORM); localStorage.removeItem(LS_RESP); localStorage.removeItem(LS_CFG); localStorage.removeItem(LS_PIN); localStorage.removeItem(LS_THEME); state.adminUnlocked = false; location.reload(); } });
-      $('resetSeedBtn').addEventListener('click', async () => { if (await ui.confirm('فرم اولیه بازگردانی شود؟')) { state.questions = structuredClone(seedQuestions); state.responses = []; state.runValues = {}; state.current = 0; state.editingResponseId = null; persistAll(); renderBuilder(); renderData(); renderRunner(); } });
-      $('exportBtn').addEventListener('click', () => exportJSON({ form: state.cfg, questions: state.questions }, 'form-builder.json'));
-      $('exportResponsesBtn').addEventListener('click', () => exportJSON(state.responses, 'form-responses.json'));
-      $('exportExcelBtn').addEventListener('click', exportXlsx);
-      $('importFile').addEventListener('change', async e => { const f = e.target.files?.[0]; if (!f) return; try { const data = JSON.parse(await f.text()); if (Array.isArray(data.questions)) state.questions = data.questions; if (data.form) state.cfg = { ...state.cfg, ...data.form }; persistAll(); renderBuilder(); renderRunner(); renderData(); ui.alert('واردسازی انجام شد.', 'موفق'); } catch { modalError('فایل JSON معتبر نیست.'); } e.target.value = ''; });
-      $('addQuestionBtn').addEventListener('click', async () => {
-        const label = $('newLabel').value.trim();
-        const type = $('newType').value;
-        const required = $('newRequired').value === 'yes';
-        const placeholder = $('newPlaceholder').value.trim();
-        const order = $('newOrder').value;
-        const options = $('newOptions').value.split('|').map(s => s.trim()).filter(Boolean);
-        const showIfId = $('newShowIfQuestion').value;
-        const showIfValue = $('newShowIfValue').value.trim();
-        const showIfOp = $('newShowIfOp').value;
-        const condMode = $('newCondMode').value;
-        if (!label) return modalError('متن سؤال را وارد کنید.');
-        if (['select', 'radio', 'checkbox'].includes(type) && options.length === 0) return modalError('برای این نوع سؤال، حداقل یک گزینه لازم است.');
-        const q = { id: state.editingId || uid(), label, type, required, options, placeholder, showIfId, showIfOp, showIfValue, condMode };
-        if (state.editingId) { const idx = qIndex(state.editingId); if (idx >= 0) state.questions[idx] = q; state.editingId = null; $('addQuestionBtn').textContent = 'افزودن سؤال'; }
-        else { if (order === 'start') state.questions.unshift(q); else state.questions.push(q); }
-        setDraftDefaults(); persistAll(); renderBuilder(); renderRunner();
-        await ui.alert('سؤال ذخیره شد.', 'موفق');
-      });
-      $('clearDraftBtn').addEventListener('click', () => { state.editingId = null; $('addQuestionBtn').textContent = 'افزودن سؤال'; setDraftDefaults(); });
-      ['formTitle', 'formDesc', 'autoNext', 'deviceName', 'slogan'].forEach(id => $(id).addEventListener('input', syncCfg));
-
-      function handleEnterToAdvance(e) {
-        if (e.key !== 'Enter' || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
-        const active = document.activeElement;
-        if (loginRoot && !loginRoot.classList.contains('hidden') && active && active.id === 'adminPin') {
-          e.preventDefault();
-          $('doLogin').click();
-          return;
-        }
-        if (state.view !== 'runnerView') return;
-        if (modalRoot && !modalRoot.classList.contains('hidden')) return;
-        if (!active) return;
-        if (active.tagName === 'TEXTAREA' || active.isContentEditable) return;
-        if (!active.closest('#answerArea')) return;
-        e.preventDefault();
-        const vis = visibleQuestions();
-        if (state.current >= vis.length - 1) $('finishBtn').click();
-        else $('nextBtn').click();
-      }
-      document.addEventListener('keydown', handleEnterToAdvance);
-      $('adminPin').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('doLogin').click(); } });
-
-      function init() {
-        applyTheme(state.theme);
-        requireAdminUI();
-        renderTabs();
-        renderBuilder();
-        renderData();
-        state.current = 0;
-        renderRunner();
-        state.view = 'builderView';
-        renderTabs();
-        setDraftDefaults();
-      }
-
-      // helpers exposed to renderers
-      function modalError(msg) { return openModal({ title: 'خطا', message: `<span class="dangerText">${esc(msg)}</span>`, buttons: [{ label: 'باشه', kind: 'danger', value: true }] }); }
-
-      init();
-    })();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="config.js" defer></script>
+  <script src="assets/app.js" defer></script>
 </body>
-
 </html>
