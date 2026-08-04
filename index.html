@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز" />
+  <title>سامانه فرم‌ساز دانش‌آموز</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">د</div>
+        <div class="brand-copy">
+          <h1 id="brandTitle">دبیرستان نمونه دولتی شهید شیرآقایی بهشهر</h1>
+          <p id="brandSub">سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span id="connectionBadge" class="status-badge status-neutral">در حال بررسی</span>
+        <button id="themeBtn" class="btn btn-ghost btn-sm" type="button">حالت تاریک</button>
+        <button id="adminEntryBtn" class="btn btn-ghost btn-sm" type="button">ورود مدیر</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section id="configError" class="panel alert-panel hidden" aria-live="polite">
+        <div class="alert-icon">!</div>
+        <div>
+          <h2>تنظیمات اتصال تکمیل نشده است</h2>
+          <p>در فایل <code>config.js</code> مقدارهای <code>SUPABASE_URL</code> و <code>SUPABASE_ANON_KEY</code> را وارد کنید.</p>
+        </div>
+      </section>
+
+      <section id="publicApp" class="view">
+        <div id="publicLoading" class="panel center-panel">
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>در حال دریافت آخرین نسخه فرم…</h2>
+          <p>لطفاً چند لحظه صبر کنید.</p>
+        </div>
+
+        <div id="publicUnavailable" class="panel center-panel hidden">
+          <div class="empty-icon">○</div>
+          <h2>فرم در دسترس نیست</h2>
+          <p id="publicUnavailableMessage">هنوز هیچ نسخه‌ای از فرم منتشر نشده است.</p>
+          <button id="publicRetryBtn" class="btn btn-primary" type="button">تلاش دوباره</button>
+        </div>
+
+        <section id="runnerPanel" class="panel hidden">
+          <div class="panel-header runner-header">
+            <div>
+              <div class="eyebrow">فرم منتشرشده</div>
+              <h2 id="runnerTitle">اجرای فرم</h2>
+              <p id="runnerDesc" class="panel-subtitle"></p>
+            </div>
+            <div class="runner-tools">
+              <span id="runnerVersion" class="status-badge status-info">—</span>
+              <button id="runnerRefreshBtn" class="btn btn-ghost btn-sm" type="button">بررسی نسخه جدید</button>
+            </div>
+          </div>
+
+          <div id="publicUpdateBanner" class="inline-alert info hidden">
+            <div>
+              <strong>نسخه جدید فرم منتشر شده است.</strong>
+              <span>برای جلوگیری از قطع پاسخ جاری، پس از پایان این فرم می‌توانید نسخه جدید را دریافت کنید.</span>
+            </div>
+            <button id="loadNewVersionBtn" class="btn btn-soft btn-sm" type="button">دریافت نسخه جدید</button>
+          </div>
+
+          <div class="panel-body wizard-body">
+            <div class="runner-meta-row">
+              <div id="runnerCounter" class="muted">سؤال ۰ از ۰</div>
+              <label class="device-field">
+                <span>نام دستگاه / محل</span>
+                <input id="runnerDeviceName" class="input compact-input" type="text" maxlength="120" placeholder="مثلاً: موبایل دفتر مدرسه" />
+              </label>
+            </div>
+
+            <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-value"></div></div>
+
+            <div class="question-box">
+              <div class="question-kicker" id="questionKicker">سؤال</div>
+              <h3 id="qText">…</h3>
+              <div id="qHelp" class="question-help"></div>
+              <div id="answerArea" class="answer-area"></div>
+
+              <div class="nav-row">
+                <div id="requiredHint" class="small muted"></div>
+                <div class="button-group">
+                  <button id="prevBtn" class="btn btn-ghost" type="button">قبلی</button>
+                  <button id="nextBtn" class="btn btn-primary" type="button">بعدی</button>
+                  <button id="finishBtn" class="btn btn-success hidden" type="button">ثبت نهایی</button>
+                </div>
+              </div>
+              <div id="runtimeBanner" class="runtime-banner" aria-live="polite"></div>
+            </div>
+
+            <div id="runnerFoot" class="footerline"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="adminApp" class="view hidden">
+        <div id="adminLoginView" class="auth-layout">
+          <div class="auth-card panel">
+            <div class="auth-icon">⌁</div>
+            <div class="eyebrow">دسترسی مدیر</div>
+            <h2>ورود به فرم‌ساز</h2>
+            <p class="panel-subtitle">حساب مدیر توسط Supabase Auth مدیریت می‌شود و از هر دستگاهی می‌توانید با همان حساب وارد شوید.</p>
+
+            <div id="loginError" class="inline-alert danger hidden"></div>
+            <div class="field">
+              <label for="loginEmail">ایمیل مدیر</label>
+              <input id="loginEmail" class="input" type="email" autocomplete="username" placeholder="admin@example.com" />
+            </div>
+            <div class="field">
+              <label for="loginPassword">رمز عبور</label>
+              <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="رمز عبور" />
+            </div>
+            <div class="auth-actions">
+              <button id="loginBtn" class="btn btn-primary" type="button">ورود</button>
+              <button id="backToPublicBtn" class="btn btn-ghost" type="button">بازگشت به فرم عمومی</button>
+            </div>
+            <p class="small muted auth-note">ثبت‌نام عمومی عمداً غیرفعال است. مدیر باید از قبل در Supabase Auth ساخته شده باشد.</p>
+          </div>
+        </div>
+
+        <div id="adminDashboard" class="hidden">
+          <div class="admin-topbar panel">
+            <div>
+              <div class="eyebrow">کنترل مرکزی</div>
+              <h2>پنل مدیریت فرم</h2>
+              <p id="adminUserLabel" class="panel-subtitle"></p>
+            </div>
+            <div class="admin-actions">
+              <button class="view-tab active" data-admin-view="builder" type="button">مدیریت فرم</button>
+              <button class="view-tab" data-admin-view="data" type="button">داده‌ها</button>
+              <button id="refreshAdminBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+              <button id="logoutBtn" class="btn btn-danger btn-sm" type="button">خروج</button>
+            </div>
+          </div>
+
+          <div id="adminBuilderView" class="admin-view">
+            <div class="layout-grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="eyebrow">ویرایش مرکزی</div>
+                    <h2>طراحی فرم</h2>
+                    <p class="panel-subtitle">تغییرات ابتدا به‌عنوان پیش‌نویس ذخیره می‌شوند و پس از انتشار برای همه دستگاه‌ها فعال خواهند شد.</p>
+                  </div>
+                  <div class="button-group wrap-buttons">
+                    <button id="resetSeedBtn" class="btn btn-soft btn-sm" type="button">بازگردانی فرم اولیه</button>
+                    <button id="saveDraftBtn" class="btn btn-success btn-sm" type="button">ذخیره پیش‌نویس</button>
+                    <button id="publishBtn" class="btn btn-primary btn-sm" type="button">انتشار برای همه دستگاه‌ها</button>
+                  </div>
+                </div>
+
+                <div class="panel-body">
+                  <div class="stats-grid">
+                    <div class="stat-card"><span>تعداد سؤال‌ها</span><strong id="statQ">۰</strong></div>
+                    <div class="stat-card"><span>پاسخ‌های ذخیره‌شده</span><strong id="statR">۰</strong></div>
+                    <div class="stat-card"><span>نسخه منتشرشده</span><strong id="statV">—</strong></div>
+                    <div class="stat-card"><span>وضعیت</span><strong id="statStatus">—</strong></div>
+                  </div>
+
+                  <div id="draftConflictBanner" class="inline-alert warning hidden"></div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۱</span><div><h3>مشخصات فرم</h3><p>عنوان و تنظیمات اصلی فرم منتشرشده.</p></div></div>
+                    <div class="row-2">
+                      <div class="field"><label for="formTitle">عنوان فرم</label><input id="formTitle" class="input" maxlength="180" placeholder="مثلاً: فرم اطلاعات دانش‌آموزان" /></div>
+                      <div class="field"><label for="formDesc">توضیح فرم</label><textarea id="formDesc" class="input textarea" maxlength="1000" placeholder="توضیح کوتاه برای دانش‌آموز یا والدین…"></textarea></div>
+                    </div>
+                    <div class="row-3">
+                      <div class="field"><label for="autoNext">رفتن خودکار به سؤال بعدی</label><select id="autoNext" class="input"><option value="1">بله</option><option value="0">خیر</option></select></div>
+                      <div class="field"><label for="deviceName">نام پیش‌فرض دستگاه</label><input id="deviceName" class="input" maxlength="120" placeholder="مثلاً: دفتر مدرسه" /></div>
+                      <div class="field"><label for="slogan">شعار / متن کوتاه</label><input id="slogan" class="input" maxlength="180" placeholder="مثلاً: فرم دانش‌آموزی مدرسه" /></div>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۲</span><div><h3>افزودن یا ویرایش سؤال</h3><p>تمام قابلیت‌های فرم‌ساز اولیه با اعتبارسنجی کامل.</p></div></div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newLabel">متن سؤال <span class="required">*</span></label><input id="newLabel" class="input" maxlength="250" placeholder="مثلاً: نام دانش‌آموز" /></div>
+                      <div class="field"><label for="newType">نوع سؤال</label><select id="newType" class="input">
+                        <option value="text">متن</option><option value="number">عدد</option><option value="date">تاریخ میلادی</option><option value="jalali">تاریخ شمسی</option><option value="textarea">پاسخ بلند</option><option value="select">سلکت باکس</option><option value="radio">رادیو باتن</option><option value="checkbox">چک‌باکس چندگزینه‌ای</option><option value="serial">سریال شناسنامه</option>
+                      </select></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOptions">گزینه‌ها</label><input id="newOptions" class="input" maxlength="1200" placeholder="با | جدا کنید؛ مثال: اجاره‌ای | شخصی" /></div>
+                      <div class="field"><label for="newPlaceholder">راهنما / Placeholder</label><input id="newPlaceholder" class="input" maxlength="250" placeholder="متن راهنما درون فیلد" /></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOrder">محل سؤال</label><select id="newOrder" class="input"><option value="end">انتهای فهرست</option><option value="start">ابتدای فهرست</option></select></div>
+                      <div class="field"><label for="newRequired">الزامی بودن</label><select id="newRequired" class="input"><option value="yes">الزامی</option><option value="no">اختیاری</option></select></div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="subsection-title">اعتبارسنجی اختصاصی</div>
+                      <div class="row-4">
+                        <div class="field"><label for="newMin">حداقل عدد</label><input id="newMin" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMax">حداکثر عدد</label><input id="newMax" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMinLength">حداقل طول متن</label><input id="newMinLength" class="input" type="number" min="0" step="1" /></div>
+                        <div class="field"><label for="newMaxLength">حداکثر طول متن</label><input id="newMaxLength" class="input" type="number" min="0" step="1" /></div>
+                      </div>
+                      <div class="row-2">
+                        <div class="field"><label for="newPattern">Regex</label><input id="newPattern" class="input ltr" placeholder="مثلاً ^09[0-9]{9}$" /></div>
+                        <div class="field"><label for="newInteger">عدد صحیح باشد؟</label><select id="newInteger" class="input"><option value="no">خیر</option><option value="yes">بله</option></select></div>
+                      </div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="condition-editor-head"><div><div class="subsection-title">شرایط نمایش</div><p class="small muted">فقط سؤال‌های قبلی مجازند؛ بنابراین شرط‌ها نمی‌توانند حلقه ایجاد کنند.</p></div><button id="addConditionBtn" class="btn btn-soft btn-sm" type="button">افزودن شرط</button></div>
+                      <div id="conditionList" class="condition-list"></div>
+                      <div class="row-2 compact-row">
+                        <div class="field"><label for="newCondMode">نحوه ترکیب</label><select id="newCondMode" class="input"><option value="and">همه شرط‌ها (AND)</option><option value="or">حداقل یکی (OR)</option></select></div>
+                        <div class="field"><label>وضعیت</label><div class="status-box">شرط‌های نامعتبر قبل از ذخیره و انتشار مسدود می‌شوند.</div></div>
+                      </div>
+                    </div>
+
+                    <div class="button-group">
+                      <button id="addQuestionBtn" class="btn btn-primary" type="button">افزودن سؤال</button>
+                      <button id="clearDraftBtn" class="btn btn-ghost" type="button">پاک کردن ویرایشگر</button>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۳</span><div><h3>فهرست سؤال‌ها</h3><p>جابجایی با دکمه‌ها یا Drag & Drop؛ تغییرات تا زمان انتشار فقط در پیش‌نویس هستند.</p></div></div>
+                    <div class="toolbar-row">
+                      <div class="small muted">نسخه Draft: <strong id="draftVersionLabel">—</strong> · آخرین تغییر: <strong id="draftUpdatedAt">—</strong></div>
+                      <div class="button-group">
+                        <button id="exportFormBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                        <label class="btn btn-ghost btn-sm file-button"><input id="importFile" type="file" accept="application/json" /><span>ورود JSON</span></label>
+                      </div>
+                    </div>
+                    <div id="questionList" class="question-list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="panel side-panel">
+                <div class="panel-header"><div><div class="eyebrow">پیکربندی</div><h2>وضعیت سامانه</h2></div></div>
+                <div class="panel-body stack">
+                  <div class="info-card"><span>اتصال</span><strong id="serverStatus">در حال بررسی…</strong></div>
+                  <div class="info-card"><span>حساب مدیر</span><strong id="managerStatus">—</strong></div>
+                  <div class="info-card"><span>آخرین نسخه منتشرشده</span><strong id="publishedAtLabel">—</strong></div>
+                  <div class="tip-card"><strong>انتشار یعنی چه؟</strong><p>پیش‌نویس روی دیتابیس مرکزی ذخیره می‌شود. فقط بعد از انتشار، فرم عمومی تمام گوشی‌ها و لپ‌تاپ‌ها نسخه جدید را دریافت می‌کنند.</p></div>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">تغییر رمز مدیر</div>
+                  <div class="field"><label for="currentPassword">رمز فعلی</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" placeholder="برای تأیید هویت" /></div>
+                  <div class="field"><label for="newPassword">رمز جدید</label><input id="newPassword" class="input" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر" /></div>
+                  <div class="field"><label for="newPassword2">تکرار رمز جدید</label><input id="newPassword2" class="input" type="password" autocomplete="new-password" /></div>
+                  <button id="changePasswordBtn" class="btn btn-ghost" type="button">تغییر رمز</button>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">دسترسی سریع</div>
+                  <button id="openPublicBtn" class="btn btn-soft" type="button">مشاهده فرم عمومی</button>
+                  <p class="small muted">برای ورود مدیر در دستگاه دیگر، همین آدرس را با <code>?mode=admin</code> باز کنید.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div id="adminDataView" class="admin-view hidden">
+            <div class="panel">
+              <div class="panel-header">
+                <div><div class="eyebrow">دیتابیس مرکزی</div><h2>داده‌های ذخیره‌شده</h2><p class="panel-subtitle">تمام پاسخ‌ها از یک منبع مرکزی خوانده می‌شوند؛ حذف و ویرایش فقط برای مدیر مجاز است.</p></div>
+                <div class="button-group wrap-buttons">
+                  <button id="refreshResponsesBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+                  <button id="exportResponsesBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                  <button id="exportExcelBtn" class="btn btn-success btn-sm" type="button">خروجی Excel</button>
+                  <button id="clearResponsesBtn" class="btn btn-danger btn-sm" type="button">حذف همه پاسخ‌ها</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="row-2">
+                  <div class="field"><label for="responseSearch">جست‌وجو</label><input id="responseSearch" class="input" placeholder="در نام، تلفن، آدرس یا سایر پاسخ‌ها جست‌وجو کنید" /></div>
+                  <div class="field"><label for="responsePerPage">تعداد در صفحه</label><select id="responsePerPage" class="input"><option value="25">۲۵</option><option value="50" selected>۵۰</option><option value="100">۱۰۰</option></select></div>
+                </div>
+                <div class="table-scroll"><table class="data-table"><thead><tr id="respHead"></tr></thead><tbody id="respBody"></tbody></table></div>
+                <div class="pagination"><button id="respPrevBtn" class="btn btn-ghost btn-sm" type="button">قبلی</button><span id="respPageLabel">صفحه ۱ از ۱</span><button id="respNextBtn" class="btn btn-ghost btn-sm" type="button">بعدی</button></div>
+              </div>
+            </div>
+
+            <section id="adminEditPanel" class="panel hidden">
+              <div class="panel-header"><div><div class="eyebrow">ویرایش رکورد</div><h2>ویرایش پاسخ</h2><p id="editResponseMeta" class="panel-subtitle"></p></div><button id="closeEditPanelBtn" class="btn btn-ghost btn-sm" type="button">بستن</button></div>
+              <div class="panel-body">
+                <div id="editAnswerArea" class="answer-area"></div>
+                <div class="button-group end-buttons"><button id="saveEditedResponseBtn" class="btn btn-success" type="button">ذخیره تغییرات</button></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalRoot" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-icon" id="modalIcon">i</div>
+      <div class="modal-content"><h3 id="modalTitle">پیام</h3><p id="modalMessage"></p></div>
+      <div id="modalActions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="jalaliWrap" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jpTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card jalali-card">
+      <div class="modal-card-header"><div><div class="eyebrow">تقویم شمسی</div><h3 id="jpTitle">فروردین ۱۴۰۵</h3><p id="jpSub" class="small muted"></p></div><button id="jpClose" class="btn btn-danger btn-sm" type="button">بستن</button></div>
+      <div class="calendar-controls"><select id="jpYear" class="input"></select><select id="jpMonth" class="input"></select><button id="jpPrevMonth" class="btn btn-ghost btn-sm" type="button">ماه قبل</button><button id="jpNextMonth" class="btn btn-ghost btn-sm" type="button">ماه بعد</button></div>
+      <div id="jpDays" class="jalali-grid"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="config.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
