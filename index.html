@@ -134,6 +134,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
 .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px; }
 .field label { font-size: 12px; font-weight: 800; color: color-mix(in srgb, var(--text) 90%, var(--muted)); }
 .input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: var(--surface-solid); outline: none; transition: .18s ease; }
+.numeric-input { direction: rtl; text-align: right; }
 .input:focus { border-color: color-mix(in srgb, var(--primary) 55%, var(--line)); box-shadow: var(--focus); }
 .textarea { min-height: 100px; resize: vertical; }
 .compact-input { max-width: 230px; min-height: 38px; }
@@ -763,7 +764,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
       {id:'housing_status',label:'وضعیت مسکن',type:'select',required:false,options:['اجاره‌ای','شخصی'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
       {id:'coverage',label:'تحت پوشش',type:'select',required:false,options:['کمیته امداد','بهزیستی','غیره','هیچکدام'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
       {id:'family_children_count',label:'تعداد فرزندان خانواده',type:'number',required:false,options:[],placeholder:'مثلاً 3',validation:{min:1,max:30,step:1,integer:true},conditions:[],conditionMode:'and'},
-      {id:'student_child_order',label:'دانش‌آموز فرزند چندم است',type:'number',required:false,options:[],placeholder:'مثلاً 2',validation:{min:1,max:30,step:1,integer:true},conditions:[],conditionMode:'and'},
+      {id:'student_child_order',label:'دانش‌آموز فرزند چندم است',type:'number',required:false,options:[],placeholder:'مثلاً ۲ یا اول',validation:{min:1,max:30,step:1,integer:true},conditions:[],conditionMode:'and'},
       {id:'uses_school_transport',label:'استفاده از سرویس مدارس',type:'radio',required:false,options:['بله','خیر'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
       {id:'driver_name',label:'نام راننده در صورت استفاده',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:120},conditions:[{questionId:'uses_school_transport',operator:'eq',value:'بله'}],conditionMode:'and'},
       {id:'driver_phone',label:'شماره تماس راننده در صورت استفاده',type:'text',required:false,options:[],placeholder:'09...',validation:{pattern:'^09[0-9]{9}$'},conditions:[{questionId:'uses_school_transport',operator:'eq',value:'بله'}],conditionMode:'and'}
@@ -805,8 +806,55 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
   }
   function normalizeDigits(value) {
     const fa='۰۱۲۳۴۵۶۷۸۹', ar='٠١٢٣٤٥٦٧٨٩';
-    return String(value ?? '').replace(/[۰-۹]/g,d=>String(fa.indexOf(d))).replace(/[٠-٩]/g,d=>String(ar.indexOf(d)));
+    return String(value ?? '')
+      .replace(/[۰-۹]/g,d=>String(fa.indexOf(d)))
+      .replace(/[٠-٩]/g,d=>String(ar.indexOf(d)))
+      .replace(/[٫،]/g,'.');
   }
+
+  const PERSIAN_ORDINALS = Object.freeze({
+    'اول':1,'اولین':1,'یکم':1,'یک':1,
+    'دوم':2,'سوم':3,'چهارم':4,'پنجم':5,'ششم':6,'هفتم':7,'هشتم':8,'نهم':9,'دهم':10,
+    'یازدهم':11,'دوازدهم':12,'سیزدهم':13,'چهاردهم':14,'پانزدهم':15,'پانزدهم':15,
+    'شانزدهم':16,'هفدهم':17,'هجدهم':18,'نوزدهم':19,'بیستم':20,
+    'بیست و یکم':21,'بیست و دوم':22,'بیست و سوم':23,'بیست و چهارم':24,'بیست و پنجم':25,
+    'بیست و ششم':26,'بیست و هفتم':27,'بیست و هشتم':28,'بیست و نهم':29,'سی‌ام':30,'سی ام':30,'سی‌امین':30
+  });
+
+  function normalizeText(value) {
+    return String(value ?? '')
+      .replace(/[يى]/g,'ی')
+      .replace(/[ك]/g,'ک')
+      .replace(/[‌]/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function parseFlexibleNumber(value) {
+    const normalized = normalizeDigits(value).trim().replace(/,/g,'');
+    if (!normalized) return NaN;
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function parseOrdinalNumber(value) {
+    const raw = normalizeText(value);
+    if (!raw) return NaN;
+
+    const numeric = parseFlexibleNumber(raw);
+    if (Number.isFinite(numeric)) return numeric;
+
+    const cleaned = raw
+      .replace(/^(فرزند|دانش آموز|دانش‌آموز|نفر)\s*/,'')
+      .trim();
+
+    if (Object.prototype.hasOwnProperty.call(PERSIAN_ORDINALS, cleaned)) {
+      return PERSIAN_ORDINALS[cleaned];
+    }
+
+    return NaN;
+  }
+
   function faNumber(value) { return String(value ?? '').replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
   function nowIso() { return new Date().toISOString(); }
   function formatDateTime(value) {
@@ -1373,10 +1421,23 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     if(empty)return null;
     const v=q.validation||{};
     if(q.type==='number'){
-      const n=Number(normalizeDigits(value)); if(!Number.isFinite(n))return `مقدار «${q.label}» باید عدد باشد.`;
+      const n = q.id === 'student_child_order'
+        ? parseOrdinalNumber(value)
+        : parseFlexibleNumber(value);
+      if(!Number.isFinite(n)){
+        return q.id === 'student_child_order'
+          ? `مقدار «${q.label}» را به‌صورت عدد (مثلاً ۲) یا ترتیب (مثلاً اول، دوم، سوم) وارد کنید.`
+          : `مقدار «${q.label}» باید عدد باشد.`;
+      }
       if(v.integer&&!Number.isInteger(n))return `مقدار «${q.label}» باید عدد صحیح باشد.`;
       if(v.min!==undefined&&n<Number(v.min))return `مقدار «${q.label}» نباید کمتر از ${v.min} باشد.`;
       if(v.max!==undefined&&n>Number(v.max))return `مقدار «${q.label}» نباید بیشتر از ${v.max} باشد.`;
+      if(v.step!==undefined&&Number(v.step)>0){
+        const step=Number(v.step);
+        const base=v.min!==undefined?Number(v.min):0;
+        const ratio=(n-base)/step;
+        if(Math.abs(ratio-Math.round(ratio))>1e-9)return `مقدار «${q.label}» با گام مجاز سازگار نیست.`;
+      }
     }
     if(['text','textarea','select','radio'].includes(q.type)){
       const text=String(value??'');
@@ -1398,7 +1459,8 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     const visible=visibleQuestions(form,values);
     for(const q of visible){const error=validateQuestion(q,values,form.questions);if(error)return error;}
     if(values.family_children_count!==undefined&&values.student_child_order!==undefined&&String(values.family_children_count)!==''&&String(values.student_child_order)!==''){
-      const count=Number(normalizeDigits(values.family_children_count)),order=Number(normalizeDigits(values.student_child_order));
+      const count=parseFlexibleNumber(values.family_children_count);
+      const order=parseOrdinalNumber(values.student_child_order);
       if(Number.isFinite(count)&&Number.isFinite(order)&&order>count)return 'ترتیب تولد دانش‌آموز نمی‌تواند از تعداد فرزندان خانواده بیشتر باشد.';
     }
     return null;
@@ -1408,7 +1470,9 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     if(q.type==='jalali')return'از تقویم شمسی استفاده کنید؛ تاریخ‌های نامعتبر پذیرفته نمی‌شوند.';
     if(q.type==='date')return'تاریخ میلادی را انتخاب کنید.';
     if(q.type==='serial')return'قالب: حرف + دو رقم / شش رقم؛ مثال: ا12/123456';
-    if(q.type==='number')return'عدد معتبر وارد کنید.';
+    if(q.type==='number')return q.id==='student_child_order'
+      ? 'عدد فارسی/انگلیسی یا ترتیب نوشتاری مانند «اول»، «دوم»، «سوم» را وارد کنید.'
+      : 'عدد فارسی یا انگلیسی معتبر وارد کنید.';
     if(['select','radio','checkbox'].includes(q.type))return'گزینه مناسب را انتخاب کنید.';
     return q.placeholder?`راهنما: ${q.placeholder}`:'پاسخ خود را وارد کنید.';
   }
@@ -1418,7 +1482,10 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     const id=makeAnswerId(prefix,q.id), ph=escapeHtml(q.placeholder||'');
     if(q.type==='textarea')return `<textarea id="${id}" class="input textarea" placeholder="${ph}">${escapeHtml(value||'')}</textarea>`;
     if(q.type==='number'){
-      const v=q.validation||{}; return `<input id="${id}" class="input" type="number" value="${escapeHtml(value??'')}" placeholder="${ph}" ${v.min!==undefined?`min="${escapeHtml(v.min)}"`:''} ${v.max!==undefined?`max="${escapeHtml(v.max)}"`:''} ${v.step!==undefined?`step="${escapeHtml(v.step)}"`:'step="any"'} />`;
+      const isChildOrder = q.id === 'student_child_order';
+      const placeholder = isChildOrder ? (q.placeholder || 'مثلاً ۲ یا اول') : (ph || 'مثلاً ۱۲۳');
+      const inputMode = isChildOrder ? 'numeric' : ((q.validation||{}).integer ? 'numeric' : 'decimal');
+      return `<input id="${id}" class="input numeric-input" type="text" inputmode="${inputMode}" autocomplete="off" value="${escapeHtml(value??'')}" placeholder="${escapeHtml(placeholder)}" />`;
     }
     if(q.type==='date')return `<input id="${id}" class="input" type="date" value="${escapeHtml(value||'')}" />`;
     if(q.type==='jalali')return `<div class="button-group"><input id="${id}" class="input" type="text" readonly value="${escapeHtml(value||'')}" placeholder="${ph||'۱۴۰۵/۰۱/۱۵'}" /><button class="btn btn-soft btn-sm" type="button" data-open-jalali="${escapeHtml(q.id)}">تقویم شمسی</button></div>`;
@@ -1447,14 +1514,29 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
   }
 
   function bindAnswer(q,container,prefix,onChanged,{autoNext=false}={}) {
-    const id=makeAnswerId(prefix,q.id); const save=()=>{onChanged(q,readAnswer(q,container,prefix));};
+    const id=makeAnswerId(prefix,q.id);
+    const save=()=>{onChanged(q,readAnswer(q,container,prefix));};
     if(q.type==='radio')$$(`input[name="${CSS.escape(id)}"]`,container).forEach(el=>el.addEventListener('change',()=>{save();if(autoNext)setTimeout(()=>onChanged('__AUTO_NEXT__',null),130);}));
     else if(q.type==='checkbox')$$(`input[data-multi="${CSS.escape(id)}"]`,container).forEach(el=>el.addEventListener('change',save));
     if(q.type==='serial'){['_1','_2','_3'].forEach(s=>{const el=$(id+s,container);el?.addEventListener('input',save);el?.addEventListener('change',save);});}
     else if(q.type==='jalali'){
       const input=$(id,container); input?.addEventListener('input',save); $$('[data-open-jalali]',container).forEach(btn=>btn.addEventListener('click',()=>openJalaliPicker(q.id,container,prefix)));
     }else if(q.type==='select')$(id,container)?.addEventListener('change',()=>{save();if(autoNext)setTimeout(()=>onChanged('__AUTO_NEXT__',null),130);});
-    else $(id,container)?.addEventListener('input',save);
+    else if(q.type==='number'){
+      $(id,container)?.addEventListener('input',e=>{
+        if(q.id!=='student_child_order'){
+          const el=e.currentTarget;
+          const value=el.value;
+          const normalized=value.replace(/[٫،]/g,'.');
+          if(value!==normalized){
+            const pos=el.selectionStart;
+            el.value=normalized;
+            if(pos!==null)el.setSelectionRange(pos,pos);
+          }
+        }
+        save();
+      });
+    }else $(id,container)?.addEventListener('input',save);
   }
 
   function renderPublicRunner() {
