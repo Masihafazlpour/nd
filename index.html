@@ -725,6 +725,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const THEME_KEY = 'student_form_theme_v13';
   const DEVICE_KEY = 'student_form_device_v13';
+  const RUNNER_STATE_KEY = `student_form_runner_state_${(window.APP_CONFIG?.FORM_SLUG || 'student-registration')}_v3`;
   const FORM_SLUG = CFG.FORM_SLUG || 'student-registration';
   const SERIAL_LETTERS = ['ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی'];
   const QUESTION_TYPES = ['text','number','date','jalali','textarea','select','radio','checkbox','serial'];
@@ -814,6 +815,42 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     catch { return String(value); }
   }
   function debounce(fn, ms=350) { let timer; return (...args) => { clearTimeout(timer); timer=setTimeout(()=>fn(...args),ms); }; }
+  function persistRunnerState() {
+    try {
+      const payload = {
+        version: state.runner.version ? clone(state.runner.version) : null,
+        current: Number(state.runner.current) || 0,
+        values: clone(state.runner.values || {}),
+        pendingVersion: state.runner.pendingVersion ? clone(state.runner.pendingVersion) : null,
+        deviceName: state.runner.deviceName || ''
+      };
+      sessionStorage.setItem(RUNNER_STATE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Could not persist runner state:', error);
+    }
+  }
+
+  function restoreRunnerState() {
+    try {
+      const raw = sessionStorage.getItem(RUNNER_STATE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (!saved || typeof saved !== 'object') return;
+      state.runner.version = saved.version ? saved.version : null;
+      state.runner.current = Number.isInteger(saved.current) ? Math.max(0, saved.current) : 0;
+      state.runner.values = saved.values && typeof saved.values === 'object' ? saved.values : {};
+      state.runner.pendingVersion = saved.pendingVersion || null;
+      if (typeof saved.deviceName === 'string') state.runner.deviceName = saved.deviceName;
+    } catch (error) {
+      console.warn('Could not restore runner state:', error);
+      sessionStorage.removeItem(RUNNER_STATE_KEY);
+    }
+  }
+
+  function clearRunnerState() {
+    try { sessionStorage.removeItem(RUNNER_STATE_KEY); } catch {}
+  }
+
   function isConfigReady() { return typeof CFG.SUPABASE_URL==='string' && /^https:\/\/[^\s]+\.supabase\.co$/.test(CFG.SUPABASE_URL) && typeof CFG.SUPABASE_ANON_KEY==='string' && CFG.SUPABASE_ANON_KEY.length > 30; }
   function goPublic() { window.location.href = 'index.html?mode=form'; }
   function goAdmin() { window.location.href = 'index.html?mode=admin'; }
@@ -1432,16 +1469,17 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     bindAnswer(q,area,'public',(changedQ,value)=>{
       if(changedQ==='__AUTO_NEXT__'){goPublicNext();return;}
       state.runner.values[changedQ.id]=value; state.runner.values=pruneHiddenValues(form,state.runner.values);
+      persistRunnerState();
       if(['radio','select','checkbox'].includes(q.type)) renderPublicRunner();
     },{autoNext:form.auto_next});
   }
 
-  function goPublicPrev(){if(state.runner.current>0){state.runner.current--;renderPublicRunner();}}
+  function goPublicPrev(){if(state.runner.current>0){state.runner.current--;persistRunnerState();renderPublicRunner();}}
   function goPublicNext(){
     const form=state.runner.version;if(!form)return; const vis=visibleQuestions(form,state.runner.values); const q=vis[state.runner.current];
     const current=readAnswer(q,$('answerArea'),'public'); state.runner.values[q.id]=current; state.runner.values=pruneHiddenValues(form,state.runner.values);
     const error=validateQuestion(q,state.runner.values);if(error)return ui.error(error);
-    if(state.runner.current<visibleQuestions(form,state.runner.values).length-1){state.runner.current++;renderPublicRunner();}
+    if(state.runner.current<visibleQuestions(form,state.runner.values).length-1){state.runner.current++;persistRunnerState();renderPublicRunner();}
   }
 
   function formatReviewValue(q, value) {
@@ -1460,9 +1498,11 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     if (!root || !list) return Promise.resolve(false);
 
     const visible = visibleQuestions(form, values);
+    const visibleIds = new Set(visible.map(q => q.id));
+    const allQuestions = Array.isArray(form.questions) ? form.questions : visible;
     list.innerHTML = '';
 
-    visible.forEach((q, index) => {
+    allQuestions.forEach((q, index) => {
       const item = document.createElement('div');
       item.className = 'review-item';
 
@@ -1472,9 +1512,15 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
 
       const value = document.createElement('div');
       value.className = 'review-value';
-      const answer = formatReviewValue(q, values[q.id]);
-      value.textContent = answer;
-      if (answer === 'بدون پاسخ') value.classList.add('review-empty');
+
+      if (!visibleIds.has(q.id)) {
+        value.textContent = 'این سؤال به دلیل شرایط نمایش برای این پاسخ نمایش داده نشد.';
+        value.classList.add('review-empty');
+      } else {
+        const answer = formatReviewValue(q, values[q.id]);
+        value.textContent = answer;
+        if (answer === 'بدون پاسخ') value.classList.add('review-empty');
+      }
 
       item.append(label, value);
       list.appendChild(item);
@@ -1515,6 +1561,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     }
 
     state.runner.values = pruneHiddenValues(form, state.runner.values);
+    persistRunnerState();
 
     const error = validateAllResponse(form, state.runner.values);
     if (error) return ui.error(error);
@@ -1537,6 +1584,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
       state.runner.values = {};
       state.runner.current = 0;
       state.runner.pendingVersion = null;
+      clearRunnerState();
 
       await ui.success(`اطلاعات با موفقیت ثبت شد.\nکد پیگیری: ${data}`);
       await loadPublicForm({silent: true});
@@ -1604,8 +1652,8 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
       $('runnerPanel').classList.remove('hidden');
       $('runnerDeviceName').value = state.runner.deviceName;
       renderPublicRunner();
+      persistRunnerState();
       setConnection('متصل و آماده', 'success');
-      subscribePublicRealtime(version.form_id);
     } catch (error) {
       $('publicLoading').classList.add('hidden');
       $('publicUnavailable').classList.remove('hidden');
@@ -1616,30 +1664,20 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
   }
 
   function subscribePublicRealtime(formId) {
-    if (!state.sb || !formId) return;
-    if (state.publicChannel && state.publicChannelFormId === formId) return;
-
-    if (state.publicChannel) {
-      state.sb.removeChannel(state.publicChannel);
-    }
-
-    state.publicChannelFormId = formId;
-    state.publicChannel = state.sb
-      .channel(`public-form-${formId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'form_versions',
-          filter: `form_id=eq.${formId}`
-        },
-        () => loadPublicForm({silent:true})
-      )
-      .subscribe();
+    // عمدی: فرم عمومی در طول تکمیل پاسخ، به‌صورت خودکار دوباره بارگیری نمی‌شود.
+    // بررسی نسخه جدید فقط با دکمه «بررسی نسخه جدید» انجام می‌شود تا فرم کاربر هرگز ریست نشود.
   }
 
-  function loadPendingVersion(){if(!state.runner.pendingVersion)return;state.runner.version=state.runner.pendingVersion;state.runner.pendingVersion=null;state.runner.values={};state.runner.current=0;$('publicUpdateBanner').classList.add('hidden');renderPublicRunner();}
+  function loadPendingVersion(){
+    if(!state.runner.pendingVersion)return;
+    state.runner.version=state.runner.pendingVersion;
+    state.runner.pendingVersion=null;
+    state.runner.values={};
+    state.runner.current=0;
+    $('publicUpdateBanner').classList.add('hidden');
+    persistRunnerState();
+    renderPublicRunner();
+  }
 
   function serialValueValid(value){return !value || new RegExp(`^[${SERIAL_LETTERS.join('')}][0-9]{2}\\/[0-9]{6}$`).test(value);}
 
@@ -1775,7 +1813,7 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     $('prevBtn')?.addEventListener('click',goPublicPrev);
     $('nextBtn')?.addEventListener('click',goPublicNext);
     $('finishBtn')?.addEventListener('click',finishPublic);
-    $('runnerDeviceName')?.addEventListener('input',e=>{state.runner.deviceName=e.target.value.trim();localStorage.setItem(DEVICE_KEY,state.runner.deviceName);});
+    $('runnerDeviceName')?.addEventListener('input',e=>{state.runner.deviceName=e.target.value.trim();localStorage.setItem(DEVICE_KEY,state.runner.deviceName);persistRunnerState();});
   }
 
   function bindAdminEvents(){
@@ -1815,6 +1853,9 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
     $('exportResponsesBtn')?.addEventListener('click',exportResponsesJson);$('exportExcelBtn')?.addEventListener('click',exportResponsesXlsx);$('clearResponsesBtn')?.addEventListener('click',clearAllResponses);
   }
 
+  window.addEventListener('pagehide', persistRunnerState);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistRunnerState(); });
+
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){
       const modal=$('modalRoot'); if(modal&&!modal.classList.contains('hidden')&&!state.modal.isConfirm){state.modal.resolver?.(false);modal.classList.add('hidden');return;}
@@ -1828,7 +1869,15 @@ code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Re
   });
 
   async function bootPublic(){
-    $('runnerDeviceName').value=state.runner.deviceName; await loadPublicForm(); setInterval(()=>loadPublicForm({silent:true}),30000);
+    restoreRunnerState();
+    $('runnerDeviceName').value=state.runner.deviceName;
+    if (state.runner.version) {
+      renderPublicRunner();
+      $('publicLoading').classList.add('hidden');
+      $('publicUnavailable').classList.add('hidden');
+      $('runnerPanel').classList.remove('hidden');
+    }
+    await loadPublicForm();
   }
 
   async function bootAdmin(){
