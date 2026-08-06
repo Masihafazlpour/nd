@@ -166,7 +166,7 @@
     catch { return String(value); }
   }
   function debounce(fn, ms=350) { let timer; return (...args) => { clearTimeout(timer); timer=setTimeout(()=>fn(...args),ms); }; }
-  function persistRunnerState() {
+  function saveRunnerState() {
     try {
       const payload = {
         version: state.runner.version ? clone(state.runner.version) : null,
@@ -967,17 +967,17 @@
     bindAnswer(q,area,'public',(changedQ,value)=>{
       if(changedQ==='__AUTO_NEXT__'){goPublicNext();return;}
       state.runner.values[changedQ.id]=value; state.runner.values=pruneHiddenValues(form,state.runner.values);
-      persistRunnerState();
+      saveRunnerState();
       if(['radio','select','checkbox'].includes(q.type)) renderPublicRunner();
     },{autoNext:form.auto_next});
   }
 
-  function goPublicPrev(){if(state.runner.current>0){state.runner.current--;persistRunnerState();renderPublicRunner();}}
+  function goPublicPrev(){if(state.runner.current>0){state.runner.current--;saveRunnerState();renderPublicRunner();}}
   function goPublicNext(){
     const form=state.runner.version;if(!form)return; const vis=visibleQuestions(form,state.runner.values); const q=vis[state.runner.current];
     const current=readAnswer(q,$('answerArea'),'public'); state.runner.values[q.id]=current; state.runner.values=pruneHiddenValues(form,state.runner.values);
     const error=validateQuestion(q,state.runner.values);if(error)return ui.error(error);
-    if(state.runner.current<visibleQuestions(form,state.runner.values).length-1){state.runner.current++;persistRunnerState();renderPublicRunner();}
+    if(state.runner.current<visibleQuestions(form,state.runner.values).length-1){state.runner.current++;saveRunnerState();renderPublicRunner();}
   }
 
   function formatReviewValue(q, value) {
@@ -1123,7 +1123,7 @@
       $('runnerPanel').classList.remove('hidden');
       $('runnerDeviceName').value = state.runner.deviceName;
       renderPublicRunner();
-      persistRunnerState();
+      saveRunnerState();
       setConnection('متصل و آماده', 'success');
     } catch (error) {
       $('publicLoading').classList.add('hidden');
@@ -1146,7 +1146,7 @@
     state.runner.values={};
     state.runner.current=0;
     $('publicUpdateBanner').classList.add('hidden');
-    persistRunnerState();
+    saveRunnerState();
     renderPublicRunner();
   }
 
@@ -1287,7 +1287,7 @@
     $('prevBtn')?.addEventListener('click',goPublicPrev);
     $('nextBtn')?.addEventListener('click',goPublicNext);
     $('finishBtn')?.addEventListener('click',finishPublic);
-    $('runnerDeviceName')?.addEventListener('input',e=>{state.runner.deviceName=e.target.value.trim();localStorage.setItem(DEVICE_KEY,state.runner.deviceName);persistRunnerState();});
+    $('runnerDeviceName')?.addEventListener('input',e=>{state.runner.deviceName=e.target.value.trim();localStorage.setItem(DEVICE_KEY,state.runner.deviceName);saveRunnerState();});
   }
 
   function bindAdminEvents(){
@@ -1327,8 +1327,8 @@
     $('exportResponsesBtn')?.addEventListener('click',exportResponsesJson);$('exportExcelBtn')?.addEventListener('click',exportResponsesXlsx);$('clearResponsesBtn')?.addEventListener('click',clearAllResponses);
   }
 
-  window.addEventListener('pagehide', persistRunnerState);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistRunnerState(); });
+  window.addEventListener('pagehide', saveRunnerState);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveRunnerState(); });
 
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){
