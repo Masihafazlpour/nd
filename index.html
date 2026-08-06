@@ -1,0 +1,2098 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز" />
+  <title>سامانه فرم‌ساز دانش‌آموز</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <style>
+    :root {
+  --bg: #eef2f7;
+  --bg-soft: #f8fafc;
+  --surface: rgba(255,255,255,.92);
+  --surface-solid: #ffffff;
+  --surface-soft: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #dbe3ee;
+  --line-strong: #c6d0de;
+  --primary: #1d4ed8;
+  --primary-2: #1e40af;
+  --success: #15803d;
+  --danger: #b91c1c;
+  --warning: #b45309;
+  --info: #0369a1;
+  --shadow-sm: 0 8px 22px rgba(15,23,42,.06);
+  --shadow-md: 0 18px 45px rgba(15,23,42,.09);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --focus: 0 0 0 4px rgba(29,78,216,.14);
+}
+
+body.dark {
+  --bg: #0b1220;
+  --bg-soft: #0f172a;
+  --surface: rgba(15,23,42,.92);
+  --surface-solid: #111827;
+  --surface-soft: #0f172a;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --line: rgba(148,163,184,.18);
+  --line-strong: rgba(148,163,184,.3);
+  --primary: #4f7df3;
+  --primary-2: #385bd7;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #38bdf8;
+  --shadow-sm: 0 8px 22px rgba(0,0,0,.22);
+  --shadow-md: 0 18px 45px rgba(0,0,0,.28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 100% -5%, rgba(29,78,216,.1), transparent 65%),
+    radial-gradient(700px 500px at -10% 0%, rgba(14,165,233,.07), transparent 60%),
+    linear-gradient(180deg, var(--bg-soft), var(--bg));
+  line-height: 1.75;
+}
+body.dark { background: linear-gradient(180deg, #0b1220, #0f172a); }
+button, input, textarea, select { font: inherit; }
+button { border: 0; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+input::placeholder, textarea::placeholder { color: #94a3b8; }
+code { direction: ltr; unicode-bidi: embed; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.ltr { direction: ltr; text-align: left; }
+.hidden { display: none !important; }
+.small { font-size: 12px; }
+.muted { color: var(--muted); }
+.eyebrow { color: var(--primary); font-size: 11px; font-weight: 900; letter-spacing: .08em; margin-bottom: 4px; }
+.required { color: var(--danger); }
+
+.app { min-height: 100vh; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-solid) 86%, transparent);
+  backdrop-filter: blur(18px);
+}
+.brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.logo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; flex: 0 0 auto; background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; font-weight: 900; box-shadow: var(--shadow-sm); }
+.brand-copy { min-width: 0; }
+.brand h1 { margin: 0; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.topbar-actions, .admin-actions, .runner-tools, .button-group, .auth-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.page-shell { width: min(1680px, calc(100% - 28px)); margin: 20px auto 50px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+.panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding: 20px 22px; border-bottom: 1px solid var(--line); }
+.panel-header h2, .panel-header h3 { margin: 0; }
+.panel-subtitle { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.85; }
+.panel-body { padding: 22px; }
+.center-panel { padding: 60px 24px; text-align: center; }
+.alert-panel { display: flex; align-items: flex-start; gap: 14px; padding: 22px; margin-bottom: 18px; }
+.alert-icon { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: rgba(185,28,28,.11); color: var(--danger); font-weight: 900; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.status-neutral { color: var(--muted); background: var(--surface-soft); border: 1px solid var(--line); }
+.status-info { color: var(--info); background: color-mix(in srgb, var(--info) 10%, transparent); border: 1px solid color-mix(in srgb, var(--info) 24%, transparent); }
+.status-success { color: var(--success); background: color-mix(in srgb, var(--success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--success) 24%, transparent); }
+.status-danger { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); border: 1px solid color-mix(in srgb, var(--danger) 24%, transparent); }
+
+.btn { min-height: 42px; padding: 9px 15px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 13px; transition: .18s ease; border: 1px solid transparent; }
+.btn:hover { transform: translateY(-1px); }
+.btn:focus-visible, .input:focus-visible, .view-tab:focus-visible { outline: none; box-shadow: var(--focus); }
+.btn-sm { min-height: 36px; padding: 7px 11px; font-size: 12px; }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; }
+.btn-success { background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; }
+.btn-danger { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; }
+.btn-soft { background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 18%, transparent); }
+.btn-ghost { background: var(--surface-soft); color: var(--text); border-color: var(--line); }
+.wrap-buttons { justify-content: flex-end; }
+
+.view { width: 100%; }
+.auth-layout { min-height: calc(100vh - 180px); display: grid; place-items: center; }
+.auth-card { width: min(460px, 100%); padding: 30px; }
+.auth-icon { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); font-size: 26px; margin-bottom: 12px; }
+.auth-card h2 { margin: 0; }
+.auth-card .panel-subtitle { margin-bottom: 20px; }
+.auth-note { margin-top: 15px; }
+
+.field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px; }
+.field label { font-size: 12px; font-weight: 800; color: color-mix(in srgb, var(--text) 90%, var(--muted)); }
+.input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: var(--surface-solid); outline: none; transition: .18s ease; }
+.numeric-input { direction: rtl; text-align: right; }
+.input:focus { border-color: color-mix(in srgb, var(--primary) 55%, var(--line)); box-shadow: var(--focus); }
+.textarea { min-height: 100px; resize: vertical; }
+.compact-input { max-width: 230px; min-height: 38px; }
+.row-2, .row-3, .row-4 { display: grid; gap: 14px; }
+.row-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.row-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.row-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { padding: 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface-soft); }
+.stat-card span { display: block; font-size: 12px; color: var(--muted); }
+.stat-card strong { display: block; margin-top: 7px; font-size: 24px; line-height: 1.1; }
+.info-card { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); }
+.info-card span { display: block; color: var(--muted); font-size: 11px; }
+.info-card strong { display: block; margin-top: 3px; font-size: 14px; }
+.tip-card { padding: 14px; border-radius: 14px; background: color-mix(in srgb, var(--primary) 6%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 14%, transparent); }
+.tip-card p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+
+.inline-alert { margin: 0 0 18px; padding: 13px 15px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid; font-size: 12px; }
+.inline-alert span { color: var(--muted); margin-right: 8px; }
+.inline-alert.info { color: var(--info); background: color-mix(in srgb, var(--info) 7%, transparent); border-color: color-mix(in srgb, var(--info) 20%, transparent); }
+.inline-alert.warning { color: var(--warning); background: color-mix(in srgb, var(--warning) 8%, transparent); border-color: color-mix(in srgb, var(--warning) 22%, transparent); }
+.inline-alert.danger { color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, transparent); border-color: color-mix(in srgb, var(--danger) 22%, transparent); }
+
+.layout-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start; }
+.side-panel { position: sticky; top: 90px; }
+.stack > * + * { margin-top: 12px; }
+.form-section + .form-section { margin-top: 26px; padding-top: 25px; border-top: 1px solid var(--line); }
+.section-heading { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 17px; }
+.section-number { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); font-size: 11px; font-weight: 900; flex: 0 0 auto; }
+.section-heading h3 { margin: 0; font-size: 16px; }
+.section-heading p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.subsection-card { margin: 17px 0; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface-soft); }
+.subsection-title { font-weight: 900; font-size: 13px; }
+.condition-editor-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.condition-list { display: grid; gap: 10px; margin: 15px 0; }
+.condition-row { display: grid; grid-template-columns: 1.2fr .95fr 1fr auto; gap: 8px; align-items: center; }
+.compact-row { margin-top: 12px; }
+.status-box { min-height: 44px; display: flex; align-items: center; padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: 12px; color: var(--muted); font-size: 12px; background: var(--surface-solid); }
+.toolbar-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.file-button input { display: none; }
+
+.question-list { display: grid; gap: 11px; }
+.question-card { padding: 15px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-soft); transition: .18s ease; }
+.question-card.dragging { opacity: .55; }
+.question-card.drag-over { border-color: var(--primary); box-shadow: var(--focus); }
+.question-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.question-title { font-weight: 900; line-height: 1.75; }
+.question-meta { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.chip { display: inline-flex; align-items: center; min-height: 26px; padding: 3px 8px; border-radius: 999px; background: var(--surface-solid); border: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+.question-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+
+.admin-topbar { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 17px 20px; margin-bottom: 18px; }
+.view-tab { min-height: 36px; padding: 8px 12px; border-radius: 10px; cursor: pointer; background: transparent; color: var(--muted); font-size: 12px; font-weight: 800; }
+.view-tab.active { color: var(--text); background: var(--surface-soft); border: 1px solid var(--line); }
+
+.runner-header { align-items: center; }
+.runner-meta-row { display: flex; justify-content: space-between; align-items: end; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.device-field { display: flex; flex-direction: column; gap: 6px; width: min(280px, 100%); font-size: 11px; font-weight: 800; color: var(--muted); }
+.progress-track { height: 9px; background: var(--surface-soft); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 20px; }
+.progress-value { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), #0ea5e9); transition: width .22s ease; }
+.question-box { padding: 25px; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, color-mix(in srgb, var(--surface-solid) 95%, transparent), var(--surface-soft)); box-shadow: var(--shadow-sm); }
+.question-kicker { color: var(--primary); font-size: 11px; font-weight: 900; margin-bottom: 5px; }
+.question-box h3 { margin: 0; font-size: clamp(20px, 2.2vw, 28px); line-height: 1.75; }
+.question-help { margin-top: 7px; color: var(--muted); font-size: 12px; }
+.answer-area { margin-top: 22px; }
+.option-list { display: grid; gap: 10px; }
+.option-item { display: flex; align-items: center; gap: 10px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-solid); cursor: pointer; }
+.option-item:hover { border-color: color-mix(in srgb, var(--primary) 35%, var(--line)); }
+.option-item input { width: 18px; height: 18px; }
+.nav-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+.runtime-banner { margin-top: 12px; color: var(--muted); font-size: 12px; min-height: 20px; }
+.footerline { margin-top: 18px; color: var(--muted); font-size: 11px; line-height: 1.9; }
+
+.table-scroll { overflow: auto; border: 1px solid var(--line); border-radius: 14px; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 1180px; background: var(--surface-solid); }
+.data-table th, .data-table td { padding: 11px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; font-size: 11px; vertical-align: top; }
+.data-table th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); font-weight: 900; }
+.data-table tr:hover td { background: color-mix(in srgb, var(--primary) 2.5%, transparent); }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 13px; margin-top: 15px; }
+.end-buttons { justify-content: flex-end; }
+
+.edit-answer-grid { display: grid; gap: 16px; }
+.meta-preview { padding: 12px 14px; border-radius: 13px; border: 1px solid var(--line); background: var(--surface-soft); color: var(--muted); font-size: 12px; }
+
+.modal-root { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 18px; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(2,6,23,.62); backdrop-filter: blur(7px); }
+.modal-card { position: relative; z-index: 1; width: min(560px, 100%); padding: 22px; border-radius: 20px; background: var(--surface-solid); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(2,6,23,.28); }
+.modal-card-header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.modal-icon { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 10px; background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); font-weight: 900; }
+.modal-content h3 { margin: 0; }
+.modal-content p { margin: 7px 0 0; color: var(--muted); line-height: 1.85; white-space: pre-line; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.jalali-card { width: min(720px, 100%); }
+.calendar-controls { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 8px; margin: 18px 0 12px; }
+.jalali-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 7px; }
+.jalali-head, .jalali-day { min-height: 42px; display: grid; place-items: center; border-radius: 11px; }
+.jalali-head { color: var(--muted); font-size: 11px; font-weight: 900; }
+.jalali-day { border: 1px solid var(--line); background: var(--surface-soft); cursor: pointer; font-size: 12px; font-weight: 800; }
+.jalali-day:hover { border-color: var(--primary); color: var(--primary); }
+
+.spinner { width: 38px; height: 38px; margin: 0 auto 14px; border: 3px solid var(--line); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-icon { width: 56px; height: 56px; margin: 0 auto 12px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 18px; color: var(--muted); font-size: 28px; }
+
+@media (max-width: 1180px) {
+  .layout-grid { grid-template-columns: 1fr; }
+  .side-panel { position: static; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 840px) {
+  .topbar { padding: 14px; align-items: flex-start; flex-direction: column; }
+  .topbar-actions { width: 100%; justify-content: flex-start; }
+  .brand h1 { white-space: normal; }
+  .page-shell { width: min(100% - 16px, 720px); margin-top: 10px; }
+  .panel-header, .panel-body { padding: 16px; }
+  .row-2, .row-3, .row-4 { grid-template-columns: 1fr; }
+  .condition-row { grid-template-columns: 1fr; }
+  .runner-header { flex-direction: column; }
+  .runner-tools { width: 100%; }
+  .compact-input { max-width: none; }
+  .question-box { padding: 18px; }
+  .admin-topbar { flex-direction: column; align-items: flex-start; }
+  .admin-actions { width: 100%; }
+  .view-tab { flex: 1; }
+  .inline-alert { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 560px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .button-group .btn, .button-group .file-button { width: 100%; }
+  .wrap-buttons { width: 100%; }
+  .auth-card { padding: 22px; }
+  .question-box h3 { font-size: 20px; }
+  .nav-row { align-items: stretch; }
+  .nav-row .button-group { width: 100%; }
+  .nav-row .button-group .btn { flex: 1; }
+  .calendar-controls { grid-template-columns: 1fr 1fr; }
+}
+
+.serial-editor { display: grid; grid-template-columns: 1.2fr .7fr auto 1.6fr; gap: 8px; align-items: center; }
+.serial-editor > span { font-size: 22px; font-weight: 900; text-align: center; color: var(--muted); }
+@media (max-width: 560px) {
+  .serial-editor { grid-template-columns: 1fr; }
+  .serial-editor > span { display: none; }
+}
+
+
+.review-card {
+  width: min(900px, 100%);
+  max-height: min(88vh, 900px);
+  overflow-y: auto;
+}
+
+.review-question-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding-left: 2px;
+}
+
+.review-item {
+  display: grid;
+  grid-template-columns: minmax(180px, .8fr) minmax(0, 1.5fr);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+
+.review-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--muted);
+}
+
+.review-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.review-empty {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.review-confirm-box {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--line));
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.review-confirm-box strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.review-confirm-box p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .review-card {
+    padding: 16px;
+  }
+
+  .review-question-list {
+    max-height: 52vh;
+  }
+
+  .review-item {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .review-card .modal-actions {
+    flex-direction: column;
+  }
+
+  .review-card .modal-actions .btn {
+    width: 100%;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">د</div>
+        <div class="brand-copy">
+          <h1 id="brandTitle">دبیرستان نمونه دولتی شهید شیرآقایی بهشهر</h1>
+          <p id="brandSub">سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span id="connectionBadge" class="status-badge status-neutral">در حال بررسی</span>
+        <button id="themeBtn" class="btn btn-ghost btn-sm" type="button">حالت تاریک</button>
+        <button id="adminEntryBtn" class="btn btn-ghost btn-sm" type="button">ورود مدیر</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section id="configError" class="panel alert-panel hidden" aria-live="polite">
+        <div class="alert-icon">!</div>
+        <div>
+          <h2>تنظیمات اتصال تکمیل نشده است</h2>
+          <p>تنظیمات اتصال Supabase در نسخه تک‌فایلی برنامه قرار دارد. در صورت مشاهده این پیام، کد اتصال را بررسی کنید.</p>
+        </div>
+      </section>
+
+      <section id="publicApp" class="view">
+        <div id="publicLoading" class="panel center-panel">
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>در حال دریافت آخرین نسخه فرم…</h2>
+          <p>لطفاً چند لحظه صبر کنید.</p>
+        </div>
+
+        <div id="publicUnavailable" class="panel center-panel hidden">
+          <div class="empty-icon">○</div>
+          <h2>فرم در دسترس نیست</h2>
+          <p id="publicUnavailableMessage">هنوز هیچ نسخه‌ای از فرم منتشر نشده است.</p>
+          <button id="publicRetryBtn" class="btn btn-primary" type="button">تلاش دوباره</button>
+        </div>
+
+        <section id="runnerPanel" class="panel hidden">
+          <div class="panel-header runner-header">
+            <div>
+              <div class="eyebrow">فرم منتشرشده</div>
+              <h2 id="runnerTitle">اجرای فرم</h2>
+              <p id="runnerDesc" class="panel-subtitle"></p>
+            </div>
+            <div class="runner-tools">
+              <span id="runnerVersion" class="status-badge status-info">—</span>
+              <button id="runnerRefreshBtn" class="btn btn-ghost btn-sm" type="button">بررسی نسخه جدید</button>
+            </div>
+          </div>
+
+          <div id="publicUpdateBanner" class="inline-alert info hidden">
+            <div>
+              <strong>نسخه جدید فرم منتشر شده است.</strong>
+              <span>برای جلوگیری از قطع پاسخ جاری، پس از پایان این فرم می‌توانید نسخه جدید را دریافت کنید.</span>
+            </div>
+            <button id="loadNewVersionBtn" class="btn btn-soft btn-sm" type="button">دریافت نسخه جدید</button>
+          </div>
+
+          <div class="panel-body wizard-body">
+            <div class="runner-meta-row">
+              <div id="runnerCounter" class="muted">سؤال ۰ از ۰</div>
+              <label class="device-field">
+                <span>نام دستگاه / محل</span>
+                <input id="runnerDeviceName" class="input compact-input" type="text" maxlength="120" placeholder="مثلاً: موبایل دفتر مدرسه" />
+              </label>
+            </div>
+
+            <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-value"></div></div>
+
+            <div class="question-box">
+              <div class="question-kicker" id="questionKicker">سؤال</div>
+              <h3 id="qText">…</h3>
+              <div id="qHelp" class="question-help"></div>
+              <div id="answerArea" class="answer-area"></div>
+
+              <div class="nav-row">
+                <div id="requiredHint" class="small muted"></div>
+                <div class="button-group">
+                  <button id="prevBtn" class="btn btn-ghost" type="button">قبلی</button>
+                  <button id="nextBtn" class="btn btn-primary" type="button">بعدی</button>
+                  <button id="finishBtn" class="btn btn-success hidden" type="button">ثبت نهایی</button>
+                </div>
+              </div>
+              <div id="runtimeBanner" class="runtime-banner" aria-live="polite"></div>
+            </div>
+
+            <div id="runnerFoot" class="footerline"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="adminApp" class="view hidden">
+        <div id="adminLoginView" class="auth-layout">
+          <div class="auth-card panel">
+            <div class="auth-icon">⌁</div>
+            <div class="eyebrow">دسترسی مدیر</div>
+            <h2>ورود به فرم‌ساز</h2>
+            <p class="panel-subtitle">حساب مدیر توسط Supabase Auth مدیریت می‌شود و از هر دستگاهی می‌توانید با همان حساب وارد شوید.</p>
+
+            <div id="loginError" class="inline-alert danger hidden"></div>
+            <div class="field">
+              <label for="loginEmail">ایمیل مدیر</label>
+              <input id="loginEmail" class="input" type="email" autocomplete="username" placeholder="admin@example.com" />
+            </div>
+            <div class="field">
+              <label for="loginPassword">رمز عبور</label>
+              <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="رمز عبور" />
+            </div>
+            <div class="auth-actions">
+              <button id="loginBtn" class="btn btn-primary" type="button">ورود</button>
+              <button id="backToPublicBtn" class="btn btn-ghost" type="button">بازگشت به فرم عمومی</button>
+            </div>
+            <p class="small muted auth-note">ثبت‌نام عمومی عمداً غیرفعال است. مدیر باید از قبل در Supabase Auth ساخته شده باشد.</p>
+          </div>
+        </div>
+
+        <div id="adminDashboard" class="hidden">
+          <div class="admin-topbar panel">
+            <div>
+              <div class="eyebrow">کنترل مرکزی</div>
+              <h2>پنل مدیریت فرم</h2>
+              <p id="adminUserLabel" class="panel-subtitle"></p>
+            </div>
+            <div class="admin-actions">
+              <button class="view-tab active" data-admin-view="builder" type="button">مدیریت فرم</button>
+              <button class="view-tab" data-admin-view="data" type="button">داده‌ها</button>
+              <button id="refreshAdminBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+              <button id="logoutBtn" class="btn btn-danger btn-sm" type="button">خروج</button>
+            </div>
+          </div>
+
+          <div id="adminBuilderView" class="admin-view">
+            <div class="layout-grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="eyebrow">ویرایش مرکزی</div>
+                    <h2>طراحی فرم</h2>
+                    <p class="panel-subtitle">تغییرات ابتدا به‌عنوان پیش‌نویس ذخیره می‌شوند و پس از انتشار برای همه دستگاه‌ها فعال خواهند شد.</p>
+                  </div>
+                  <div class="button-group wrap-buttons">
+                    <button id="resetSeedBtn" class="btn btn-soft btn-sm" type="button">بازگردانی فرم اولیه</button>
+                    <button id="saveDraftBtn" class="btn btn-success btn-sm" type="button">ذخیره پیش‌نویس</button>
+                    <button id="publishBtn" class="btn btn-primary btn-sm" type="button">انتشار برای همه دستگاه‌ها</button>
+                  </div>
+                </div>
+
+                <div class="panel-body">
+                  <div class="stats-grid">
+                    <div class="stat-card"><span>تعداد سؤال‌ها</span><strong id="statQ">۰</strong></div>
+                    <div class="stat-card"><span>پاسخ‌های ذخیره‌شده</span><strong id="statR">۰</strong></div>
+                    <div class="stat-card"><span>نسخه منتشرشده</span><strong id="statV">—</strong></div>
+                    <div class="stat-card"><span>وضعیت</span><strong id="statStatus">—</strong></div>
+                  </div>
+
+                  <div id="draftConflictBanner" class="inline-alert warning hidden"></div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۱</span><div><h3>مشخصات فرم</h3><p>عنوان و تنظیمات اصلی فرم منتشرشده.</p></div></div>
+                    <div class="row-2">
+                      <div class="field"><label for="formTitle">عنوان فرم</label><input id="formTitle" class="input" maxlength="180" placeholder="مثلاً: فرم اطلاعات دانش‌آموزان" /></div>
+                      <div class="field"><label for="formDesc">توضیح فرم</label><textarea id="formDesc" class="input textarea" maxlength="1000" placeholder="توضیح کوتاه برای دانش‌آموز یا والدین…"></textarea></div>
+                    </div>
+                    <div class="row-3">
+                      <div class="field"><label for="autoNext">رفتن خودکار به سؤال بعدی</label><select id="autoNext" class="input"><option value="1">بله</option><option value="0">خیر</option></select></div>
+                      <div class="field"><label for="deviceName">نام پیش‌فرض دستگاه</label><input id="deviceName" class="input" maxlength="120" placeholder="مثلاً: دفتر مدرسه" /></div>
+                      <div class="field"><label for="slogan">شعار / متن کوتاه</label><input id="slogan" class="input" maxlength="180" placeholder="مثلاً: فرم دانش‌آموزی مدرسه" /></div>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۲</span><div><h3>افزودن یا ویرایش سؤال</h3><p>تمام قابلیت‌های فرم‌ساز اولیه با اعتبارسنجی کامل.</p></div></div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newLabel">متن سؤال <span class="required">*</span></label><input id="newLabel" class="input" maxlength="250" placeholder="مثلاً: نام دانش‌آموز" /></div>
+                      <div class="field"><label for="newType">نوع سؤال</label><select id="newType" class="input">
+                        <option value="text">متن</option><option value="number">عدد</option><option value="date">تاریخ میلادی</option><option value="jalali">تاریخ شمسی</option><option value="textarea">پاسخ بلند</option><option value="select">سلکت باکس</option><option value="radio">رادیو باتن</option><option value="checkbox">چک‌باکس چندگزینه‌ای</option><option value="serial">سریال شناسنامه</option>
+                      </select></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOptions">گزینه‌ها</label><input id="newOptions" class="input" maxlength="1200" placeholder="با | جدا کنید؛ مثال: اجاره‌ای | شخصی" /></div>
+                      <div class="field"><label for="newPlaceholder">راهنما / Placeholder</label><input id="newPlaceholder" class="input" maxlength="250" placeholder="متن راهنما درون فیلد" /></div>
+                    </div>
+
+                    <div class="row-2">
+                      <div class="field"><label for="newOrder">محل سؤال</label><select id="newOrder" class="input"><option value="end">انتهای فهرست</option><option value="start">ابتدای فهرست</option></select></div>
+                      <div class="field"><label for="newRequired">الزامی بودن</label><select id="newRequired" class="input"><option value="yes">الزامی</option><option value="no">اختیاری</option></select></div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="subsection-title">اعتبارسنجی اختصاصی</div>
+                      <div class="row-4">
+                        <div class="field"><label for="newMin">حداقل عدد</label><input id="newMin" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMax">حداکثر عدد</label><input id="newMax" class="input" type="number" step="any" /></div>
+                        <div class="field"><label for="newMinLength">حداقل طول متن</label><input id="newMinLength" class="input" type="number" min="0" step="1" /></div>
+                        <div class="field"><label for="newMaxLength">حداکثر طول متن</label><input id="newMaxLength" class="input" type="number" min="0" step="1" /></div>
+                      </div>
+                      <div class="row-2">
+                        <div class="field"><label for="newPattern">Regex</label><input id="newPattern" class="input ltr" placeholder="مثلاً ^09[0-9]{9}$" /></div>
+                        <div class="field"><label for="newInteger">عدد صحیح باشد؟</label><select id="newInteger" class="input"><option value="no">خیر</option><option value="yes">بله</option></select></div>
+                      </div>
+                    </div>
+
+                    <div class="subsection-card">
+                      <div class="condition-editor-head"><div><div class="subsection-title">شرایط نمایش</div><p class="small muted">فقط سؤال‌های قبلی مجازند؛ بنابراین شرط‌ها نمی‌توانند حلقه ایجاد کنند.</p></div><button id="addConditionBtn" class="btn btn-soft btn-sm" type="button">افزودن شرط</button></div>
+                      <div id="conditionList" class="condition-list"></div>
+                      <div class="row-2 compact-row">
+                        <div class="field"><label for="newCondMode">نحوه ترکیب</label><select id="newCondMode" class="input"><option value="and">همه شرط‌ها (AND)</option><option value="or">حداقل یکی (OR)</option></select></div>
+                        <div class="field"><label>وضعیت</label><div class="status-box">شرط‌های نامعتبر قبل از ذخیره و انتشار مسدود می‌شوند.</div></div>
+                      </div>
+                    </div>
+
+                    <div class="button-group">
+                      <button id="addQuestionBtn" class="btn btn-primary" type="button">افزودن سؤال</button>
+                      <button id="clearDraftBtn" class="btn btn-ghost" type="button">پاک کردن ویرایشگر</button>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <div class="section-heading"><span class="section-number">۰۳</span><div><h3>فهرست سؤال‌ها</h3><p>جابجایی با دکمه‌ها یا Drag & Drop؛ تغییرات تا زمان انتشار فقط در پیش‌نویس هستند.</p></div></div>
+                    <div class="toolbar-row">
+                      <div class="small muted">نسخه Draft: <strong id="draftVersionLabel">—</strong> · آخرین تغییر: <strong id="draftUpdatedAt">—</strong></div>
+                      <div class="button-group">
+                        <button id="exportFormBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                        <label class="btn btn-ghost btn-sm file-button"><input id="importFile" type="file" accept="application/json" /><span>ورود JSON</span></label>
+                      </div>
+                    </div>
+                    <div id="questionList" class="question-list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="panel side-panel">
+                <div class="panel-header"><div><div class="eyebrow">پیکربندی</div><h2>وضعیت سامانه</h2></div></div>
+                <div class="panel-body stack">
+                  <div class="info-card"><span>اتصال</span><strong id="serverStatus">در حال بررسی…</strong></div>
+                  <div class="info-card"><span>حساب مدیر</span><strong id="managerStatus">—</strong></div>
+                  <div class="info-card"><span>آخرین نسخه منتشرشده</span><strong id="publishedAtLabel">—</strong></div>
+                  <div class="tip-card"><strong>انتشار یعنی چه؟</strong><p>پیش‌نویس روی دیتابیس مرکزی ذخیره می‌شود. فقط بعد از انتشار، فرم عمومی تمام گوشی‌ها و لپ‌تاپ‌ها نسخه جدید را دریافت می‌کنند.</p></div>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">تغییر رمز مدیر</div>
+                  <div class="field"><label for="currentPassword">رمز فعلی</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" placeholder="برای تأیید هویت" /></div>
+                  <div class="field"><label for="newPassword">رمز جدید</label><input id="newPassword" class="input" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر" /></div>
+                  <div class="field"><label for="newPassword2">تکرار رمز جدید</label><input id="newPassword2" class="input" type="password" autocomplete="new-password" /></div>
+                  <button id="changePasswordBtn" class="btn btn-ghost" type="button">تغییر رمز</button>
+
+                  <div class="divider"></div>
+                  <div class="subsection-title">دسترسی سریع</div>
+                  <button id="openPublicBtn" class="btn btn-soft" type="button">مشاهده فرم عمومی</button>
+                  <p class="small muted">برای ورود مدیر در دستگاه دیگر، همین آدرس را با <code>?mode=admin</code> باز کنید.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div id="adminDataView" class="admin-view hidden">
+            <div class="panel">
+              <div class="panel-header">
+                <div><div class="eyebrow">دیتابیس مرکزی</div><h2>داده‌های ذخیره‌شده</h2><p class="panel-subtitle">تمام پاسخ‌ها از یک منبع مرکزی خوانده می‌شوند؛ حذف و ویرایش فقط برای مدیر مجاز است.</p></div>
+                <div class="button-group wrap-buttons">
+                  <button id="refreshResponsesBtn" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+                  <button id="exportResponsesBtn" class="btn btn-ghost btn-sm" type="button">خروجی JSON</button>
+                  <button id="exportExcelBtn" class="btn btn-success btn-sm" type="button">خروجی Excel</button>
+                  <button id="clearResponsesBtn" class="btn btn-danger btn-sm" type="button">حذف همه پاسخ‌ها</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="row-2">
+                  <div class="field"><label for="responseSearch">جست‌وجو</label><input id="responseSearch" class="input" placeholder="در نام، تلفن، آدرس یا سایر پاسخ‌ها جست‌وجو کنید" /></div>
+                  <div class="field"><label for="responsePerPage">تعداد در صفحه</label><select id="responsePerPage" class="input"><option value="25">۲۵</option><option value="50" selected>۵۰</option><option value="100">۱۰۰</option></select></div>
+                </div>
+                <div class="table-scroll"><table class="data-table"><thead><tr id="respHead"></tr></thead><tbody id="respBody"></tbody></table></div>
+                <div class="pagination"><button id="respPrevBtn" class="btn btn-ghost btn-sm" type="button">قبلی</button><span id="respPageLabel">صفحه ۱ از ۱</span><button id="respNextBtn" class="btn btn-ghost btn-sm" type="button">بعدی</button></div>
+              </div>
+            </div>
+
+            <section id="adminEditPanel" class="panel hidden">
+              <div class="panel-header"><div><div class="eyebrow">ویرایش رکورد</div><h2>ویرایش پاسخ</h2><p id="editResponseMeta" class="panel-subtitle"></p></div><button id="closeEditPanelBtn" class="btn btn-ghost btn-sm" type="button">بستن</button></div>
+              <div class="panel-body">
+                <div id="editAnswerArea" class="answer-area"></div>
+                <div class="button-group end-buttons"><button id="saveEditedResponseBtn" class="btn btn-success" type="button">ذخیره تغییرات</button></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalRoot" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-icon" id="modalIcon">i</div>
+      <div class="modal-content"><h3 id="modalTitle">پیام</h3><p id="modalMessage"></p></div>
+      <div id="modalActions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="jalaliWrap" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jpTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card jalali-card">
+      <div class="modal-card-header"><div><div class="eyebrow">تقویم شمسی</div><h3 id="jpTitle">فروردین ۱۴۰۵</h3><p id="jpSub" class="small muted"></p></div><button id="jpClose" class="btn btn-danger btn-sm" type="button">بستن</button></div>
+      <div class="calendar-controls"><select id="jpYear" class="input"></select><select id="jpMonth" class="input"></select><button id="jpPrevMonth" class="btn btn-ghost btn-sm" type="button">ماه قبل</button><button id="jpNextMonth" class="btn btn-ghost btn-sm" type="button">ماه بعد</button></div>
+      <div id="jpDays" class="jalali-grid"></div>
+    </div>
+  </div>
+
+  <div id="reviewRoot" class="modal-root hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card review-card">
+      <div class="modal-card-header">
+        <div>
+          <div class="eyebrow">بررسی نهایی اطلاعات</div>
+          <h3 id="reviewTitle">پیش‌نمایش اطلاعات واردشده</h3>
+          <p class="small muted">لطفاً تمام اطلاعات زیر را با دقت بررسی کنید.</p>
+        </div>
+      </div>
+      <div id="reviewQuestionList" class="review-question-list"></div>
+      <div class="review-confirm-box">
+        <strong>آیا اطلاعات درج شده در این فرم را تأیید می‌کنید؟</strong>
+        <p>در صورت تأیید، اطلاعات برای ثبت نهایی به سامانه ارسال می‌شود.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="reviewEditBtn" class="btn btn-ghost" type="button">بازگشت و ویرایش اطلاعات</button>
+        <button id="reviewConfirmBtn" class="btn btn-success" type="button">بله، اطلاعات صحیح است و ثبت نهایی</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.APP_CONFIG = Object.freeze({
+      SUPABASE_URL: 'https://ezxyxsxjlzaxkpmaudwi.supabase.co',
+      SUPABASE_ANON_KEY: 'sb_publishable_IIPfIbikyTq0e9LwAd6I9A_hANvHH2L',
+      FORM_SLUG: 'student-registration',
+      SCHOOL_NAME: 'دبیرستان نمونه دولتی شهید شیرآقایی بهشهر',
+      APP_NAME: 'سامانه فرم‌ساز دانش‌آموز'
+    });
+  </script>
+  <script>
+    (() => {
+  'use strict';
+
+  const CFG = window.APP_CONFIG || {};
+  const MODE = new URLSearchParams(window.location.search).get('mode') === 'admin' ? 'admin' : 'form';
+  const $ = (id, root = document) => root === document ? document.getElementById(id) : root.querySelector(`#${CSS.escape(id)}`);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const THEME_KEY = 'student_form_theme_v13';
+  const DEVICE_KEY = 'student_form_device_v13';
+  const RUNNER_STATE_KEY = `student_form_runner_state_${(window.APP_CONFIG?.FORM_SLUG || 'student-registration')}_v3`;
+  const FORM_SLUG = CFG.FORM_SLUG || 'student-registration';
+  const SERIAL_LETTERS = ['ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی'];
+  const QUESTION_TYPES = ['text','number','date','jalali','textarea','select','radio','checkbox','serial'];
+  const CONDITION_OPS = ['eq','neq','contains','starts','ends','empty','notempty'];
+  const TYPE_LABELS = {text:'متن',number:'عدد',date:'تاریخ میلادی',jalali:'تاریخ شمسی',textarea:'پاسخ بلند',select:'سلکت باکس',radio:'رادیو باتن',checkbox:'چک‌باکس',serial:'سریال شناسنامه'};
+  const CONDITION_LABELS = {eq:'برابر است با',neq:'مخالف است با',contains:'شامل است',starts:'شروع می‌شود با',ends:'پایان می‌یابد با',empty:'خالی است',notempty:'خالی نیست'};
+
+  const DEFAULT_FORM = {
+    title: 'فرم اطلاعات دانش‌آموزان',
+    description: 'فرم ثبت اطلاعات دانش‌آموز و خانواده',
+    auto_next: true,
+    device_name: 'دستگاه مدرسه',
+    slogan: 'فرم دانش‌آموزی',
+    questions: [
+      {id:'grade',label:'پایه',type:'select',required:true,options:['دهم','یازدهم','دوازدهم'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'field',label:'رشته',type:'select',required:true,options:['تجربی','ریاضی','انسانی'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'student_first_name',label:'نام دانش‌آموز',type:'text',required:true,options:[],placeholder:'نام',validation:{minLength:2,maxLength:80},conditions:[],conditionMode:'and'},
+      {id:'student_last_name',label:'نام خانوادگی دانش‌آموز',type:'text',required:true,options:[],placeholder:'نام خانوادگی',validation:{minLength:2,maxLength:100},conditions:[],conditionMode:'and'},
+      {id:'birth_serial',label:'سریال شناسنامه',type:'serial',required:false,options:[],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'birth_date',label:'تاریخ تولد',type:'jalali',required:true,options:[],placeholder:'1400/01/15',validation:{},conditions:[],conditionMode:'and'},
+      {id:'father_name',label:'نام پدر',type:'text',required:true,options:[],placeholder:'',validation:{minLength:2,maxLength:100},conditions:[],conditionMode:'and'},
+      {id:'father_job',label:'شغل پدر',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:120},conditions:[],conditionMode:'and'},
+      {id:'father_education',label:'میزان تحصیلات پدر',type:'select',required:false,options:['ابتدایی','سیکل','دیپلم','فوق دیپلم','لیسانس','فوق لیسانس','دکتری'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'father_mobile',label:'شماره تلفن همراه پدر',type:'text',required:false,options:[],placeholder:'09...',validation:{pattern:'^09[0-9]{9}$'},conditions:[],conditionMode:'and'},
+      {id:'mother_name',label:'نام و نام خانوادگی مادر',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:120},conditions:[],conditionMode:'and'},
+      {id:'mother_job',label:'شغل مادر',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:120},conditions:[],conditionMode:'and'},
+      {id:'mother_education',label:'میزان تحصیلات مادر',type:'select',required:false,options:['ابتدایی','سیکل','دیپلم','فوق دیپلم','لیسانس','فوق لیسانس','دکتری'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'mother_mobile',label:'شماره تلفن همراه مادر',type:'text',required:false,options:[],placeholder:'09...',validation:{pattern:'^09[0-9]{9}$'},conditions:[],conditionMode:'and'},
+      {id:'home_address',label:'آدرس منزل',type:'textarea',required:false,options:[],placeholder:'آدرس کامل',validation:{maxLength:500},conditions:[],conditionMode:'and'},
+      {id:'home_phone',label:'شماره تلفن منزل',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:20},conditions:[],conditionMode:'and'},
+      {id:'student_mobile',label:'شماره موبایل دانش‌آموز',type:'text',required:false,options:[],placeholder:'09...',validation:{pattern:'^09[0-9]{9}$'},conditions:[],conditionMode:'and'},
+      {id:'previous_average',label:'معدل سال قبل',type:'number',required:false,options:[],placeholder:'مثلاً 19.50',validation:{min:0,max:20,step:0.01},conditions:[],conditionMode:'and'},
+      {id:'has_disease',label:'بیماری خاص (دارد/ندارد)',type:'radio',required:true,options:['دارد','ندارد'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'disease_desc',label:'توضیحات در صورت داشتن بیماری',type:'textarea',required:false,options:[],placeholder:'نوع بیماری و توضیحات ضروری',validation:{maxLength:500},conditions:[{questionId:'has_disease',operator:'eq',value:'دارد'}],conditionMode:'and'},
+      {id:'housing_status',label:'وضعیت مسکن',type:'select',required:false,options:['اجاره‌ای','شخصی'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'coverage',label:'تحت پوشش',type:'select',required:false,options:['کمیته امداد','بهزیستی','غیره','هیچکدام'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'family_children_count',label:'تعداد فرزندان خانواده',type:'number',required:false,options:[],placeholder:'مثلاً 3',validation:{min:1,max:30,step:1,integer:true},conditions:[],conditionMode:'and'},
+      {id:'student_child_order',label:'دانش‌آموز فرزند چندم است',type:'number',required:false,options:[],placeholder:'مثلاً ۲ یا اول',validation:{min:1,max:30,step:1,integer:true},conditions:[],conditionMode:'and'},
+      {id:'uses_school_transport',label:'استفاده از سرویس مدارس',type:'radio',required:false,options:['بله','خیر'],placeholder:'',validation:{},conditions:[],conditionMode:'and'},
+      {id:'driver_name',label:'نام راننده در صورت استفاده',type:'text',required:false,options:[],placeholder:'',validation:{maxLength:120},conditions:[{questionId:'uses_school_transport',operator:'eq',value:'بله'}],conditionMode:'and'},
+      {id:'driver_phone',label:'شماره تماس راننده در صورت استفاده',type:'text',required:false,options:[],placeholder:'09...',validation:{pattern:'^09[0-9]{9}$'},conditions:[{questionId:'uses_school_transport',operator:'eq',value:'بله'}],conditionMode:'and'}
+    ]
+  };
+
+  const state = {
+    sb: null,
+    user: null,
+    profile: null,
+    form: null,
+    published: null,
+    draftDirty: false,
+    editingQuestionId: null,
+    conditionDraft: [],
+    conditionMode: 'and',
+    draggedId: null,
+    currentAdminView: 'builder',
+    adminChannel: null,
+    publicChannel: null,
+    publicChannelFormId: null,
+    responses: {page:1, perPage:50, search:'', total:0, totalPages:1, rows:[]},
+    editResponse: null,
+    editSchema: null,
+    runner: {version:null, current:0, values:{}, pendingVersion:null, deviceName: localStorage.getItem(DEVICE_KEY) || ''},
+    jalali: null,
+    modal: {resolver:null, closeOnBackdrop:false, previousFocus:null, isConfirm:false}
+  };
+
+  function clone(value) {
+    return window.structuredClone ? structuredClone(value) : JSON.parse(JSON.stringify(value));
+  }
+  function uid() {
+    if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+    return `q_${Math.random().toString(36).slice(2)}_${Date.now().toString(36)}`;
+  }
+  function escapeHtml(value='') {
+    return String(value).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function normalizeDigits(value) {
+    const fa='۰۱۲۳۴۵۶۷۸۹', ar='٠١٢٣٤٥٦٧٨٩';
+    return String(value ?? '')
+      .replace(/[۰-۹]/g,d=>String(fa.indexOf(d)))
+      .replace(/[٠-٩]/g,d=>String(ar.indexOf(d)))
+      .replace(/[٫،]/g,'.');
+  }
+
+
+  function isBlankAnswer(value) {
+    if (Array.isArray(value)) return value.length === 0;
+    if (value === undefined || value === null) return true;
+    return normalizeText(String(value)).length === 0;
+  }
+
+  function normalizePatternInput(q, value) {
+    let text = normalizeDigits(String(value ?? ''));
+    if (q?.type === 'number') {
+      return text.replace(/[\s,\u00a0]/g, '');
+    }
+    if (q?.type === 'serial') {
+      return text.replace(/\s+/g, '');
+    }
+    const label = normalizeText(q?.label || '');
+    if (/(شماره|تلفن|موبایل|phone|mobile|tel)/i.test(label)) {
+      return text.replace(/[\s\-–—()]+/g, '');
+    }
+    return text;
+  }
+
+  const PERSIAN_ORDINALS = Object.freeze({
+    'اول':1,'اولین':1,'یکم':1,'یک':1,
+    'دوم':2,'سوم':3,'چهارم':4,'پنجم':5,'ششم':6,'هفتم':7,'هشتم':8,'نهم':9,'دهم':10,
+    'یازدهم':11,'دوازدهم':12,'سیزدهم':13,'چهاردهم':14,'پانزدهم':15,'پانزدهم':15,
+    'شانزدهم':16,'هفدهم':17,'هجدهم':18,'نوزدهم':19,'بیستم':20,
+    'بیست و یکم':21,'بیست و دوم':22,'بیست و سوم':23,'بیست و چهارم':24,'بیست و پنجم':25,
+    'بیست و ششم':26,'بیست و هفتم':27,'بیست و هشتم':28,'بیست و نهم':29,'سی‌ام':30,'سی ام':30,'سی‌امین':30
+  });
+
+  function normalizeText(value) {
+    return String(value ?? '')
+      .replace(/[يى]/g,'ی')
+      .replace(/[ك]/g,'ک')
+      .replace(/[‌]/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function parseFlexibleNumber(value) {
+    const normalized = normalizeDigits(value).trim().replace(/,/g,'');
+    if (!normalized) return NaN;
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function parseOrdinalNumber(value) {
+    const raw = normalizeText(value);
+    if (!raw) return NaN;
+
+    const numeric = parseFlexibleNumber(raw);
+    if (Number.isFinite(numeric)) return numeric;
+
+    const cleaned = raw
+      .replace(/^(فرزند|دانش آموز|دانش‌آموز|نفر)\s*/,'')
+      .trim();
+
+    if (Object.prototype.hasOwnProperty.call(PERSIAN_ORDINALS, cleaned)) {
+      return PERSIAN_ORDINALS[cleaned];
+    }
+
+    return NaN;
+  }
+
+  function faNumber(value) { return String(value ?? '').replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+  function nowIso() { return new Date().toISOString(); }
+  function formatDateTime(value) {
+    if (!value) return '—';
+    try { return new Intl.DateTimeFormat('fa-IR',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value)); }
+    catch { return String(value); }
+  }
+  function debounce(fn, ms=350) { let timer; return (...args) => { clearTimeout(timer); timer=setTimeout(()=>fn(...args),ms); }; }
+  function persistRunnerState() {
+    try {
+      const payload = {
+        version: state.runner.version ? clone(state.runner.version) : null,
+        current: Number(state.runner.current) || 0,
+        values: clone(state.runner.values || {}),
+        pendingVersion: state.runner.pendingVersion ? clone(state.runner.pendingVersion) : null,
+        deviceName: state.runner.deviceName || ''
+      };
+      sessionStorage.setItem(RUNNER_STATE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Could not persist runner state:', error);
+    }
+  }
+
+  function restoreRunnerState() {
+    try {
+      const raw = sessionStorage.getItem(RUNNER_STATE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (!saved || typeof saved !== 'object') return;
+      state.runner.version = saved.version ? saved.version : null;
+      state.runner.current = Number.isInteger(saved.current) ? Math.max(0, saved.current) : 0;
+      state.runner.values = saved.values && typeof saved.values === 'object' ? saved.values : {};
+      state.runner.pendingVersion = saved.pendingVersion || null;
+      if (typeof saved.deviceName === 'string') state.runner.deviceName = saved.deviceName;
+    } catch (error) {
+      console.warn('Could not restore runner state:', error);
+      sessionStorage.removeItem(RUNNER_STATE_KEY);
+    }
+  }
+
+  function clearRunnerState() {
+    try { sessionStorage.removeItem(RUNNER_STATE_KEY); } catch {}
+  }
+
+  function isConfigReady() { return typeof CFG.SUPABASE_URL==='string' && /^https:\/\/[^\s]+\.supabase\.co$/.test(CFG.SUPABASE_URL) && typeof CFG.SUPABASE_ANON_KEY==='string' && CFG.SUPABASE_ANON_KEY.length > 30; }
+  function goPublic() { window.location.href = 'index.html?mode=form'; }
+  function goAdmin() { window.location.href = 'index.html?mode=admin'; }
+
+  function applyTheme(theme) {
+    const value = theme === 'dark' ? 'dark' : 'light';
+    document.body.classList.toggle('dark', value === 'dark');
+    localStorage.setItem(THEME_KEY, value);
+    const btn = $('themeBtn');
+    if (btn) btn.textContent = value === 'light' ? 'حالت تاریک' : 'حالت روشن';
+  }
+
+  function setConnection(text, kind='neutral') {
+    const badge = $('connectionBadge');
+    if (!badge) return;
+    badge.textContent = text;
+    badge.className = `status-badge status-${kind}`;
+  }
+
+  function showConfigError() {
+    $('configError')?.classList.remove('hidden');
+    $('connectionBadge') && setConnection('تنظیمات ناقص','danger');
+  }
+
+  function hideConfigError() { $('configError')?.classList.add('hidden'); }
+
+  function showOnly(mode) {
+    $('publicApp')?.classList.toggle('hidden', mode !== 'form');
+    $('adminApp')?.classList.toggle('hidden', mode !== 'admin');
+    const entry = $('adminEntryBtn');
+    if (entry) {
+      entry.textContent = mode === 'admin' ? 'فرم عمومی' : 'ورود مدیر';
+      entry.onclick = mode === 'admin' ? goPublic : goAdmin;
+    }
+  }
+
+  function openModal({title='پیام',message='',buttons=[{label:'باشه',value:true,kind:'primary'}],closeOnBackdrop=false,isConfirm=false}) {
+    const root=$('modalRoot');
+    if (!root) return Promise.resolve(true);
+    if (state.modal.resolver) state.modal.resolver(false);
+    state.modal.previousFocus=document.activeElement;
+    state.modal.closeOnBackdrop=closeOnBackdrop;
+    state.modal.isConfirm=isConfirm;
+    return new Promise(resolve=>{
+      state.modal.resolver=resolve;
+      $('modalTitle').textContent=title;
+      $('modalMessage').textContent=message;
+      $('modalIcon').textContent=isConfirm?'?':'i';
+      const actions=$('modalActions'); actions.innerHTML='';
+      let closed=false;
+      const close=(value)=>{
+        if(closed)return;
+        closed=true;
+        root.classList.add('hidden'); root.setAttribute('aria-hidden','true');
+        state.modal.resolver=null;
+        try{state.modal.previousFocus?.focus?.()}catch{}
+        resolve(value);
+      };
+      buttons.forEach((button,index)=>{
+        const el=document.createElement('button'); el.type='button';
+        el.className=button.kind==='danger'?'btn btn-danger':button.kind==='success'?'btn btn-success':button.kind==='ghost'?'btn btn-ghost':button.kind==='soft'?'btn btn-soft':'btn btn-primary';
+        el.textContent=button.label; el.addEventListener('click',()=>close(button.value)); actions.appendChild(el);
+        if(index===buttons.length-1)setTimeout(()=>el.focus(),0);
+      });
+      root.classList.remove('hidden'); root.setAttribute('aria-hidden','false');
+      const backdrop=root.querySelector('.modal-backdrop');
+      backdrop.onclick=()=>{if(closeOnBackdrop)close(false);};
+    });
+  }
+  const ui={
+    alert:(message,title='پیام')=>openModal({title,message,closeOnBackdrop:true}),
+    success:(message)=>openModal({title:'موفق',message,buttons:[{label:'باشه',value:true,kind:'success'}],closeOnBackdrop:true}),
+    error:(message)=>openModal({title:'خطا',message:Array.isArray(message)?message.filter(Boolean).join('\n'):String(message ?? ''),buttons:[{label:'باشه',value:true,kind:'danger'}],closeOnBackdrop:true}),
+    confirm:(message,title='تأیید')=>openModal({title,message,buttons:[{label:'لغو',value:false,kind:'ghost'},{label:'تأیید',value:true,kind:'primary'}],isConfirm:true})
+  };
+
+  const errorController = {
+    last: null,
+    normalize(error, fallback='عملیات ناموفق بود.') {
+      if (error instanceof Error) {
+        return {message: error.message || fallback, details: error.stack || '', code: error.code || '', raw: error};
+      }
+      if (Array.isArray(error)) {
+        return {message: error.filter(Boolean).join('\n') || fallback, details: '', code: '', raw: error};
+      }
+      if (typeof error === 'string') {
+        return {message: error.trim() || fallback, details: '', code: '', raw: error};
+      }
+      if (error && typeof error === 'object') {
+        return {
+          message: error.message || error.error_description || error.detail || fallback,
+          details: error.details || error.hint || error.context || '',
+          code: error.code || '',
+          raw: error
+        };
+      }
+      return {message: fallback, details: '', code: '', raw: error};
+    },
+    show(error, {title='خطا', fallback='عملیات انجام نشد.', includeDetails=false, context=''} = {}) {
+      const normalized = this.normalize(error, fallback);
+      this.last = { ...normalized, title, context, at: nowIso() };
+      console.error(`[${context || title}]`, normalized.raw || error);
+      const parts = [normalized.message];
+      if (includeDetails && normalized.code) parts.push(`کد خطا: ${normalized.code}`);
+      if (includeDetails && normalized.details) parts.push(normalized.details);
+      return ui.error(parts.join('\n'));
+    },
+    showValidation(errors, title='اعتبارسنجی') {
+      const items = Array.isArray(errors) ? errors.filter(Boolean) : [errors].filter(Boolean);
+      if (!items.length) return null;
+      const body = [`${title} با خطا مواجه شد:`, ...items.map((item, index) => `${faNumber(index + 1)}. ${item}`)].join('\n');
+      return ui.error(body);
+    }
+  };
+
+  function makeClient() {
+  function makeClient() {
+    const {createClient}=window.supabase || {};
+    if (!createClient) throw new Error('کتابخانه Supabase بارگذاری نشده است.');
+    return createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+  }
+
+  async function loadProfile(userId) {
+    const {data,error}=await state.sb.from('profiles').select('id,display_name,role').eq('id',userId).maybeSingle();
+    if(error)throw error;
+    return data;
+  }
+
+  async function ensureAdminSession() {
+    const {data:{session}}=await state.sb.auth.getSession();
+    if(!session){state.user=null;state.profile=null;return false;}
+    const profile=await loadProfile(session.user.id);
+    if(!profile || profile.role!=='admin'){
+      await state.sb.auth.signOut();
+      throw new Error('این حساب مجوز مدیر ندارد. ابتدا نقش admin را در جدول profiles تنظیم کنید.');
+    }
+    state.user=session.user; state.profile=profile; return true;
+  }
+
+  function showAdminLogin(message='') {
+    $('adminLoginView')?.classList.remove('hidden');
+    $('adminDashboard')?.classList.add('hidden');
+    const box=$('loginError');
+    if(box){box.textContent=message;box.classList.toggle('hidden',!message);}
+  }
+  function showAdminDashboard() {
+    $('adminLoginView')?.classList.add('hidden');
+    $('adminDashboard')?.classList.remove('hidden');
+    const name=state.profile?.display_name || state.user?.email || 'مدیر';
+    $('adminUserLabel').textContent=`حساب فعال: ${name}`;
+    $('managerStatus').textContent='مدیر مجاز';
+  }
+
+  async function loginAdmin() {
+    const email=$('loginEmail').value.trim();
+    const password=$('loginPassword').value;
+    if(!email || !password)return showAdminLogin('ایمیل و رمز عبور را کامل وارد کنید.');
+    $('loginBtn').disabled=true;
+    try{
+      const {error}=await state.sb.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      const ok=await ensureAdminSession();
+      if(!ok)throw new Error('ورود انجام نشد.');
+      showAdminDashboard();
+      await loadAdminState({silent:true});
+      switchAdminView('builder');
+    }catch(error){showAdminLogin(error.message || 'ورود ناموفق بود.');}
+    finally{$('loginBtn').disabled=false;}
+  }
+
+  async function signOut() {
+    await state.sb.auth.signOut();
+    state.user=null;state.profile=null;state.form=null;state.published=null;
+    if(MODE==='admin')showAdminLogin('از حساب مدیر خارج شدید.');
+  }
+
+  function makeSeedForm() {
+    return clone(DEFAULT_FORM);
+  }
+
+  async function getOrCreateForm() {
+    let {data,error}=await state.sb.from('forms').select('*').eq('slug',FORM_SLUG).maybeSingle();
+    if(error)throw error;
+    if(data)return data;
+    const seed=makeSeedForm();
+    const payload={slug:FORM_SLUG,title:seed.title,description:seed.description,auto_next:seed.auto_next,device_name:seed.device_name,slogan:seed.slogan,draft_questions:seed.questions,draft_revision:1};
+    const inserted=await state.sb.from('forms').insert(payload).select('*').single();
+    if(inserted.error){
+      if(inserted.error.code==='23505'){
+        const retry=await state.sb.from('forms').select('*').eq('slug',FORM_SLUG).single();
+        if(retry.error)throw retry.error;
+        return retry.data;
+      }
+      throw inserted.error;
+    }
+    return inserted.data;
+  }
+
+  async function getPublishedVersion(formId) {
+    const {data,error}=await state.sb.from('form_versions').select('*').eq('form_id',formId).eq('is_published',true).maybeSingle();
+    if(error)throw error;
+    return data;
+  }
+
+  async function countResponses(formId) {
+    const {count,error}=await state.sb.from('responses').select('id',{count:'exact',head:true}).eq('form_id',formId);
+    if(error)throw error;
+    return count||0;
+  }
+
+  async function logAudit(action,entityType='',entityId=null,details={}) {
+    if(!state.user)return;
+    const {error}=await state.sb.from('audit_logs').insert({admin_id:state.user.id,action,entity_type:entityType||null,entity_id:entityId,details});
+    if(error)console.warn('Audit log failed:',error.message);
+  }
+
+  function normalizeQuestion(q) {
+    return {
+      id:String(q.id||uid()),
+      label:String(q.label||'').trim(),
+      type:QUESTION_TYPES.includes(q.type)?q.type:'text',
+      required:Boolean(q.required),
+      options:Array.isArray(q.options)?q.options.map(v=>String(v).trim()).filter(Boolean):[],
+      placeholder:String(q.placeholder||'').trim(),
+      validation:typeof q.validation==='object'&&q.validation?q.validation:{},
+      conditions:Array.isArray(q.conditions)?q.conditions.map(c=>({questionId:String(c.questionId||''),operator:String(c.operator||'eq'),value:String(c.value??'')})).filter(c=>c.questionId&&CONDITION_OPS.includes(c.operator)):[],
+      conditionMode:q.conditionMode==='or'?'or':'and'
+    };
+  }
+
+  function normalizeFormRecord(row) {
+    return {
+      ...row,
+      questions:Array.isArray(row?.draft_questions)?row.draft_questions.map(normalizeQuestion):[],
+      auto_next:Boolean(row?.auto_next),
+      device_name:String(row?.device_name||''),
+      slogan:String(row?.slogan||'')
+    };
+  }
+
+  function localValidateSchema(questions) {
+    if(!Array.isArray(questions))return 'ساختار سؤال‌ها معتبر نیست.';
+    const ids=new Set();
+    for(let i=0;i<questions.length;i++){
+      const q=normalizeQuestion(questions[i]);
+      if(!q.label)return `متن سؤال شماره ${i+1} خالی است.`;
+      if(!/^[A-Za-z0-9_-]{1,80}$/.test(q.id))return `شناسه سؤال «${q.label}» معتبر نیست.`;
+      if(ids.has(q.id))return `شناسه سؤال تکراری است: ${q.id}`;
+      ids.add(q.id);
+      if(!QUESTION_TYPES.includes(q.type))return `نوع سؤال «${q.type}» معتبر نیست.`;
+      if(['select','radio','checkbox'].includes(q.type)){
+        if(!q.options.length)return `سؤال «${q.label}» حداقل یک گزینه لازم دارد.`;
+        if(new Set(q.options).size!==q.options.length)return `گزینه‌های سؤال «${q.label}» نباید تکراری باشند.`;
+      }
+      const v=q.validation||{};
+      if(v.min!==undefined&&v.min!==''&&Number.isNaN(Number(v.min)))return `حداقل عدد سؤال «${q.label}» معتبر نیست.`;
+      if(v.max!==undefined&&v.max!==''&&Number.isNaN(Number(v.max)))return `حداکثر عدد سؤال «${q.label}» معتبر نیست.`;
+      if(v.min!==undefined&&v.max!==undefined&&v.min!==''&&v.max!==''&&Number(v.min)>Number(v.max))return `حداقل عدد سؤال «${q.label}» نمی‌تواند بیشتر از حداکثر باشد.`;
+      if(v.minLength!==undefined&&v.maxLength!==undefined&&v.minLength!==''&&v.maxLength!==''&&Number(v.minLength)>Number(v.maxLength))return `حداقل طول سؤال «${q.label}» نمی‌تواند بیشتر از حداکثر باشد.`;
+      if(v.integer && q.type==='number' && v.step!==undefined && Number(v.step)!==1)return `سؤال عددی صحیح «${q.label}» باید گام ۱ داشته باشد.`;
+      if(v.pattern){try{new RegExp(v.pattern);}catch{return `Regex سؤال «${q.label}» معتبر نیست.`;}}
+      for(const cond of q.conditions){
+        const sourceIndex=questions.findIndex(x=>x.id===cond.questionId);
+        if(sourceIndex<0)return `سؤال شرطی «${q.label}» به سؤال ناموجود متصل است.`;
+        if(sourceIndex>=i)return `شرط سؤال «${q.label}» فقط می‌تواند به سؤال‌های قبلی وابسته باشد.`;
+        if(!CONDITION_OPS.includes(cond.operator))return `عملگر شرط سؤال «${q.label}» معتبر نیست.`;
+        if(['empty','notempty'].includes(cond.operator) && cond.value) return `برای عملگر «${CONDITION_LABELS[cond.operator]}» مقدار شرط باید خالی باشد.`;
+      }
+      if(q.conditions.length>1 && !['and','or'].includes(q.conditionMode))return `نحوه ترکیب شرط‌های «${q.label}» معتبر نیست.`;
+    }
+    return null;
+  }
+
+  function syncBuilderMetaFromUI() {
+    if(!state.form)return;
+    state.form.title=$('formTitle').value.trim()||'فرم اطلاعات دانش‌آموزان';
+    state.form.description=$('formDesc').value.trim();
+    state.form.auto_next=$('autoNext').value==='1';
+    state.form.device_name=$('deviceName').value.trim();
+    state.form.slogan=$('slogan').value.trim();
+    state.draftDirty=true;
+  }
+
+  function updateBuilderStats() {
+    if(!state.form)return;
+    $('statQ').textContent=faNumber(state.form.questions.length);
+    $('statR').textContent=faNumber(state.form.responseCount||0);
+    $('statV').textContent=state.published?`نسخه ${faNumber(state.published.version_number)}`:'—';
+    $('statStatus').textContent=state.draftDirty?'پیش‌نویس تغییر کرده':'همسان با سرور';
+    $('draftVersionLabel').textContent=faNumber(state.form.draft_revision||1);
+    $('draftUpdatedAt').textContent=formatDateTime(state.form.draft_updated_at);
+    $('publishedAtLabel').textContent=state.published?formatDateTime(state.published.published_at):'—';
+  }
+
+  function getEditingIndex() { return state.editingQuestionId ? state.form.questions.findIndex(q=>q.id===state.editingQuestionId) : -1; }
+  function getConditionSourceQuestions() {
+    if(!state.form)return [];
+    const editIndex=getEditingIndex();
+    const maxIndex=editIndex>=0?editIndex:state.form.questions.length;
+    return state.form.questions.slice(0,maxIndex);
+  }
+
+  function renderConditionEditor() {
+    const list=$('conditionList'); if(!list)return;
+    list.innerHTML='';
+    const available=getConditionSourceQuestions();
+    if(!state.conditionDraft.length){
+      const empty=document.createElement('div'); empty.className='small muted'; empty.textContent='هنوز شرطی اضافه نشده است؛ سؤال همیشه نمایش داده می‌شود.'; list.appendChild(empty); return;
+    }
+    state.conditionDraft.forEach((cond,index)=>{
+      const row=document.createElement('div'); row.className='condition-row'; row.dataset.index=String(index);
+      const qSel=document.createElement('select'); qSel.className='input'; qSel.dataset.field='questionId';
+      available.forEach(q=>{const o=document.createElement('option');o.value=q.id;o.textContent=q.label;qSel.appendChild(o);});
+      if(available.some(q=>q.id===cond.questionId))qSel.value=cond.questionId;
+      else if(available[0]){qSel.value=available[0].id;cond.questionId=available[0].id;}
+      const opSel=document.createElement('select'); opSel.className='input'; opSel.dataset.field='operator';
+      CONDITION_OPS.forEach(op=>{const o=document.createElement('option');o.value=op;o.textContent=CONDITION_LABELS[op];opSel.appendChild(o);}); opSel.value=cond.operator;
+      const val=document.createElement('input'); val.className='input'; val.dataset.field='value'; val.value=cond.value||''; val.placeholder=['empty','notempty'].includes(cond.operator)?'بدون مقدار':'مثلاً: بله'; val.disabled=['empty','notempty'].includes(cond.operator);
+      const del=document.createElement('button'); del.type='button'; del.className='btn btn-danger btn-sm'; del.dataset.deleteCondition=String(index); del.textContent='حذف';
+      row.append(qSel,opSel,val,del); list.appendChild(row);
+    });
+  }
+
+  function readConditionsFromDOM() {
+    state.conditionDraft=$$('.condition-row',$('conditionList')).map(row=>({
+      questionId:$('[data-field="questionId"]',row)?.value||'',
+      operator:$('[data-field="operator"]',row)?.value||'eq',
+      value:$('[data-field="value"]',row)?.value.trim()||''
+    }));
+  }
+
+  function clearQuestionEditor() {
+    state.editingQuestionId=null; state.conditionDraft=[]; state.conditionMode='and';
+    $('newLabel').value=''; $('newType').value='text'; $('newOptions').value=''; $('newPlaceholder').value=''; $('newOrder').value='end'; $('newRequired').value='yes'; $('newMin').value=''; $('newMax').value=''; $('newMinLength').value=''; $('newMaxLength').value=''; $('newPattern').value=''; $('newInteger').value='no'; $('newCondMode').value='and';
+    $('addQuestionBtn').textContent='افزودن سؤال'; renderConditionEditor();
+  }
+
+  function fillQuestionEditor(q) {
+    state.editingQuestionId=q.id; state.conditionDraft=clone(q.conditions||[]); state.conditionMode=q.conditionMode||'and';
+    $('newLabel').value=q.label; $('newType').value=q.type; $('newOptions').value=(q.options||[]).join(' | '); $('newPlaceholder').value=q.placeholder||''; $('newOrder').value='end'; $('newRequired').value=q.required?'yes':'no';
+    const v=q.validation||{}; $('newMin').value=v.min??''; $('newMax').value=v.max??''; $('newMinLength').value=v.minLength??''; $('newMaxLength').value=v.maxLength??''; $('newPattern').value=v.pattern??''; $('newInteger').value=v.integer?'yes':'no'; $('newCondMode').value=state.conditionMode;
+    $('addQuestionBtn').textContent='ثبت ویرایش'; renderConditionEditor(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function buildQuestionFromEditor() {
+    readConditionsFromDOM();
+    const validation={};
+    const min=$('newMin').value.trim(),max=$('newMax').value.trim(),minLength=$('newMinLength').value.trim(),maxLength=$('newMaxLength').value.trim(),pattern=$('newPattern').value.trim();
+    if(min!=='')validation.min=Number(min); if(max!=='')validation.max=Number(max); if(minLength!=='')validation.minLength=Number(minLength); if(maxLength!=='')validation.maxLength=Number(maxLength); if(pattern)validation.pattern=pattern; if($('newInteger').value==='yes')validation.integer=true; if($('newType').value==='number')validation.step=validation.integer?1:0.01;
+    return normalizeQuestion({
+      id:state.editingQuestionId||uid(),label:$('newLabel').value.trim(),type:$('newType').value,required:$('newRequired').value==='yes',options:$('newOptions').value.split('|').map(s=>s.trim()).filter(Boolean),placeholder:$('newPlaceholder').value.trim(),validation,conditions:state.conditionDraft,conditionMode:$('newCondMode').value||'and'
+    });
+  }
+
+  function renderQuestionList() {
+    const list=$('questionList'); if(!list||!state.form)return;
+    list.innerHTML='';
+    if(!state.form.questions.length){const empty=document.createElement('div');empty.className='center-panel';empty.textContent='هنوز سؤالی ثبت نشده است.';list.appendChild(empty);return;}
+    state.form.questions.forEach((q,index)=>{
+      const card=document.createElement('article');card.className='question-card';card.draggable=true;card.dataset.id=q.id;
+      const top=document.createElement('div');top.className='question-top';
+      const left=document.createElement('div');
+      const title=document.createElement('div');title.className='question-title';title.textContent=`${faNumber(index+1)}. ${q.label}${q.required?' *':''}`;
+      const meta=document.createElement('div');meta.className='question-meta';meta.textContent=`نوع: ${TYPE_LABELS[q.type]||q.type}`;
+      left.append(title,meta); top.appendChild(left);
+      const badge=document.createElement('span');badge.className='chip';badge.textContent=q.required?'الزامی':'اختیاری';top.appendChild(badge);card.appendChild(top);
+      const chips=document.createElement('div');chips.className='chip-row';
+      if(q.conditions?.length){const c=document.createElement('span');c.className='chip';c.textContent=`شرط ${q.conditionMode==='or'?'OR':'AND'}: ${q.conditions.length} مورد`;chips.appendChild(c);}
+      if(q.options?.length){const c=document.createElement('span');c.className='chip';c.textContent=`گزینه‌ها: ${q.options.join(' / ')}`;chips.appendChild(c);}
+      if(q.validation?.pattern){const c=document.createElement('span');c.className='chip';c.textContent='Regex فعال';chips.appendChild(c);}
+      if(q.type==='jalali'){const c=document.createElement('span');c.className='chip';c.textContent='تقویم شمسی';chips.appendChild(c);}
+      if(q.type==='serial'){const c=document.createElement('span');c.className='chip';c.textContent='سریال استاندارد';chips.appendChild(c);}
+      if(chips.children.length)card.appendChild(chips);
+      const actions=document.createElement('div');actions.className='question-actions';
+      [['up','بالا','btn-ghost'],['down','پایین','btn-ghost'],['edit','ویرایش','btn-soft'],['del','حذف','btn-danger']].forEach(([act,label,kind])=>{const b=document.createElement('button');b.type='button';b.className=`btn ${kind} btn-sm`;b.dataset.action=act;b.textContent=label;actions.appendChild(b);});
+      card.appendChild(actions); list.appendChild(card);
+    });
+  }
+
+  async function questionAction(action,id) {
+    const index=state.form.questions.findIndex(q=>q.id===id); if(index<0)return;
+    if(action==='edit'){fillQuestionEditor(state.form.questions[index]);return;}
+    if(action==='del'){
+      const dependents=state.form.questions.filter(q=>(q.conditions||[]).some(c=>c.questionId===id));
+      let message=`سؤال «${state.form.questions[index].label}» حذف شود؟`;
+      if(dependents.length)message+=`\n\nشرط‌های وابسته در ${dependents.length} سؤال نیز حذف خواهند شد.`;
+      if(!await ui.confirm(message,'حذف سؤال'))return;
+      state.form.questions.splice(index,1);
+      state.form.questions.forEach(q=>q.conditions=(q.conditions||[]).filter(c=>c.questionId!==id));
+    }else{
+      const target=action==='up'?index-1:index+1;
+      if(target<0||target>=state.form.questions.length)return;
+      const copy=state.form.questions.slice(); [copy[index],copy[target]]=[copy[target],copy[index]];
+      const error=localValidateSchema(copy); if(error)return ui.error(error);
+      state.form.questions=copy;
+    }
+    state.draftDirty=true; updateBuilderStats(); renderQuestionList(); renderConditionEditor();
+  }
+
+  async function saveDraft() {
+    if(!state.form)return;
+    syncBuilderMetaFromUI();
+    const error=localValidateSchema(state.form.questions); if(error)return ui.error(error);
+    const revision=Number(state.form.draft_revision||1);
+    $('saveDraftBtn').disabled=true;
+    try{
+      const payload={title:state.form.title,description:state.form.description,auto_next:state.form.auto_next,device_name:state.form.device_name,slogan:state.form.slogan,draft_questions:state.form.questions,draft_revision:revision+1,updated_at:nowIso()};
+      const {data,error:updateError}=await state.sb.from('forms').update(payload).eq('id',state.form.id).eq('draft_revision',revision).select('*').maybeSingle();
+      if(updateError)throw updateError;
+      if(!data)throw Object.assign(new Error('پیش‌نویس روی دستگاه دیگری تغییر کرده است. ابتدا نسخه جدید را دریافت کنید.'),{code:'DRAFT_CONFLICT'});
+      state.form=normalizeFormRecord(data); state.draftDirty=false; updateBuilderStats(); renderQuestionList(); await logAudit('save_draft','forms',state.form.id,{revision:state.form.draft_revision}); await ui.success('پیش‌نویس با موفقیت روی دیتابیس مرکزی ذخیره شد.');
+      hideConflict();
+    }catch(error){if(error.code==='DRAFT_CONFLICT'){showConflict();}else ui.error(error.message||'ذخیره پیش‌نویس ناموفق بود.');}
+    finally{$('saveDraftBtn').disabled=false;}
+  }
+
+  async function publishDraft() {
+    if(!state.form)return;
+    syncBuilderMetaFromUI();
+    const error=localValidateSchema(state.form.questions); if(error)return ui.error(error);
+    if(state.draftDirty){const ok=await ui.confirm('پیش‌نویس هنوز ذخیره نشده است. ابتدا آن را ذخیره و سپس منتشر کنم؟','ذخیره و انتشار');if(!ok)return;await saveDraft();if(state.draftDirty)return;}
+    if(!await ui.confirm('این نسخه فرم برای همه دستگاه‌ها منتشر شود؟ نسخه منتشرشده فرم عمومی تغییر خواهد کرد اما پاسخ‌های قبلی دست‌نخورده می‌مانند.','انتشار فرم'))return;
+    $('publishBtn').disabled=true;
+    try{
+      const {data,error:rpcError}=await state.sb.rpc('publish_form',{p_form_id:state.form.id});
+      if(rpcError)throw rpcError;
+      await logAudit('publish_form','forms',state.form.id,data);
+      await loadAdminState({silent:true});
+      await ui.success(`نسخه ${faNumber(data.version_number)} با موفقیت منتشر شد و اکنون همه دستگاه‌ها همان نسخه را دریافت می‌کنند.`);
+    }catch(error){ui.error(error.message||'انتشار فرم ناموفق بود.');}
+    finally{$('publishBtn').disabled=false;}
+  }
+
+  async function resetSeed() {
+    if(!state.form)return;
+    if(!await ui.confirm('فقط پیش‌نویس فرم به ساختار اولیه برگردد؟ پاسخ‌های ثبت‌شده حذف نخواهند شد.','بازگردانی فرم اولیه'))return;
+    state.form.questions=makeSeedForm().questions; state.form.title=DEFAULT_FORM.title; state.form.description=DEFAULT_FORM.description; state.form.auto_next=true; state.form.device_name=DEFAULT_FORM.device_name; state.form.slogan=DEFAULT_FORM.slogan; state.draftDirty=true;
+    renderBuilder(); await ui.alert('فرم اولیه در پیش‌نویس جایگزین شد. برای اعمال در فرم عمومی، ابتدا ذخیره و سپس انتشار کنید.');
+  }
+
+  function showConflict() {
+    const box=$('draftConflictBanner');if(!box)return;box.textContent='این فرم در دستگاه دیگری تغییر کرده است. برای جلوگیری از پاک‌شدن تغییرات، ابتدا «به‌روزرسانی» را بزنید و سپس تغییرات خود را دوباره اعمال کنید.';box.classList.remove('hidden');updateBuilderStats();
+  }
+  function hideConflict(){$('draftConflictBanner')?.classList.add('hidden');}
+
+  async function loadAdminState({silent=false,overwrite=true}={}) {
+    try{
+      if(!state.form || overwrite){
+        const row=await getOrCreateForm();
+        const published=await getPublishedVersion(row.id);
+        const count=await countResponses(row.id);
+        state.form=normalizeFormRecord(row); state.form.responseCount=count; state.published=published; state.draftDirty=false; state.editingQuestionId=null; state.conditionDraft=[]; hideConflict();
+        renderBuilder();
+      }else if(state.draftDirty){
+        const remote=await getOrCreateForm();
+        if(remote.draft_revision!==state.form.draft_revision)showConflict();
+      }
+      setConnection('متصل و آماده','success'); $('serverStatus').textContent='متصل و آماده'; updateBuilderStats();
+      if(state.currentAdminView==='data')await loadResponses();
+      subscribeAdminRealtime();
+    }catch(error){setConnection('خطای اتصال','danger');$('serverStatus').textContent='خطا در اتصال';if(!silent)ui.error(error.message||'دریافت اطلاعات مدیر ناموفق بود.');}
+  }
+
+  function renderBuilder() {
+    if(!state.form)return;
+    $('formTitle').value=state.form.title||''; $('formDesc').value=state.form.description||''; $('autoNext').value=state.form.auto_next?'1':'0'; $('deviceName').value=state.form.device_name||''; $('slogan').value=state.form.slogan||'';
+    $('newCondMode').value=state.conditionMode||'and'; $('serverStatus').textContent='متصل و آماده'; updateBuilderStats(); renderQuestionList(); renderConditionEditor();
+  }
+
+  function subscribeAdminRealtime() {
+    if(!state.sb || !state.form)return;
+    if(state.adminChannel)state.sb.removeChannel(state.adminChannel);
+    state.adminChannel=state.sb.channel(`admin-form-${state.form.id}`)
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'forms',filter:`id=eq.${state.form.id}`},payload=>{
+        const remote=normalizeFormRecord(payload.new);
+        if(state.draftDirty){if(remote.draft_revision!==state.form.draft_revision)showConflict();return;}
+        state.form=remote; state.form.responseCount=state.form.responseCount||0; getPublishedVersion(state.form.id).then(v=>{state.published=v;renderBuilder();}).catch(()=>{});
+      })
+      .on('postgres_changes',{event:'*',schema:'public',table:'responses',filter:`form_id=eq.${state.form.id}`},()=>{if(state.currentAdminView==='data')loadResponses();countResponses(state.form.id).then(c=>{state.form.responseCount=c;updateBuilderStats();}).catch(()=>{});})
+      .subscribe();
+  }
+
+  function switchAdminView(view) {
+    state.currentAdminView=view;
+    $$('#adminDashboard [data-admin-view]').forEach(btn=>btn.classList.toggle('active',btn.dataset.adminView===view));
+    $('adminBuilderView').classList.toggle('hidden',view!=='builder'); $('adminDataView').classList.toggle('hidden',view!=='data');
+    if(view==='data')loadResponses();
+  }
+
+  async function changePassword() {
+    const email=state.user?.email; const current=$('currentPassword').value; const p=$('newPassword').value; const p2=$('newPassword2').value;
+    if(!email)return ui.error('نشست مدیر معتبر نیست.');
+    if(!current)return ui.error('برای تغییر رمز، رمز فعلی را وارد کنید.');
+    if(p.length<8)return ui.error('رمز جدید باید حداقل ۸ کاراکتر باشد.');
+    if(p!==p2)return ui.error('تکرار رمز جدید یکسان نیست.');
+    try{
+      const authCheck=await state.sb.auth.signInWithPassword({email,password:current});
+      if(authCheck.error)throw new Error('رمز فعلی صحیح نیست.');
+      const {error}=await state.sb.auth.updateUser({password:p}); if(error)throw error;
+      $('currentPassword').value='';$('newPassword').value='';$('newPassword2').value=''; await logAudit('change_password','profiles',state.user.id,{}); await ui.success('رمز عبور با موفقیت تغییر کرد.');
+    }catch(error){ui.error(error.message||'تغییر رمز ناموفق بود.');}
+  }
+
+  function exportJson(data,filename) {
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+  }
+
+  function exportFormJson() {
+    if(!state.form)return;
+    syncBuilderMetaFromUI();
+    exportJson({format:'student-form-cloud-html-css-js',version:13,exportedAt:nowIso(),form:{title:state.form.title,description:state.form.description,auto_next:state.form.auto_next,device_name:state.form.device_name,slogan:state.form.slogan},questions:state.form.questions},'student-form.json');
+  }
+
+  async function importFormJson(file) {
+    try{
+      const data=JSON.parse(await file.text());
+      const questions=Array.isArray(data.questions)?data.questions:Array.isArray(data.form?.questions)?data.form.questions:null;
+      if(!questions)throw new Error('فهرست سؤال‌ها پیدا نشد.');
+      const normalized=questions.map(normalizeQuestion); const error=localValidateSchema(normalized); if(error)throw new Error(error);
+      if(!await ui.confirm('فرم پیش‌نویس فعلی با این فایل جایگزین شود؟ پاسخ‌های ثبت‌شده حذف نخواهند شد.','ورود JSON'))return;
+      state.form.questions=normalized; const meta=data.form||data; if(meta.title!==undefined)state.form.title=String(meta.title); if(meta.description!==undefined)state.form.description=String(meta.description); if(meta.auto_next!==undefined)state.form.auto_next=Boolean(meta.auto_next); if(meta.device_name!==undefined)state.form.device_name=String(meta.device_name); if(meta.slogan!==undefined)state.form.slogan=String(meta.slogan);
+      state.draftDirty=true; renderBuilder(); await ui.success('فرم JSON وارد شد. برای اعمال روی همه دستگاه‌ها، ابتدا ذخیره پیش‌نویس و سپس انتشار را انجام دهید.');
+    }catch(error){ui.error(`ورود JSON انجام نشد: ${error.message}`);}
+  }
+
+  function getValueForCondition(values,id) { return values?.[id]; }
+  function matchCondition(value,op,target) {
+    const t=String(target??'').trim();
+    const v=Array.isArray(value)?value.join('، '):String(value??'').trim();
+    switch(op){case'empty':return v==='';case'notempty':return v!=='';case'contains':return v.includes(t);case'starts':return v.startsWith(t);case'ends':return v.endsWith(t);case'neq':return v!==t;case'eq':default:return v===t;}
+  }
+  function isQuestionVisible(q,values) {
+    if(!q.conditions?.length)return true;
+    const results=q.conditions.map(c=>matchCondition(getValueForCondition(values,c.questionId),c.operator,c.value));
+    return q.conditionMode==='or'?results.some(Boolean):results.every(Boolean);
+  }
+  function visibleQuestions(form,values) { return (form?.questions||[]).filter(q=>isQuestionVisible(q,values)); }
+
+  function isBlankAnswer(value, type) {
+    if (value === undefined || value === null) return true;
+    if (type === 'checkbox') return !Array.isArray(value) || value.length === 0;
+    if (Array.isArray(value)) return value.length === 0 || value.every(item => String(item ?? '').trim() === '');
+    return String(value).trim() === '';
+  }
+
+  function normalizeSubmissionValues(form, values) {
+    const clean = {};
+    for (const q of form?.questions || []) {
+      if (!isQuestionVisible(q, values)) continue;
+      const value = values?.[q.id];
+      if (isBlankAnswer(value, q.type)) {
+        if (q.required) clean[q.id] = value;
+        continue;
+      }
+      clean[q.id] = value;
+    }
+    if (clean.family_children_count !== undefined && clean.student_child_order !== undefined) {
+      clean.family_children_count = clean.family_children_count;
+      clean.student_child_order = clean.student_child_order;
+    }
+    return clean;
+  }
+
+
+  function collectResponseErrors(form, values) {
+    const errors = [];
+    const visible = visibleQuestions(form, values);
+    for (const q of visible) {
+      const error = validateQuestion(q, values, form.questions);
+      if (error) errors.push(error);
+    }
+    const countRaw = values.family_children_count;
+    const orderRaw = values.student_child_order;
+    if (!isBlankAnswer(countRaw) && !isBlankAnswer(orderRaw)) {
+      const count = parseFlexibleNumber(countRaw);
+      let order = parseFlexibleNumber(orderRaw);
+      if (!Number.isFinite(order)) order = parseOrdinalNumber(orderRaw);
+      if (Number.isFinite(count) && Number.isFinite(order) && order > count) {
+        errors.push('ترتیب تولد دانش‌آموز نمی‌تواند از تعداد فرزندان خانواده بیشتر باشد.');
+      }
+    }
+    return errors;
+  }
+  function isValidJalaliDate(value) {
+  function isValidJalaliDate(value) {
+    const m=normalizeDigits(value).match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/); if(!m)return false;
+    const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]); if(y<1200||y>1500||mo<1||mo>12||d<1)return false; return d<=jalaaliMonthLength(y,mo);
+  }
+
+
+  function validateQuestion(q, values, questions = null) {
+    if (!q) return null;
+    if (questions && !isQuestionVisible(q, values)) return null;
+
+    const value = values?.[q.id];
+    const empty = isBlankAnswer(value);
+    if (q.required && empty) {
+      if (q.type === 'checkbox') return `حداقل یک گزینه برای «${q.label}» انتخاب کنید.`;
+      return `پاسخ «${q.label}» الزامی است.`;
+    }
+    if (empty) return null;
+
+    const v = q.validation || {};
+
+    if (q.type === 'number') {
+      let n = parseFlexibleNumber(value);
+      if (!Number.isFinite(n) && q.id === 'student_child_order') {
+        const ordinal = parseOrdinalNumber(value);
+        if (Number.isFinite(ordinal)) n = ordinal;
+      }
+      if (!Number.isFinite(n)) return `مقدار «${q.label}» باید عدد معتبر باشد.`;
+      if (v.integer && !Number.isInteger(n)) return `مقدار «${q.label}» باید عدد صحیح باشد.`;
+      if (v.min !== undefined && n < Number(v.min)) return `مقدار «${q.label}» نباید کمتر از ${v.min} باشد.`;
+      if (v.max !== undefined && n > Number(v.max)) return `مقدار «${q.label}» نباید بیشتر از ${v.max} باشد.`;
+    }
+
+    if (['text', 'textarea', 'select', 'radio'].includes(q.type)) {
+      const text = normalizeText(String(value ?? ''));
+      if (v.minLength !== undefined && text.length < Number(v.minLength)) return `طول «${q.label}» حداقل باید ${v.minLength} کاراکتر باشد.`;
+      if (v.maxLength !== undefined && text.length > Number(v.maxLength)) return `طول «${q.label}» بیشتر از ${v.maxLength} کاراکتر نباشد.`;
+      if (v.pattern) {
+        try {
+          const regex = new RegExp(v.pattern);
+          const candidate = normalizePatternInput(q, text);
+          const compact = candidate.replace(/[\s\-–—()]+/g, '');
+          if (!regex.test(candidate) && !regex.test(compact)) return `قالب «${q.label}» صحیح نیست.`;
+        } catch {
+          return `قالب اعتبارسنجی سؤال «${q.label}» خراب است.`;
+        }
+      }
+    }
+
+    if (q.type === 'select' || q.type === 'radio') {
+      if (q.options.length && !q.options.includes(String(value))) return `گزینه انتخاب‌شده برای «${q.label}» معتبر نیست.`;
+    }
+
+    if (q.type === 'checkbox') {
+      if (!Array.isArray(value) || value.some(vv => !q.options.includes(String(vv)))) return `گزینه‌های انتخاب‌شده برای «${q.label}» معتبر نیستند.`;
+    }
+
+    if (q.type === 'date') {
+      const text = normalizeDigits(String(value ?? '')).trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return `تاریخ «${q.label}» معتبر نیست.`;
+    }
+
+    if (q.type === 'jalali') {
+      if (!isValidJalaliDate(value)) return `تاریخ شمسی «${q.label}» معتبر نیست.`;
+    }
+
+    if (q.type === 'serial') {
+      const raw = normalizeDigits(String(value ?? '')).replace(/\s+/g, '');
+      if (raw && !new RegExp(`^[${SERIAL_LETTERS.join('')}][0-9]{2}\/[0-9]{6}$`).test(raw)) return `فرمت سریال «${q.label}» صحیح نیست.`;
+    }
+
+    return null;
+  }
+  function validateAllResponse(form,values) {
+    const errors=collectResponseErrors(form,values);
+    return errors.length ? errors[0] : null;
+  }
+
+
+  function helpText(q){
+    if (q.type === 'jalali') return 'از تقویم شمسی استفاده کنید؛ تاریخ‌های نامعتبر پذیرفته نمی‌شوند.';
+    if (q.type === 'date') return 'تاریخ میلادی را انتخاب کنید. اعداد فارسی نیز به‌درستی پذیرفته می‌شوند.';
+    if (q.type === 'serial') return 'قالب: حرف + دو رقم / شش رقم؛ مثال: ا12/123456';
+    if (q.type === 'number') return q.id === 'student_child_order'
+      ? 'عدد فارسی/انگلیسی یا ترتیب نوشتاری مانند «اول»، «دوم»، «سوم» را وارد کنید.'
+      : 'عدد فارسی یا انگلیسی معتبر وارد کنید.';
+    if (['select', 'radio', 'checkbox'].includes(q.type)) return 'گزینه مناسب را انتخاب کنید.';
+    return q.placeholder ? `راهنما: ${q.placeholder}` : 'پاسخ خود را وارد کنید.';
+  }
+
+
+  function makeAnswerId(prefix,id){return `${prefix}_answer_${id}`;}
+  function renderQuestionInput(q,value,prefix='public') {
+    const id = makeAnswerId(prefix, q.id), ph = escapeHtml(q.placeholder || '');
+    if (q.type === 'textarea') return `<textarea id="${id}" class="input textarea" placeholder="${ph}">${escapeHtml(value || '')}</textarea>`;
+    if (q.type === 'number') {
+      const isChildOrder = q.id === 'student_child_order';
+      const placeholder = isChildOrder ? (q.placeholder || 'مثلاً ۲ یا اول') : (ph || 'مثلاً ۱۲۳');
+      const inputMode = isChildOrder ? 'numeric' : ((q.validation || {}).integer ? 'numeric' : 'decimal');
+      return `<input id="${id}" class="input numeric-input" type="text" inputmode="${inputMode}" autocomplete="off" value="${escapeHtml(value ?? '')}" placeholder="${escapeHtml(placeholder)}" />`;
+    }
+    if (q.type === 'date') return `<input id="${id}" class="input" type="date" value="${escapeHtml(value || '')}" />`;
+    if (q.type === 'jalali') return `<div class="button-group"><input id="${id}" class="input" type="text" readonly value="${escapeHtml(value || '')}" placeholder="${ph || '۱۴۰۵/۰۱/۱۵'}" /><button class="btn btn-soft btn-sm" type="button" data-open-jalali="${escapeHtml(q.id)}">تقویم شمسی</button></div>`;
+    if (q.type === 'serial') {
+      const m = String(value || '').match(/^(.)(\d{2})\/(\d{6})$/);
+      const a = m ? m[1] : '', b = m ? m[2] : '', c = m ? m[3] : '';
+      return `<div class="serial-editor"><select id="${id}_1" class="input"><option value="">حرف</option>${SERIAL_LETTERS.map(ch=>`<option value="${ch}" ${a===ch?'selected':''}>${ch}</option>`).join('')}</select><input id="${id}_2" class="input" maxlength="2" inputmode="numeric" placeholder="۰۰" value="${escapeHtml(b)}" /><span>/</span><input id="${id}_3" class="input" maxlength="6" inputmode="numeric" placeholder="۰۰۰۰۰۰" value="${escapeHtml(c)}" /></div><div class="small muted">فرمت نهایی: حرف + دو رقم / شش رقم</div>`;
+    }
+    if (q.type === 'select') return `<select id="${id}" class="input"><option value="">— انتخاب کنید —</option>${q.options.map(o=>`<option value="${escapeHtml(o)}" ${String(value ?? '') === String(o) ? 'selected' : ''}>${escapeHtml(o)}</option>`).join('')}</select>`;
+    if (q.type === 'radio') return `<div class="option-list">${q.options.map(o=>`<label class="option-item"><input type="radio" name="${id}" value="${escapeHtml(o)}" ${String(value ?? '') === String(o) ? 'checked' : ''} /><span>${escapeHtml(o)}</span></label>`).join('')}</div>`;
+    if (q.type === 'checkbox') {
+      const arr = Array.isArray(value) ? value : [];
+      return `<div class="option-list">${q.options.map(o=>`<label class="option-item"><input type="checkbox" data-multi="${escapeHtml(id)}" value="${escapeHtml(o)}" ${arr.includes(o) ? 'checked' : ''} /><span>${escapeHtml(o)}</span></label>`).join('')}</div>`;
+    }
+    return `<input id="${id}" class="input" type="text" value="${escapeHtml(value || '')}" placeholder="${ph}" />`;
+  }
+
+  function readAnswer(q,container,prefix) {
+    const id = makeAnswerId(prefix, q.id);
+    if (q.type === 'serial') {
+      const letter = $(id + '_1', container)?.value || '';
+      const d2 = normalizeDigits($(id + '_2', container)?.value || '').replace(/[^0-9]/g, '').slice(0, 2);
+      const d6 = normalizeDigits($(id + '_3', container)?.value || '').replace(/[^0-9]/g, '').slice(0, 6);
+      if (!letter && !d2 && !d6) return '';
+      return `${letter}${d2}/${d6}`;
+    }
+    if (q.type === 'number') {
+      const raw = normalizeDigits($(id, container)?.value ?? '').trim();
+      if (q.id === 'student_child_order') {
+        const ordinal = parseOrdinalNumber(raw);
+        if (Number.isFinite(ordinal)) return String(ordinal);
+      }
+      return raw.replace(/[\s,،\u00a0]/g, '');
+    }
+    if (q.type === 'text' && /(?:شماره|تلفن|موبایل|phone|mobile|tel)/i.test(normalizeText(q.label || ''))) {
+      return normalizeDigits($(id, container)?.value ?? '').replace(/[\s\-–—()]+/g, '').trim();
+    }
+    if (q.type === 'radio') return $$(`input[name="${CSS.escape(id)}"]`, container).find(i => i.checked)?.value || '';
+    if (q.type === 'checkbox') return $$(`input[data-multi="${CSS.escape(id)}"]`, container).filter(i => i.checked).map(i => i.value);
+    return $(id, container)?.value ?? '';
+  }
+  function bindAnswer(q,container,prefix,onChanged,{autoNext=false}={}) {
+    const id=makeAnswerId(prefix,q.id);
+    const save=()=>{onChanged(q,readAnswer(q,container,prefix));};
+    if(q.type==='radio')$$(`input[name="${CSS.escape(id)}"]`,container).forEach(el=>el.addEventListener('change',()=>{save();if(autoNext)setTimeout(()=>onChanged('__AUTO_NEXT__',null),130);}));
+    else if(q.type==='checkbox')$$(`input[data-multi="${CSS.escape(id)}"]`,container).forEach(el=>el.addEventListener('change',save));
+    if(q.type==='serial'){['_1','_2','_3'].forEach(s=>{const el=$(id+s,container);el?.addEventListener('input',save);el?.addEventListener('change',save);});}
+    else if(q.type==='jalali'){
+      const input=$(id,container); input?.addEventListener('input',save); $$('[data-open-jalali]',container).forEach(btn=>btn.addEventListener('click',()=>openJalaliPicker(q.id,container,prefix)));
+    }else if(q.type==='select')$(id,container)?.addEventListener('change',()=>{save();if(autoNext)setTimeout(()=>onChanged('__AUTO_NEXT__',null),130);});
+    else if(q.type==='number'){
+      $(id,container)?.addEventListener('input',e=>{
+        if(q.id!=='student_child_order'){
+          const el=e.currentTarget;
+          const value=el.value;
+          const normalized=value.replace(/[٫،]/g,'.');
+          if(value!==normalized){
+            const pos=el.selectionStart;
+            el.value=normalized;
+            if(pos!==null)el.setSelectionRange(pos,pos);
+          }
+        }
+        save();
+      });
+    }else $(id,container)?.addEventListener('input',save);
+  }
+
+  function renderPublicRunner() {
+    const form=state.runner.version; if(!form)return;
+    const vis=visibleQuestions(form,state.runner.values);
+    if(!vis.length){$('qText').textContent='هیچ سؤال قابل نمایشی وجود ندارد';$('qHelp').textContent='فرم خالی است یا شرایط نمایش هنوز برقرار نشده‌اند.';return;}
+    if(state.runner.current>=vis.length)state.runner.current=vis.length-1;
+    if(state.runner.current<0)state.runner.current=0;
+    const q=vis[state.runner.current];
+    $('runnerTitle').textContent=form.title||'اجرای فرم'; $('runnerDesc').textContent=form.description||''; $('runnerVersion').textContent=`نسخه ${faNumber(form.version_number)}`; $('runnerCounter').textContent=`سؤال ${faNumber(state.runner.current+1)} از ${faNumber(vis.length)}`; $('progressBar').style.width=`${((state.runner.current+1)/vis.length)*100}%`; $('questionKicker').textContent=`سؤال ${faNumber(state.runner.current+1)}`; $('qText').textContent=q.label; $('qHelp').textContent=helpText(q); $('requiredHint').textContent=q.required?'این سؤال الزامی است.':'این سؤال اختیاری است.'; $('prevBtn').disabled=state.runner.current===0; $('nextBtn').classList.toggle('hidden',state.runner.current>=vis.length-1); $('finishBtn').classList.toggle('hidden',state.runner.current<vis.length-1); $('runnerFoot').textContent=form.slogan||'اطلاعات شما پس از ثبت نهایی در دیتابیس مرکزی سامانه ذخیره می‌شود.';
+    const area=$('answerArea'); area.innerHTML=renderQuestionInput(q,state.runner.values[q.id], 'public');
+    bindAnswer(q,area,'public',(changedQ,value)=>{
+      if(changedQ==='__AUTO_NEXT__'){goPublicNext();return;}
+      state.runner.values[changedQ.id]=value; state.runner.values=pruneHiddenValues(form,state.runner.values);
+      persistRunnerState();
+      if(['radio','select','checkbox'].includes(q.type)) renderPublicRunner();
+    },{autoNext:form.auto_next});
+  }
+
+  function goPublicPrev(){if(state.runner.current>0){state.runner.current--;persistRunnerState();renderPublicRunner();}}
+  function goPublicNext(){
+    const form=state.runner.version;if(!form)return; const vis=visibleQuestions(form,state.runner.values); const q=vis[state.runner.current];
+    const current=readAnswer(q,$('answerArea'),'public'); state.runner.values[q.id]=current; state.runner.values=pruneHiddenValues(form,state.runner.values);
+    const error=validateQuestion(q,state.runner.values);if(error)return ui.error(error);
+    if(state.runner.current<visibleQuestions(form,state.runner.values).length-1){state.runner.current++;persistRunnerState();renderPublicRunner();}
+  }
+
+  function formatReviewValue(q, value) {
+    if (Array.isArray(value)) {
+      return value.length ? value.join('، ') : 'بدون پاسخ';
+    }
+    if (value === undefined || value === null || String(value).trim() === '') {
+      return 'بدون پاسخ';
+    }
+    return String(value);
+  }
+
+  function openReviewPreview(form, values) {
+    const root = $('reviewRoot');
+    const list = $('reviewQuestionList');
+    if (!root || !list) return Promise.resolve(false);
+
+    const visible = visibleQuestions(form, values);
+    const visibleIds = new Set(visible.map(q => q.id));
+    const allQuestions = Array.isArray(form.questions) ? form.questions : visible;
+    list.innerHTML = '';
+
+    allQuestions.forEach((q, index) => {
+      const item = document.createElement('div');
+      item.className = 'review-item';
+
+      const label = document.createElement('div');
+      label.className = 'review-label';
+      label.textContent = `${faNumber(index + 1)}. ${q.label}`;
+
+      const value = document.createElement('div');
+      value.className = 'review-value';
+
+      if (!visibleIds.has(q.id)) {
+        value.textContent = 'این سؤال به دلیل شرایط نمایش برای این پاسخ نمایش داده نشد.';
+        value.classList.add('review-empty');
+      } else {
+        const answer = formatReviewValue(q, values[q.id]);
+        value.textContent = answer;
+        if (answer === 'بدون پاسخ') value.classList.add('review-empty');
+      }
+
+      item.append(label, value);
+      list.appendChild(item);
+    });
+
+    root.classList.remove('hidden');
+    root.setAttribute('aria-hidden', 'false');
+
+    return new Promise(resolve => {
+      const confirmBtn = $('reviewConfirmBtn');
+      const editBtn = $('reviewEditBtn');
+      const backdrop = root.querySelector('.modal-backdrop');
+
+      const close = (result) => {
+        root.classList.add('hidden');
+        root.setAttribute('aria-hidden', 'true');
+        confirmBtn.onclick = null;
+        editBtn.onclick = null;
+        backdrop.onclick = null;
+        resolve(result);
+      };
+
+      confirmBtn.onclick = () => close(true);
+      editBtn.onclick = () => close(false);
+      backdrop.onclick = () => {};
+    });
+  }
+
+  async function finishPublic() {
+    const form=state.runner.version;if(!form)return;
+    const vis=visibleQuestions(form,state.runner.values); const q=vis[state.runner.current]; if(q)state.runner.values[q.id]=readAnswer(q,$('answerArea'),'public'); state.runner.values=pruneHiddenValues(form,state.runner.values);
+    const cleanedValues=normalizeSubmissionValues(form,state.runner.values);
+    const errors=collectResponseErrors(form,cleanedValues);
+    if(errors.length)return errorController.showValidation(errors,'اعتبارسنجی فرم عمومی');
+    if(!await ui.confirm('اطمینان دارید اطلاعات واردشده صحیح است و ثبت نهایی شود؟ پس از ثبت، برای ویرایش باید با مدیر سامانه هماهنگ شود.','ثبت نهایی اطلاعات'))return;
+    $('finishBtn').disabled=true;
+    try{
+      const {data,error:rpcError}=await state.sb.rpc('submit_public_response',{p_form_id:form.form_id,p_form_version_id:form.id,p_response:cleanedValues,p_device_name:state.runner.device_name||''});
+      if(rpcError)throw rpcError;
+      state.runner.values={};state.runner.current=0;state.runner.pendingVersion=null;
+      await ui.success(`اطلاعات با موفقیت ثبت شد. کد پیگیری: ${data}`);
+      await loadPublicForm({silent:true});
+    }catch(error){errorController.show(error,{title:'ثبت اطلاعات',fallback:'ثبت اطلاعات ناموفق بود.',includeDetails:true,context:'finishPublic'});}
+    finally{$('finishBtn').disabled=false;}
+  }
+
+  async function loadPublicForm({silent=false}={}) {
+  async function loadPublicForm({silent=false}={}) {
+    if (!state.sb) return;
+
+    if (!silent) {
+      $('publicLoading').classList.remove('hidden');
+      $('publicUnavailable').classList.add('hidden');
+      $('runnerPanel').classList.add('hidden');
+    }
+
+    try {
+      const {data, error} = await state.sb
+        .from('form_versions')
+        .select('*')
+        .eq('slug', FORM_SLUG)
+        .eq('is_published', true)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) {
+        $('publicLoading').classList.add('hidden');
+        $('publicUnavailable').classList.remove('hidden');
+        $('publicUnavailableMessage').textContent = 'هنوز هیچ نسخه‌ای از فرم توسط مدیر منتشر نشده است.';
+        setConnection('منتشر نشده', 'neutral');
+        return;
+      }
+
+      const version = {
+        ...data,
+        form_id: data.form_id,
+        questions: Array.isArray(data.questions)
+          ? data.questions.map(normalizeQuestion)
+          : []
+      };
+
+      const hasCurrentVersion = !!state.runner.version;
+      const versionChanged = !hasCurrentVersion || state.runner.version.id !== version.id;
+      const hasUserProgress = Object.keys(state.runner.values || {}).length > 0 || state.runner.current > 0;
+
+      if (versionChanged) {
+        if (hasCurrentVersion && hasUserProgress) {
+          state.runner.pendingVersion = version;
+          $('publicUpdateBanner').classList.remove('hidden');
+        } else {
+          state.runner.version = version;
+          state.runner.pendingVersion = null;
+          state.runner.current = 0;
+          state.runner.values = {};
+          $('publicUpdateBanner').classList.add('hidden');
+        }
+      }
+
+      $('publicLoading').classList.add('hidden');
+      $('publicUnavailable').classList.add('hidden');
+      $('runnerPanel').classList.remove('hidden');
+      $('runnerDeviceName').value = state.runner.deviceName;
+      renderPublicRunner();
+      persistRunnerState();
+      setConnection('متصل و آماده', 'success');
+    } catch (error) {
+      $('publicLoading').classList.add('hidden');
+      $('publicUnavailable').classList.remove('hidden');
+      $('publicUnavailableMessage').textContent = error.message || 'خطا در دریافت فرم.';
+      setConnection('خطای اتصال', 'danger');
+      if (!silent) ui.error(error.message || 'دریافت فرم ناموفق بود.');
+    }
+  }
+
+  function subscribePublicRealtime(formId) {
+    // عمدی: فرم عمومی در طول تکمیل پاسخ، به‌صورت خودکار دوباره بارگیری نمی‌شود.
+    // بررسی نسخه جدید فقط با دکمه «بررسی نسخه جدید» انجام می‌شود تا فرم کاربر هرگز ریست نشود.
+  }
+
+  function loadPendingVersion(){
+    if(!state.runner.pendingVersion)return;
+    state.runner.version=state.runner.pendingVersion;
+    state.runner.pendingVersion=null;
+    state.runner.values={};
+    state.runner.current=0;
+    $('publicUpdateBanner').classList.add('hidden');
+    persistRunnerState();
+    renderPublicRunner();
+  }
+
+  function serialValueValid(value){return !value || new RegExp(`^[${SERIAL_LETTERS.join('')}][0-9]{2}\\/[0-9]{6}$`).test(normalizeDigits(String(value)).replace(/\s+/g,''));}
+
+  function renderEditResponse() {
+    const panel=$('adminEditPanel'); if(!state.editResponse||!state.editSchema){panel.classList.add('hidden');return;}
+    panel.classList.remove('hidden'); $('editResponseMeta').textContent=`رکورد ${state.editResponse.id} · ثبت ${formatDateTime(state.editResponse.created_at)} · نسخه ${state.editResponse.schemaVersion||'—'}`;
+    const values=state.editResponse.values||{}; const visible=visibleQuestions({questions:state.editSchema},values); const area=$('editAnswerArea'); area.innerHTML='';
+    visible.forEach(q=>{
+      const wrap=document.createElement('div');wrap.className='field'; const label=document.createElement('label');label.textContent=q.label+(q.required?' *':'');wrap.appendChild(label); const inputWrap=document.createElement('div');inputWrap.innerHTML=renderQuestionInput(q,values[q.id],'edit');wrap.appendChild(inputWrap);area.appendChild(wrap);bindAnswer(q,inputWrap,'edit',(changedQ,value)=>{if(changedQ==='__AUTO_NEXT__')return;state.editResponse.values[changedQ.id]=value;state.editResponse.values=pruneHiddenValues({questions:state.editSchema},state.editResponse.values);});
+    });
+  }
+
+  async function editResponse(row) {
+    state.editResponse={...row,values:clone(row.response||{}),schemaVersion:row.form_versions?.version_number || '—'}; state.editSchema=(Array.isArray(row.schema_snapshot)?row.schema_snapshot:state.form.questions).map(normalizeQuestion); renderEditResponse(); $('adminEditPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  async function saveEditedResponse() {
+    if(!state.editResponse||!state.editSchema)return;
+    const form={questions:state.editSchema};
+    const cleanedValues=normalizeSubmissionValues(form,state.editResponse.values);
+    const err=validateAllResponse(form,cleanedValues);if(err)return ui.error(err);
+    try{
+      state.editResponse.values=pruneHiddenValues({questions:state.editSchema},cleanedValues);
+      const {error}=await state.sb.from('responses').update({response:state.editResponse.values,device_name:state.editResponse.device_name||'',updated_at:nowIso(),updated_by:state.user.id}).eq('id',state.editResponse.id);
+      if(error)throw error;
+      await logAudit('update_response','responses',state.editResponse.id,{}); await ui.success('پاسخ با موفقیت به‌روزرسانی شد.'); state.editResponse=null;state.editSchema=null;renderEditResponse();await loadResponses();
+    }catch(error){errorController.show(error,{title:'به‌روزرسانی پاسخ',fallback:'به‌روزرسانی پاسخ ناموفق بود.',includeDetails:true,context:'saveEditedResponse'});}
+  }
+
+  function buildResponseColumns(rows) {
+  function buildResponseColumns(rows) {
+    const map=new Map();
+    (state.form?.questions||[]).forEach(q=>map.set(q.id,q.label));
+    rows.forEach(row=>(row.schema_snapshot||[]).forEach(q=>{if(!map.has(q.id))map.set(q.id,q.label);}));
+    return [...map.entries()].map(([id,label])=>({id,label}));
+  }
+
+  async function loadResponses() {
+    if(!state.form||state.currentAdminView!=='data')return;
+    try{
+      const from=(state.responses.page-1)*state.responses.perPage; const to=from+state.responses.perPage-1;
+      let query=state.sb.from('responses').select('id,form_id,form_version_id,response,schema_snapshot,device_name,created_at,updated_at,form_versions(version_number)',{count:'exact'}).eq('form_id',state.form.id).order('created_at',{ascending:false}).range(from,to);
+      const term=state.responses.search.trim(); if(term)query=query.ilike('search_text',`%${term.toLocaleLowerCase('fa-IR')}%`);
+      const {data,error,count}=await query; if(error)throw error;
+      state.responses.rows=(data||[]).map(r=>({...r,values:r.response||{}})); state.responses.total=count||0; state.responses.totalPages=Math.max(1,Math.ceil(state.responses.total/state.responses.perPage));
+      if(state.responses.page>state.responses.totalPages){state.responses.page=state.responses.totalPages;return loadResponses();}
+      renderDataTable();
+    }catch(error){ui.error(error.message||'دریافت پاسخ‌ها ناموفق بود.');}
+  }
+
+  function renderDataTable() {
+    const rows=state.responses.rows||[], cols=buildResponseColumns(rows), head=$('respHead'),body=$('respBody'); head.innerHTML='';body.innerHTML='';
+    ['شناسه','زمان ثبت','دستگاه','نسخه','عملیات',...cols.map(c=>c.label)].forEach(label=>{const th=document.createElement('th');th.textContent=label;head.appendChild(th);});
+    if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5+cols.length;td.textContent='هنوز هیچ پاسخی ثبت نشده است.';tr.appendChild(td);body.appendChild(tr);}
+    else rows.forEach(row=>{
+      const tr=document.createElement('tr'); [row.id,formatDateTime(row.created_at),row.device_name||'—',`نسخه ${faNumber(row.form_versions?.version_number||'—')}`].forEach(v=>{const td=document.createElement('td');td.textContent=String(v);tr.appendChild(td);});
+      const actions=document.createElement('td'); const edit=document.createElement('button');edit.type='button';edit.className='btn btn-soft btn-sm';edit.textContent='ویرایش';edit.onclick=()=>editResponse(row);const del=document.createElement('button');del.type='button';del.className='btn btn-danger btn-sm';del.textContent='حذف';del.onclick=()=>deleteResponse(row.id);actions.append(edit,document.createTextNode(' '),del);tr.appendChild(actions);
+      cols.forEach(col=>{const td=document.createElement('td');const v=row.values?.[col.id];td.textContent=Array.isArray(v)?v.join('، '):(v??'');tr.appendChild(td);});body.appendChild(tr);
+    });
+    $('respPageLabel').textContent=`صفحه ${faNumber(state.responses.page)} از ${faNumber(state.responses.totalPages)}`; $('respPrevBtn').disabled=state.responses.page<=1; $('respNextBtn').disabled=state.responses.page>=state.responses.totalPages;
+  }
+
+  async function deleteResponse(id) {
+    if(!await ui.confirm(`پاسخ ${id} حذف شود؟ این عملیات قابل بازگشت نیست.`,'حذف پاسخ'))return;
+    try{const {error}=await state.sb.from('responses').delete().eq('id',id);if(error)throw error;await logAudit('delete_response','responses',id,{});await loadResponses();state.form.responseCount=Math.max(0,(state.form.responseCount||0)-1);updateBuilderStats();}catch(error){ui.error(error.message||'حذف پاسخ ناموفق بود.');}
+  }
+  async function clearAllResponses() {
+    if(!await ui.confirm('تمام پاسخ‌های فرم حذف شوند؟ این عملیات دائمی است. بهتر است ابتدا خروجی پشتیبان بگیرید.','حذف همه پاسخ‌ها'))return;
+    try{const {data,error}=await state.sb.rpc('delete_all_form_responses',{p_form_id:state.form.id});if(error)throw error;await logAudit('delete_all_responses','forms',state.form.id,{deleted:data});state.form.responseCount=0;state.responses.page=1;await loadResponses();updateBuilderStats();await ui.success(`${faNumber(data||0)} پاسخ حذف شد.`);}catch(error){ui.error(error.message||'حذف پاسخ‌ها ناموفق بود.');}
+  }
+
+  async function fetchAllResponses() {
+    const all=[]; let from=0; const size=1000;
+    while(true){const {data,error}=await state.sb.from('responses').select('id,form_id,form_version_id,response,schema_snapshot,device_name,created_at,updated_at,form_versions(version_number)').eq('form_id',state.form.id).order('created_at',{ascending:true}).range(from,from+size-1);if(error)throw error;if(!data?.length)break;all.push(...data);if(data.length<size)break;from+=size;}
+    return all;
+  }
+  async function exportResponsesJson() {
+    try{const rows=await fetchAllResponses();exportJson({format:'student-form-responses',exportedAt:nowIso(),form:{id:state.form.id,title:state.form.title},rows},'student-form-responses.json');}catch(error){ui.error(error.message||'خروجی JSON ناموفق بود.');}
+  }
+
+  function xmlEscape(value) { return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,''); }
+  function excelCol(n){let s='';while(n){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
+  function textCell(ref,value){return `<c r="${ref}" t="inlineStr"><is><t>${xmlEscape(value)}</t></is></c>`;}
+  function buildSheetXml(rows){const body=rows.map((row,r)=>`<row r="${r+1}">${row.map((v,c)=>textCell(`${excelCol(c+1)}${r+1}`,v)).join('')}</row>`).join('');return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" rightToLeft="1"/></sheetViews><sheetData>${body}</sheetData><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></worksheet>`;}
+  function toU8(str){return new TextEncoder().encode(str);}
+  function crc32(buf){let c=0xffffffff;for(let i=0;i<buf.length;i++){c^=buf[i];for(let k=0;k<8;k++)c=(c>>>1)^(0xedb88320&-(c&1));}return(c^0xffffffff)>>>0;}
+  function writeU16(a,o,v){a[o]=v&255;a[o+1]=(v>>>8)&255;}
+  function writeU32(a,o,v){a[o]=v&255;a[o+1]=(v>>>8)&255;a[o+2]=(v>>>16)&255;a[o+3]=(v>>>24)&255;}
+  function dosDateTime(d){return{time:((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&65535,date:((((d.getFullYear()-1980)&127)<<9)|((d.getMonth()+1)<<5)|d.getDate())&65535};}
+  function zipStore(files){const local=[],central=[];let offset=0;const now=dosDateTime(new Date());for(const f of files){const name=toU8(f.name),data=typeof f.data==='string'?toU8(f.data):f.data,crc=crc32(data),lh=new Uint8Array(30+name.length);writeU32(lh,0,0x04034b50);writeU16(lh,4,20);writeU16(lh,6,0);writeU16(lh,8,0);writeU16(lh,10,now.time);writeU16(lh,12,now.date);writeU32(lh,14,crc);writeU32(lh,18,data.length);writeU32(lh,22,data.length);writeU16(lh,26,name.length);writeU16(lh,28,0);lh.set(name,30);local.push(lh,data);const ch=new Uint8Array(46+name.length);writeU32(ch,0,0x02014b50);writeU16(ch,4,20);writeU16(ch,6,20);writeU16(ch,8,0);writeU16(ch,10,0);writeU16(ch,12,now.time);writeU16(ch,14,now.date);writeU32(ch,16,crc);writeU32(ch,20,data.length);writeU32(ch,24,data.length);writeU16(ch,28,name.length);writeU16(ch,30,0);writeU16(ch,32,0);writeU16(ch,34,0);writeU16(ch,36,0);writeU32(ch,38,0);writeU32(ch,42,offset);ch.set(name,46);central.push(ch);offset+=lh.length+data.length;}const centralSize=central.reduce((s,a)=>s+a.length,0),end=new Uint8Array(22);writeU32(end,0,0x06054b50);writeU16(end,4,0);writeU16(end,6,0);writeU16(end,8,files.length);writeU16(end,10,files.length);writeU32(end,12,centralSize);writeU32(end,16,offset);writeU16(end,20,0);const out=new Uint8Array(offset+centralSize+22);let p=0;for(const part of [...local,...central,end]){out.set(part,p);p+=part.length;}return out;}
+  function buildXlsx(rows){const contentTypes=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;const rootRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="پاسخ‌ها" sheetId="1" r:id="rId1"/></sheets></workbook>`;const wbRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`;const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Arial"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;const sheet=buildSheetXml(rows);return zipStore([{name:'[Content_Types].xml',data:contentTypes},{name:'_rels/.rels',data:rootRels},{name:'xl/workbook.xml',data:wb},{name:'xl/_rels/workbook.xml.rels',data:wbRels},{name:'xl/styles.xml',data:styles},{name:'xl/worksheets/sheet1.xml',data:sheet}]);}
+  async function exportResponsesXlsx(){try{const rows=await fetchAllResponses();const cols=buildResponseColumns(rows);const table=[['شناسه','زمان ثبت','دستگاه',...cols.map(c=>c.label)]];rows.forEach(r=>table.push([r.id,formatDateTime(r.created_at),r.device_name||'',...cols.map(c=>{const v=r.response?.[c.id];return Array.isArray(v)?v.join('، '):(v??'');})]));const blob=new Blob([buildXlsx(table)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='student-form-responses.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);}catch(error){ui.error(error.message||'خروجی Excel ناموفق بود.');}}
+
+  function openJalaliPicker(questionId,container,prefix) {
+    const wrap=$('jalaliWrap'); if(!wrap)return;
+    const now=new Date(),today=toJalaali(now.getFullYear(),now.getMonth()+1,now.getDate());
+    state.jalali={questionId,container,prefix,jy:today.jy,jm:today.jm};
+    const render=()=>{
+      $('jpTitle').textContent=`${monthName(state.jalali.jm)} ${faNumber(state.jalali.jy)}`; $('jpSub').textContent='روز موردنظر را انتخاب کنید.'; const y=$('jpYear'),m=$('jpMonth'); y.innerHTML='';m.innerHTML='';
+      for(let yy=1200;yy<=1500;yy++){const o=document.createElement('option');o.value=String(yy);o.textContent=faNumber(yy);if(yy===state.jalali.jy)o.selected=true;y.appendChild(o);} for(let mm=1;mm<=12;mm++){const o=document.createElement('option');o.value=String(mm);o.textContent=monthName(mm);if(mm===state.jalali.jm)o.selected=true;m.appendChild(o);}
+      const days=$('jpDays');days.innerHTML='';['ش','ی','د','س','چ','پ','ج'].forEach(h=>{const el=document.createElement('div');el.className='jalali-head';el.textContent=h;days.appendChild(el);}); const g=toGregorian(state.jalali.jy,state.jalali.jm,1),start=weekdayOfGregorian(g.gy,g.gm,g.gd);for(let i=0;i<start;i++)days.appendChild(document.createElement('div')); for(let d=1;d<=jalaaliMonthLength(state.jalali.jy,state.jalali.jm);d++){const el=document.createElement('button');el.type='button';el.className='jalali-day';el.textContent=faNumber(d);el.dataset.day=d;el.addEventListener('click',()=>{const input=$(makeAnswerId(prefix,questionId),container);if(input){input.value=`${state.jalali.jy}/${String(state.jalali.jm).padStart(2,'0')}/${String(d).padStart(2,'0')}`;input.dispatchEvent(new Event('input',{bubbles:true}));}wrap.classList.add('hidden');});days.appendChild(el);}
+    };
+    wrap.classList.remove('hidden'); $('jpClose').onclick=()=>wrap.classList.add('hidden'); wrap.querySelector('.modal-backdrop').onclick=()=>wrap.classList.add('hidden'); $('jpPrevMonth').onclick=()=>{state.jalali.jm--;if(state.jalali.jm<1){state.jalali.jm=12;state.jalali.jy--;}if(state.jalali.jy<1200)state.jalali.jy=1200;render();}; $('jpNextMonth').onclick=()=>{state.jalali.jm++;if(state.jalali.jm>12){state.jalali.jm=1;state.jalali.jy++;}if(state.jalali.jy>1500)state.jalali.jy=1500;render();}; $('jpYear').onchange=()=>{state.jalali.jy=Number($('jpYear').value);render();}; $('jpMonth').onchange=()=>{state.jalali.jm=Number($('jpMonth').value);render();}; render();
+  }
+
+  function monthName(m){return['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m-1]||'';}
+  function div(a,b){return Math.floor(a/b);}
+  function mod(a,b){return a-div(a,b)*b;}
+  function jalCal(jy){const breaks=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];let bl=breaks.length,gy=jy+621,leapJ=-14,jp=breaks[0],jm,jump,n,i;if(jy<jp||jy>=breaks[bl-1])throw new Error('Invalid Jalaali year');for(i=1;i<bl;i++){jm=breaks[i];jump=jm-jp;if(jy<jm)break;leapJ+=div(jump,33)*8+div(mod(jump,33),4);jp=jm;}n=jy-jp;leapJ+=div(n,33)*8+div(mod(n,33)+3,4);if(mod(jump,33)===4&&jump-n===4)leapJ++;const leapG=div(gy,4)-div((div(gy,100)+1)*3,4)-150,march=20+leapJ-leapG;return{leap:mod(n+1,33)-1<4?1:0,gy,march};}
+  function g2d(gy,gm,gd){return div(1461*(gy+4800+div(gm-14,12)),4)+div(367*(gm-2-12*div(gm-14,12)),12)-div(3*div(gy+4900+div(gm-14,12),100),4)+gd-32075;}
+  function d2g(jdn){let j=4*jdn+139361631;j+=div(div(4*jdn+183187720,146097)*3,4)*4-3908;const i=div(mod(j,1461),4)*5+308,gd=div(mod(i,153),5)+1,gm=mod(div(i,153),12)+1,gy=div(j,1461)-100100+div(8-gm,6);return{gy,gm,gd};}
+  function j2d(jy,jm,jd){const r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div(jm,7)*(jm-7)+jd-1;}
+  function d2j(jdn){const g=d2g(jdn);let jy=g.gy-621,r=jalCal(jy),jdn1f=g2d(g.gy,3,r.march),k=jdn-jdn1f,jm,jd;if(k>=0){if(k<=185){jm=1+div(k,31);jd=mod(k,31)+1;return{jy,jm,jd};}k-=186;}else{jy--;k+=179;if(r.leap===1)k++;}jm=7+div(k,30);jd=mod(k,30)+1;return{jy,jm,jd};}
+  function toJalaali(gy,gm,gd){return d2j(g2d(gy,gm,gd));}
+  function toGregorian(jy,jm,jd){return d2g(j2d(jy,jm,jd));}
+  function jalaaliMonthLength(jy,jm){return jm<=6?31:jm<=11?30:(jalCal(jy).leap===1?30:29);}
+  function weekdayOfGregorian(gy,gm,gd){const d=new Date(Date.UTC(gy,gm-1,gd));return(d.getUTCDay()+1)%7;}
+
+  function bindDragDrop(){
+    const list=$('questionList'); if(!list)return;
+    list.addEventListener('dragstart',e=>{const card=e.target.closest('.question-card');if(!card)return;state.draggedId=card.dataset.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    list.addEventListener('dragend',e=>{const card=e.target.closest('.question-card');card?.classList.remove('dragging');$$('.question-card',list).forEach(c=>c.classList.remove('drag-over'));state.draggedId=null;});
+    list.addEventListener('dragover',e=>{e.preventDefault();const target=e.target.closest('.question-card');if(!target||!state.draggedId||target.dataset.id===state.draggedId)return;$$('.question-card',list).forEach(c=>c.classList.remove('drag-over'));target.classList.add('drag-over');const rect=target.getBoundingClientRect();const after=e.clientY>rect.top+rect.height/2;if(after)target.after(list.querySelector(`[data-id="${CSS.escape(state.draggedId)}"]`));else target.before(list.querySelector(`[data-id="${CSS.escape(state.draggedId)}"]`));});
+    list.addEventListener('drop',()=>{const ids=$$('.question-card',list).map(c=>c.dataset.id);const copy=ids.map(id=>state.form.questions.find(q=>q.id===id));const error=localValidateSchema(copy);if(error){ui.error(error);renderQuestionList();return;}state.form.questions=copy;state.draftDirty=true;renderQuestionList();renderConditionEditor();});
+  }
+
+  function bindCommonEvents(){
+    $('themeBtn')?.addEventListener('click',()=>applyTheme(document.body.classList.contains('dark')?'light':'dark'));
+    $('publicRetryBtn')?.addEventListener('click',()=>loadPublicForm());
+    $('adminEntryBtn')?.addEventListener('click',MODE==='admin'?goPublic:goAdmin);
+    $('backToPublicBtn')?.addEventListener('click',goPublic);
+    $('loginBtn')?.addEventListener('click',loginAdmin);
+    $('loginPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')loginAdmin();});
+    $('runnerRefreshBtn')?.addEventListener('click',()=>loadPublicForm());
+    $('loadNewVersionBtn')?.addEventListener('click',loadPendingVersion);
+    $('prevBtn')?.addEventListener('click',goPublicPrev);
+    $('nextBtn')?.addEventListener('click',goPublicNext);
+    $('finishBtn')?.addEventListener('click',finishPublic);
+    $('runnerDeviceName')?.addEventListener('input',e=>{state.runner.deviceName=e.target.value.trim();localStorage.setItem(DEVICE_KEY,state.runner.deviceName);persistRunnerState();});
+  }
+
+  function bindAdminEvents(){
+    $('saveDraftBtn')?.addEventListener('click',saveDraft);
+    $('publishBtn')?.addEventListener('click',publishDraft);
+    $('resetSeedBtn')?.addEventListener('click',resetSeed);
+    $('changePasswordBtn')?.addEventListener('click',changePassword);
+    $('openPublicBtn')?.addEventListener('click',goPublic);
+    $('refreshAdminBtn')?.addEventListener('click',async()=>{if(state.draftDirty&&!await ui.confirm('تغییرات ذخیره‌نشده روی این دستگاه با دریافت نسخه جدید جایگزین می‌شود. ادامه می‌دهید؟','دریافت نسخه جدید'))return;await loadAdminState({silent:false,overwrite:true});});
+    $('logoutBtn')?.addEventListener('click',async()=>{if(await ui.confirm('از حساب مدیر خارج شوید؟'))await signOut();});
+    $('saveEditedResponseBtn')?.addEventListener('click',saveEditedResponse);
+    $('closeEditPanelBtn')?.addEventListener('click',()=>{state.editResponse=null;state.editSchema=null;renderEditResponse();});
+    $$('#adminDashboard [data-admin-view]').forEach(btn=>btn.addEventListener('click',()=>switchAdminView(btn.dataset.adminView)));
+    $('formTitle')?.addEventListener('input',()=>{syncBuilderMetaFromUI();updateBuilderStats();});$('formDesc')?.addEventListener('input',()=>{syncBuilderMetaFromUI();updateBuilderStats();});$('autoNext')?.addEventListener('change',()=>{syncBuilderMetaFromUI();updateBuilderStats();});$('deviceName')?.addEventListener('input',()=>{syncBuilderMetaFromUI();updateBuilderStats();});$('slogan')?.addEventListener('input',()=>{syncBuilderMetaFromUI();updateBuilderStats();});
+    $('addConditionBtn')?.addEventListener('click',()=>{const sources=getConditionSourceQuestions();if(!sources.length)return ui.error('برای این سؤال، سؤال قبلی قابل استفاده‌ای وجود ندارد.');state.conditionDraft.push({questionId:sources[0].id,operator:'eq',value:''});state.draftDirty=true;renderConditionEditor();});
+    $('conditionList')?.addEventListener('change',e=>{if(e.target.matches('[data-field]')){readConditionsFromDOM();state.draftDirty=true;if(e.target.dataset.field==='operator')renderConditionEditor();}});
+    $('conditionList')?.addEventListener('click',e=>{const b=e.target.closest('[data-delete-condition]');if(!b)return;readConditionsFromDOM();state.conditionDraft.splice(Number(b.dataset.deleteCondition),1);state.draftDirty=true;renderConditionEditor();});
+    $('newCondMode')?.addEventListener('change',()=>{state.conditionMode=$('newCondMode').value;state.draftDirty=true;});
+    $('addQuestionBtn')?.addEventListener('click',async()=>{
+      try{
+        syncBuilderMetaFromUI(); const q=buildQuestionFromEditor(); if(!q.label)return ui.error('متن سؤال را وارد کنید.');
+        if(['select','radio','checkbox'].includes(q.type)&&!q.options.length)return ui.error('برای این نوع سؤال حداقل یک گزینه لازم است.');
+        if(state.editingQuestionId){const i=getEditingIndex();if(i<0)return ui.error('سؤال برای ویرایش پیدا نشد.');const candidate=state.form.questions.slice();candidate[i]=q;const error=localValidateSchema(candidate);if(error)return ui.error(error);state.form.questions=candidate;}
+        else {const candidate=q;const next=state.form.questions.slice();$('newOrder').value==='start'?next.unshift(candidate):next.push(candidate);const error=localValidateSchema(next);if(error)return ui.error(error);state.form.questions=next;}
+        state.draftDirty=true;clearQuestionEditor();renderBuilder();await ui.success('سؤال در پیش‌نویس قرار گرفت. برای اعمال عمومی، ذخیره و انتشار را انجام دهید.');
+      }catch(error){ui.error(error.message||'ثبت سؤال ناموفق بود.');}
+    });
+    $('clearDraftBtn')?.addEventListener('click',clearQuestionEditor);
+    $('questionList')?.addEventListener('click',e=>{const b=e.target.closest('[data-action]');const card=e.target.closest('.question-card');if(!b||!card)return;questionAction(b.dataset.action,card.dataset.id);});
+    $('importFile')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f)importFormJson(f);e.target.value='';});
+    $('exportFormBtn')?.addEventListener('click',exportFormJson);
+    $('refreshResponsesBtn')?.addEventListener('click',loadResponses);
+    $('responseSearch')?.addEventListener('input',debounce(()=>{state.responses.search=$('responseSearch').value.trim();state.responses.page=1;loadResponses();},400));
+    $('responsePerPage')?.addEventListener('change',()=>{state.responses.perPage=Number($('responsePerPage').value)||50;state.responses.page=1;loadResponses();});
+    $('respPrevBtn')?.addEventListener('click',()=>{if(state.responses.page>1){state.responses.page--;loadResponses();}});
+    $('respNextBtn')?.addEventListener('click',()=>{if(state.responses.page<state.responses.totalPages){state.responses.page++;loadResponses();}});
+    $('exportResponsesBtn')?.addEventListener('click',exportResponsesJson);$('exportExcelBtn')?.addEventListener('click',exportResponsesXlsx);$('clearResponsesBtn')?.addEventListener('click',clearAllResponses);
+  }
+
+  window.addEventListener('pagehide', persistRunnerState);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistRunnerState(); });
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      const modal=$('modalRoot'); if(modal&&!modal.classList.contains('hidden')&&!state.modal.isConfirm){state.modal.resolver?.(false);modal.classList.add('hidden');return;}
+      const jp=$('jalaliWrap');if(jp&&!jp.classList.contains('hidden'))jp.classList.add('hidden');
+    }
+    if(e.key!=='Enter'||e.shiftKey||e.altKey||e.ctrlKey||e.metaKey)return;
+    const active=document.activeElement;
+    if(active?.tagName==='TEXTAREA')return;
+    if(MODE==='admin'&&$('adminLoginView')&&!$('adminLoginView').classList.contains('hidden')&&active?.id==='loginPassword'){e.preventDefault();loginAdmin();return;}
+    if(MODE==='form'&&state.runner.version&&active?.closest('#answerArea')){e.preventDefault();const vis=visibleQuestions(state.runner.version,state.runner.values);if(state.runner.current>=vis.length-1)finishPublic();else goPublicNext();}
+  });
+
+  async function bootPublic(){
+    restoreRunnerState();
+    $('runnerDeviceName').value=state.runner.deviceName;
+    if (state.runner.version) {
+      renderPublicRunner();
+      $('publicLoading').classList.add('hidden');
+      $('publicUnavailable').classList.add('hidden');
+      $('runnerPanel').classList.remove('hidden');
+    }
+    await loadPublicForm();
+  }
+
+  async function bootAdmin(){
+    try{
+      const has=await ensureAdminSession();
+      if(has){showAdminDashboard();await loadAdminState({silent:true});}else showAdminLogin();
+    }catch(error){showAdminLogin(error.message||'نشست مدیر معتبر نیست.');}
+  }
+
+  async function boot(){
+    document.title=`${CFG.APP_NAME||'فرم‌ساز'} | ${CFG.SCHOOL_NAME||''}`;
+    $('brandTitle').textContent=CFG.SCHOOL_NAME||'دبیرستان نمونه دولتی شهید شیرآقایی بهشهر';
+    $('brandSub').textContent=CFG.APP_NAME||'سامانه مرکزی فرم‌ساز و ثبت اطلاعات دانش‌آموز';
+    applyTheme(localStorage.getItem(THEME_KEY)==='dark'?'dark':'light');showOnly(MODE);bindCommonEvents();
+    if(!isConfigReady()){showConfigError();return;} hideConfigError();
+    try{state.sb=makeClient();state.sb.auth.onAuthStateChange(async(event)=>{if(event==='SIGNED_OUT'&&MODE==='admin')showAdminLogin();});setConnection('در حال اتصال…','neutral');if(MODE==='admin'){bindAdminEvents();await bootAdmin();}else await bootPublic();}
+    catch(error){setConnection('خطا','danger');if(MODE==='admin')showAdminLogin(error.message);else{$('publicLoading').classList.add('hidden');$('publicUnavailable').classList.remove('hidden');$('publicUnavailableMessage').textContent=error.message;}}
+  }
+
+  bindDragDrop();
+  boot();
+}}}}})();
+  </script>
+</body>
+</html>
